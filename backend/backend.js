@@ -10,17 +10,6 @@ openai.api_key = os.getenv("API_KEY")
 model_id = 'gpt-4'
 print("Labeling data with GPT using OpenAI API!")
 
-# Define all unique primary hazards in a set
-# primary_hazards = set()
-
-# Read the Excel data with Pandas library into a dataframe
-df = pandas.read_excel("hazards_data.xlsx")
-
-hazards = []
-for primary_hazard, secondary_hazard in zip(df["Primary Hazard"], df["Secondary Hazard"]):
-    # Add hazards information into list as group
-    hazards.append([primary_hazard, secondary_hazard])
-# print(hazards)
 def ChatGPT_conversation(question, answers):
 
     # Response object
@@ -39,42 +28,38 @@ answers = []
 initial_prompt = "Use only the label pairs provided to assign the best primary and secondary label pairing to the text based on the auto safety hazard being described. Labels: {} Desired output format: primary_label|secondary_label".format(hazards)
 hazards_info = {'role': 'user', 'content': initial_prompt}
 
-# Read the Excel data with Pandas library into a dataframe
-df = pandas.read_excel("investigations_test.xlsx")
 
-# Add in summaries to questions list
-for summary in df["SUMMARY"]:
-    questions.append([{'role': 'user', 'content': 'Label this text: {}'.format(summary)}])
-summary = "it not wanting to go or like ir catch gears"
-questions.append([{'role': 'user', 'content': 'Label this text: {}'.format(summary)}])
+// # Add in summaries to questions list
+// for summary in df["SUMMARY"]:
+//     questions.append([{'role': 'user', 'content': 'Label this text: {}'.format(summary)}])
+// summary = "it not wanting to go or like ir catch gears"
+// questions.append([{'role': 'user', 'content': 'Label this text: {}'.format(summary)}])
 
-# Iterate through data and get record auto labeled by ChatGPT
-for question in questions:
-    # Give necessary background information
-    question.insert(0,hazards_info)
-    print("Giving GPT the needed hazards methodology information")
-    # Get response
-    ChatGPT_conversation(question, answers)
+// # Iterate through data and get record auto labeled by ChatGPT
+// for question in questions:
+//     # Give necessary background information
+//     question.insert(0,hazards_info)
+//     print("Giving GPT the needed hazards methodology information")
+//     # Get response
+//     ChatGPT_conversation(question, answers)
 
-# Write labels to Excel spreadsheet
-excel_workbook = openpyxl.load_workbook("investigations_test.xlsx")
-sheet = excel_workbook.active
 
-row = 2
-primary_col = 20
-secondary_col = 21
-for i in range(len(questions)):
-    # print("Question {}: {} \n \n{}\n".format(i,questions[i][1]['content'],answers[i]['content']))
-    # Parse GPT label output
-    labels_output = answers[i]['content'].split("|")
-    # print(labels_output)
-    # Assign labels to the respective cells
-    sheet.cell(row=row, column=primary_col).value = labels_output[0]
-    sheet.cell(row=row, column=secondary_col).value = labels_output[1]
-    print("Wrote label to excel file!")
-    print("P:{} S:{}".format(labels_output[0],labels_output[1]))
-    # Increment row
-    row += 1
 
-# Save changes 
-excel_workbook.save("investigations_test_labeled.xlsx")
+// row = 2
+// primary_col = 20
+// secondary_col = 21
+// for i in range(len(questions)):
+//     # print("Question {}: {} \n \n{}\n".format(i,questions[i][1]['content'],answers[i]['content']))
+//     # Parse GPT label output
+//     labels_output = answers[i]['content'].split("|")
+//     # print(labels_output)
+//     # Assign labels to the respective cells
+//     sheet.cell(row=row, column=primary_col).value = labels_output[0]
+//     sheet.cell(row=row, column=secondary_col).value = labels_output[1]
+//     print("Wrote label to excel file!")
+//     print("P:{} S:{}".format(labels_output[0],labels_output[1]))
+//     # Increment row
+//     row += 1
+
+// # Save changes 
+// excel_workbook.save("investigations_test_labeled.xlsx")
