@@ -1,0 +1,17 @@
+{
+    "manifest_version": 3,
+    "version": "1.0.0",
+    "name": "AI Reading Assistant Extension",
+    "action": {
+        "default_popup": "index.html"
+    },
+    "permissions": [
+        "scripting"
+    ],
+    "host_permissions": [
+        "http://*/*",
+        "https://*/*"
+    ],
+    "icons": {
+    }
+}
