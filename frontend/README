@@ -1,1 +1,7 @@
 Here will be the frontend code: HTML/react
+
+as of 9/27/23 commit:
+HTML and CSS to create the popup, the "testingExtension" folder is what was used as the unpacked extension folder that you upload directly to the chrome://extensions webpage. Current issues:
+- Popup will appear on the page even before the extension is clicked, it will appear as soon as the document loads
+- Popup can sometimes inherit styles from the main web page causing it to look weird
+- Popup sidebar will currently block the left hand side of the screen when it appears due to position style
