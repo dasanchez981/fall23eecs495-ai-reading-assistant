@@ -2,7 +2,7 @@
 
 import { Configuration, OpenAIApi } from 'openai';
 export class OpenAI {
-    constructor(apiKey) {
+    constructor(apiKey: string) {
         // Create the Configuration and OpenAIApi instances
         this.openai = new OpenAIApi(new Configuration({ apiKey }));
     }
@@ -18,7 +18,7 @@ export class OpenAI {
                 temperature,
             });
             console.log(`request cost: ${response.data.usage.total_tokens} tokens`);
-               // Return the text of the response
+            // Return the text of the response
             return response.data.choices[0].text;
         } catch (error) {
             throw error;
