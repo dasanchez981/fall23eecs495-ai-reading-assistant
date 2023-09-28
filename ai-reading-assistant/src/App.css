@@ -11,12 +11,65 @@
   will-change: filter;
   transition: filter 300ms;
 }
-.logo:hover {
+/* .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
+} */
+
+/* EXPERIMENTAL STYLING FROM TESTING EXTENSION */
+
+html, body{
+  height: 1000px;
+  /* EXPERIMENTAL WIDTH */
+  width: 400px;
 }
+
+#sidebar_container{
+  position: fixed;
+top: 0;
+height: 100%;
+left: 0;
+width: 354px;
+padding:10px 13px;
+/* background-color:#D3D9DE; */
+  z-index: 99999;
+}
+
+#manual_input, #manual_output{
+  height: 150px;
+  width: 300px;
+}
+
+#input_with_buttons{
+  width: 300px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 3fr 1fr;
+  row-gap: 0px;
+  column-gap: 0;
+}
+
+.inputButtons{
+  top: 10px;
+  font-weight: bold;
+  height: 40px;
+  grid-column: span 2;
+}
+
+#manual_input{
+  grid-column: span 4;
+  grid-row: 2 / 3;
+}
+
+#clearTextButton{
+  grid-row: 3 / -1;
+  grid-column: 2 / 4;
+  height: 40px;
+}
+
+/* END EXPERIMENTAL STYLING FROM TESTING EXTENSION */
 
 @keyframes logo-spin {
   from {
@@ -37,6 +90,6 @@
   padding: 2em;
 }
 
-.read-the-docs {
+/* .read-the-docs {
   color: #888;
-}
+} */
