@@ -1,25 +1,39 @@
-// index.js
 
-// import async API call function to make an API call
-import { OpenAI } from '../components/OpenAI';
+import OpenAI from 'openai';
 
-// Creating a new instance of the OpenAI class and passing in the OPENAI_KEY environment variable
-const openai_api_key: string = import.meta.env.OPENAI_API_KEY;
-const openAI = new OpenAI(openai_api_key);
-const topic: string = 'NodeJs';
-const model = 'gpt-3.5-turbo';
-// Function to generate the prompt for the OpenAI API 
-// In the future, it will be moved to a helper class in the next code review
-const generatePrompt = (topic: string) => {
-    return `Write an blog post about "${topic}", it should in HTML format, include 5 unique points, using informative tone.`
-};
-// Use the generateText method to generate text from the OpenAI API and passing the generated prompt, the model and max token value
-await openAI.generateText(generatePrompt(topic), model, 800)
-    .then(text => {
-        // Logging the generated text to the console
-        // In the future, this will be replaced to upload the returned blog text to a WordPress site using the WordPress REST API
-        console.log(text);
-    })
-    .catch(error => {
-        console.error(error);
+const openai = new OpenAI({
+    apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+    dangerouslyAllowBrowser: true
+    // apiKey: import.meta.env.VITE_OPENAI_API_KEY
+    // defaults to process.env["OPENAI_API_KEY"]
+});
+
+export async function summaryCall() {
+    const chatCompletion = await openai.chat.completions.create({
+      messages: [{ role: 'user', content: 'How many rainbows are on Earth?' }],
+      model: 'gpt-3.5-turbo',
     });
+    console.log(chatCompletion.choices[0].message);
+}
+  
+
+
+
+// // Asynchronous function to generate text from the OpenAI API
+// async generateText(prompt : string, model: string, max_tokens: number, temperature = 0.85) {
+//     try {
+//         // Send a request to the OpenAI API to generate text
+//         const response = await this.openai.createCompletion({
+//             model,
+//             prompt,
+//             max_tokens,
+//             n: 1,
+//             temperature,
+//         });
+//         console.log(`request cost: ${response.data.usage.total_tokens} tokens`);
+//         // Return the text of the response
+//         return response.data.choices[0].text;
+//     } catch (error) {
+//         throw error;
+//     }
+// }
