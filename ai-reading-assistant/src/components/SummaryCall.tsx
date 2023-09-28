@@ -4,7 +4,7 @@
 import { OpenAI } from '../components/OpenAI';
 
 // Creating a new instance of the OpenAI class and passing in the OPENAI_KEY environment variable
-const openai_api_key: string | undefined = import.meta.env.OPENAI_API_KEY;
+const openai_api_key: string = import.meta.env.OPENAI_API_KEY;
 const openAI = new OpenAI(openai_api_key);
 const topic: string = 'NodeJs';
 const model = 'gpt-3.5-turbo';

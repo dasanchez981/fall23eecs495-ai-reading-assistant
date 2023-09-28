@@ -7,7 +7,7 @@ export class OpenAI {
         this.openai = new OpenAIApi(new Configuration({ apiKey }));
     }
     // Asynchronous function to generate text from the OpenAI API
-    async generateText(prompt, model, max_tokens, temperature = 0.85) {
+    async generateText(prompt : string, model: string, max_tokens: number, temperature = 0.85) {
         try {
             // Send a request to the OpenAI API to generate text
             const response = await this.openai.createCompletion({
