@@ -52,6 +52,7 @@ venv/
 venv3/
 .venv/
 .pytest_cache
+.env
 
 # JavaScript
 bundle.js
