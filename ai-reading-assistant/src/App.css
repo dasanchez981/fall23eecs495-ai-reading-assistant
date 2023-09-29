@@ -28,12 +28,12 @@ html, body{
 
 #sidebar_container{
   position: fixed;
-top: 0;
-height: 100%;
-left: 0;
-width: 354px;
-padding:10px 13px;
-/* background-color:#D3D9DE; */
+  top: 0;
+  height: 100%;
+  left: 0;
+  width: 354px;
+  padding:10px 13px;
+  /* background-color:#D3D9DE; */
   z-index: 99999;
 }
 
