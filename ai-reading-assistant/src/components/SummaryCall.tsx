@@ -8,9 +8,12 @@ const openai = new OpenAI({
     // defaults to process.env["OPENAI_API_KEY"]
 });
 
-export async function summaryCall() {
+
+export async function summaryCall(text: string) {
     const chatCompletion = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
+      // TODO: Think about using choices[0]["finish_reason"] output to warn user
+      // TODO: Have a limit on the user's text input so that there's enough tokens left for proper/complete summary
       messages: [
         {
           "role": "system",
@@ -18,11 +21,12 @@ export async function summaryCall() {
         },
         {
           "role": "user",
-          "content": "Mathematically, a probability is found by taking the square of the absolute value of a complex number, known as a probability amplitude."
+          "content": text,
         },
       ],
       "temperature": 0,
-      "max_tokens": 512,
+      // TODO: Need to set this based on the number of input tokens to restrict length of summary
+      "max_tokens": 100,
     });
     console.log("The response of the ChatGPT query is below:")
     console.log(chatCompletion)

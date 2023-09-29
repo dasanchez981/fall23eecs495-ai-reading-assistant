@@ -15,7 +15,7 @@ function App() {
   const handleSubmit = (event: any) => {
     event.preventDefault();
     
-    summaryCall().then((value) => {
+    summaryCall(text).then((value) => {
       setResponse(value)
       console.log("The value of the text summary query is below") 
       console.log(value) 
