@@ -1,11 +1,20 @@
-// import { useState } from 'react'
+import { useState } from 'react'
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 import './App.css'
 import { summaryCall } from './components/SummaryCall'
 
+
 function App() {
-  // const [count, setCount] = useState(0)
+  const [text, setText] = useState("")
+
+  console.log("This is the text in the box")
+  console.log(text)
+
+  const handleSubmit = (event: any) => {
+    event.preventDefault();
+    alert(`The name you entered was: ${text}`)
+  }
 
   return (
     <>
@@ -19,10 +28,29 @@ function App() {
                 <div id="input_with_buttons">
                     {/* <!-- On button click, call the API necessary to do the function, pull element value to upload the text through JS--> */}
                     <button type="button" id="textToSpeech" className="inputButtons">Text to Speech</button>
-                    <button onClick={() => summaryCall()} type="button" id="summarization" className="inputButtons">
-                      Summarize 
-                    </button>
-                    <textarea id="manual_input" name="manual_input" placeholder="Enter your text to Speak/Summarize..."></textarea>
+                    
+                    
+                    <form onSubmit={handleSubmit}>
+                      <input type="submit" />
+
+                      <button onClick={() => summaryCall()} type="button" id="summarization" className="inputButtons">
+                        Summarize
+                      </button>
+
+                      <textarea 
+                        id="manual_input" 
+                        name="manual_input" 
+                        placeholder="Enter your text to Speak/Summarize..."
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                      >
+                      </textarea>
+                    </form>
+                    
+                
+                    
+                    
+                    
                     {/* <button type="button" id="clearTextButton" onClick="document.getElementById('manual_input').value = ''">Clear Text</button> */}
                 </div>
                 
