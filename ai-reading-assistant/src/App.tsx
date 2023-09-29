@@ -21,7 +21,6 @@ function App() {
       console.log(value) 
       
     });
-    // alert(`The name you entered was: ${response}`)
   }
 
   console.log("The response to the text summary query is below") 
