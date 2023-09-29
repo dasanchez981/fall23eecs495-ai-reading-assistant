@@ -24,6 +24,7 @@ html, body{
   height: 1000px;
   /* EXPERIMENTAL WIDTH */
   width: 400px;
+  overflow: scroll;
 }
 
 #sidebar_container{
@@ -35,7 +36,7 @@ html, body{
   padding:10px 13px;
   /* background-color:#D3D9DE; */
   z-index: 99999;
-  overflow: scroll;
+  
 }
 
 #manual_input, #manual_output{
