@@ -10,9 +10,22 @@ const openai = new OpenAI({
 
 export async function summaryCall() {
     const chatCompletion = await openai.chat.completions.create({
-      messages: [{ role: 'user', content: 'How many rainbows are on Earth?' }],
       model: 'gpt-3.5-turbo',
+      messages: [
+        {
+          "role": "system",
+          "content": "Summarize content you are provided with for a second-grade student."
+        },
+        {
+          "role": "user",
+          "content": "Mathematically, a probability is found by taking the square of the absolute value of a complex number, known as a probability amplitude."
+        },
+      ],
+      "temperature": 0,
+      "max_tokens": 512,
     });
+    console.log("The response of the ChatGPT query is below:")
+    console.log(chatCompletion)
     // console.log(chatCompletion.choices[0].message.content);
     // TODO: Revisit if ! is best way to fix, guarantees that return is a string
     return chatCompletion.choices[0].message.content!;
