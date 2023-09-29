@@ -35,6 +35,7 @@ html, body{
   padding:10px 13px;
   /* background-color:#D3D9DE; */
   z-index: 99999;
+  overflow: scroll;
 }
 
 #manual_input, #manual_output{
@@ -44,9 +45,10 @@ html, body{
 
 #input_with_buttons{
   width: 300px;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 3fr 1fr;
+  display: flex;
+  flex-direction: column;
+  /* grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 3fr 1fr; */
   row-gap: 0px;
   column-gap: 0;
 }

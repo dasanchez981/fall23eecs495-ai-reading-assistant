@@ -7,14 +7,27 @@ import { summaryCall } from './components/SummaryCall'
 
 function App() {
   const [text, setText] = useState("")
+  const [response, setResponse] = useState("")
 
   console.log("This is the text in the box")
   console.log(text)
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    alert(`The name you entered was: ${text}`)
+    
+    // setResponse(summaryCall())
+    summaryCall().then((value) => {
+      setResponse(value)
+      console.log("The value of the text summary query is below") 
+      console.log(value) 
+      
+    });
+    // alert(`The name you entered was: ${response}`)
   }
+
+  console.log("The response to the text summary query is below") 
+  console.log(response);
+  
 
   return (
     <>
@@ -27,15 +40,15 @@ function App() {
                 <h4>Please insert text into the text block below:</h4>
                 <div id="input_with_buttons">
                     {/* <!-- On button click, call the API necessary to do the function, pull element value to upload the text through JS--> */}
-                    <button type="button" id="textToSpeech" className="inputButtons">Text to Speech</button>
+                    {/* <button type="button" id="textToSpeech" className="inputButtons">Text to Speech</button> */}
                     
                     
                     <form onSubmit={handleSubmit}>
                       <input type="submit" />
 
-                      <button onClick={() => summaryCall()} type="button" id="summarization" className="inputButtons">
+                      {/* <button onClick={() => } type="button" id="summarization" className="inputButtons">
                         Summarize
-                      </button>
+                      </button> */}
 
                       <textarea 
                         id="manual_input" 
@@ -47,21 +60,20 @@ function App() {
                       </textarea>
                     </form>
                     
-                
-                    
-                    
-                    
+                    <br></br>
+                    <div>
+                      <h4>The resulting output will be displayed below:</h4>
+                      <textarea 
+                        id="manual_output" 
+                        name="manual_output" 
+                        placeholder="Result from AI summarization..."
+                        value={response}
+                        >
+                      </textarea>
+                  </div>
                     {/* <button type="button" id="clearTextButton" onClick="document.getElementById('manual_input').value = ''">Clear Text</button> */}
-                </div>
-                
-            </div>
-
-            <br></br>
-
-            <div>
-                <h4>The resulting output will be displayed below:</h4>
-                <textarea id="manual_output" name="manual_output" placeholder="Result from AI summarization..."></textarea>
-            </div>
+                </div>  
+            </div>   
         </div>   
     </>
   )

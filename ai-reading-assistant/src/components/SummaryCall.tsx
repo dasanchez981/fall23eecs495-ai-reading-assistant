@@ -13,8 +13,9 @@ export async function summaryCall() {
       messages: [{ role: 'user', content: 'How many rainbows are on Earth?' }],
       model: 'gpt-3.5-turbo',
     });
-    console.log(chatCompletion.choices[0].message);
-    return chatCompletion.choices[0].message;
+    // console.log(chatCompletion.choices[0].message.content);
+    // TODO: Revisit if ! is best way to fix, guarantees that return is a string
+    return chatCompletion.choices[0].message.content!;
 }
   
 
