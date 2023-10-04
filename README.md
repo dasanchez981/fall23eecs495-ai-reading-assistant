@@ -14,6 +14,8 @@
 ```cd ./ai-reading-assistant```
 ```npm install```
 ```npm install openai@^4.0.0```
+```npm install aws-sdk```
+```npm install react-text-selection-popover```
 ```npm run build```
 
 4) To load "dist" folder as a chrome extension:
