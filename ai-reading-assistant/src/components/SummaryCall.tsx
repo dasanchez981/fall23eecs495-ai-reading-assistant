@@ -26,7 +26,7 @@ export async function summaryCall(text: string) {
       ],
       "temperature": 0,
       // TODO: Need to set this based on the number of input tokens to restrict length of summary
-      "max_tokens": 100,
+      "max_tokens": 1000,
     });
     console.log("The response of the ChatGPT query is below:")
     console.log(chatCompletion)
