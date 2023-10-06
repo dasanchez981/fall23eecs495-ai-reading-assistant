@@ -4,7 +4,8 @@ import { useState } from 'react'
 import './App.css'
 import { summaryCall } from './components/SummaryCall'
 import { speakText } from './components/SpeakText'
-
+import AudioPlayer from 'react-h5-audio-player';
+import 'react-h5-audio-player/lib/styles.css';
 
 function App() {
   const [text, setText] = useState("")
@@ -66,7 +67,7 @@ function App() {
                         id="manual_input" 
                         name="manual_input" 
                         placeholder="Enter your text to Speak..."
-                        value={text}
+                        value={speechText}
                         onChange={(e) => setSpeechText(e.target.value)}
                       >
                       </textarea>
@@ -74,8 +75,20 @@ function App() {
             </div>
             <audio id="audioPlayback" controls>
               <source id="audioSource" type="audio/mp3" src={speechURL}></source>
+              document.getElementById("audioPlayback").load(); // why no complain?
             </audio>
-
+            <AudioPlayer
+              autoPlay
+              src={speechURL}
+              showSkipControls={true}
+              showJumpControls={true}
+              showFilledProgress={true}
+              showFilledVolume={true}
+              hasDefaultKeyBindings={true}
+              autoPlayAfterSrcChange={true}
+              // other props here
+              // TODO: need more? need to customize...
+            />
             {/* Text Summarization Button */}
             <div>
                 <h4>Please insert text into the text block below:</h4>
