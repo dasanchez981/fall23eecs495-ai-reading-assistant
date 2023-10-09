@@ -14,13 +14,13 @@
 ```cd ./ai-reading-assistant```
 ```npm install```
 ```npm install openai@^4.0.0```
-```npm install aws-sdk```
 ```npm install react-text-selection-popover```
 ```npm install react-h5-audio-player```
 ```npm install @aws-sdk/client-cognito-identity``
 ```npm install @aws-sdk/credential-provider-cognito-identity```
 ```npm install @aws-sdk/client-polly```
 ```npm install @aws-sdk/polly-request-presigner```
+```npm install --save @types/chrome```
 ```npm run build```
 
 4) To load "dist" folder as a chrome extension:
