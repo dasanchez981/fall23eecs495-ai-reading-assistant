@@ -13,6 +13,7 @@
     "@aws-sdk/client-polly": "^3.425.0",
     "@aws-sdk/credential-provider-cognito-identity": "^3.425.0",
     "@aws-sdk/polly-request-presigner": "^3.425.0",
+    "@types/chrome": "^0.0.246",
     "aws-sdk": "^2.1470.0",
     "dotenv": "^16.3.1",
     "openai": "^4.10.0",

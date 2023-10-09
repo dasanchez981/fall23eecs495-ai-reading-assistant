@@ -1,6 +1,4 @@
 import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
 import './App.css'
 import { summaryCall } from './components/SummaryCall'
 import { speakText } from './components/SpeakText'
@@ -10,12 +8,21 @@ import 'react-h5-audio-player/lib/styles.css';
 function App() {
   const [text, setText] = useState("")
   const [speechText, setSpeechText] = useState("")
+  // const [highlightText, setHighlightText] = useState("")
   const [speechURL, setSpeechURL] = useState("")
   const [response, setResponse] = useState("")
 
-  console.log("This is the text in the box")
-  console.log(text)
+  // Chrome background listener
+  chrome.runtime.onMessage.addListener((message) => {
+    if (message.action === 'setText') {
+      // Set the text and speechText values here
+      console.log("Received message from Chrome!")
+      setText(message.text);
+      setSpeechText(message.text);
+    }
+  });
 
+  // Function to handle summaries
   const handleSumSubmit = (event: any) => {
     event.preventDefault();
     
@@ -27,6 +34,7 @@ function App() {
     });
   }
 
+   // Function to handle text to speech
   const handleTTSSubmit = (event: any) => {
     event.preventDefault();
     
@@ -36,19 +44,37 @@ function App() {
       console.log(value) 
   
     });
-  
   }
 
-  console.log("The response to the text summary query is below") 
-  console.log(response);
-  
+  const onclick = async () => {
+    let [tab] = await chrome.tabs.query({active: true})
+    if (tab.url?.startsWith("chrome://")) return undefined;
+    // This can't access React variables so need to send through Chrome API
+    chrome.scripting.executeScript({
+      target: { tabId: tab.id! },
+      func: () => {
+        const highlighted = window.getSelection()?.toString()
+        if (highlighted != null) {
+          // alert(highlighted)
+          // Send the highlighted text to the background script
+          chrome.runtime.sendMessage({ action: 'setText', text: highlighted });
+        }
+      }
+    });
+  }
 
+  console.log("Text to be analyzed")
+  console.log(text)
+  console.log(speechText)
+    
   return (
     <>
       <div id="sidebar_container">
             <header>
                 <h1>AI-Powered Reading Assistant (AIRA)</h1>
             </header>
+            <br></br>
+            <button onClick={onclick}>Transfer Highlighted Text</button>
             <br></br>
             {/* Text to Speech Button */}
             <div id="textToSynth">
@@ -57,7 +83,7 @@ function App() {
               {/* <p id="result">Enter text above then click Synthesize</p> */}
 
               <form onSubmit={handleTTSSubmit}>
-                      <input type="submit" />
+                      <input type="submit" value="Speak"/>
 
                       {/* <button onClick={() => } type="button" id="summarization" className="inputButtons">
                         Summarize
@@ -71,7 +97,7 @@ function App() {
                         onChange={(e) => setSpeechText(e.target.value)}
                       >
                       </textarea>
-                    </form>
+              </form>
             </div>
             <audio id="audioPlayback" controls>
               <source id="audioSource" type="audio/mp3" src={speechURL}></source>
@@ -98,7 +124,7 @@ function App() {
                     
                     
                     <form onSubmit={handleSumSubmit}>
-                      <input type="submit" />
+                      <input type="submit" value="Summarize"/>
 
                       {/* <button onClick={() => } type="button" id="summarization" className="inputButtons">
                         Summarize
