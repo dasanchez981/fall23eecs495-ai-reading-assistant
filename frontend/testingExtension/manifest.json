@@ -4,15 +4,9 @@
     "description": "Base Level Extension",
     "version": "1.0",
     "action": {
-      "default_popup": "index.html",
+      "default_title": "Action Button",
       "default_icon": "logo.png"
     },
-    "content_scripts": [
-      {
-        "matches": ["https://*/*"],
-        "js": ["sidepop.js"]
-      }
-    ],
     "web_accessible_resources": [
       {
         "resources": ["index.html"],
@@ -25,6 +19,10 @@
     ],
     "permissions": [
       "activeTab",
-      "scripting"
-    ]
+      "scripting",
+      "tabs"
+    ],
+    "background":{
+      "service_worker": "service-worker.js"
+    }
   }
