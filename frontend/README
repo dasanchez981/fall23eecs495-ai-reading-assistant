@@ -5,3 +5,9 @@ HTML and CSS to create the popup, the "testingExtension" folder is what was used
 - Popup will appear on the page even before the extension is clicked, it will appear as soon as the document loads
 - Popup can sometimes inherit styles from the main web page causing it to look weird
 - Popup sidebar will currently block the left hand side of the screen when it appears due to position style
+
+as of 10/9/23 commit:
+- The extension now appears as a sidebar popup when the extension tab is clicked
+Known errors:
+- Some webpages have their headers appear as absolute which causes a portion of the header
+  appear behind the sidebar popup. Could be resolved with some further javascript, or can be ignored
