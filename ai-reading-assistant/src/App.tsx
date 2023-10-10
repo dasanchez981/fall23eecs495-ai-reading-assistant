@@ -7,7 +7,7 @@ import 'react-h5-audio-player/lib/styles.css';
 
 function App() {
   const [text, setText] = useState("")
-  const [speechText, setSpeechText] = useState("")
+  // const [speechText, setSpeechText] = useState("")
   // const [highlightText, setHighlightText] = useState("")
   const [speechURL, setSpeechURL] = useState("")
   const [response, setResponse] = useState("")
@@ -23,16 +23,13 @@ function App() {
 
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
   
-    
-  
-
   // Chrome background listener
   chrome.runtime.onMessage.addListener((message) => {
     if (message.action === 'setText') {
       // Set the text and speechText values here
       console.log("Received message from Chrome!")
       setText(message.text);
-      setSpeechText(message.text);
+      // setSpeechText(message.text);
     }
   });
 
@@ -48,17 +45,35 @@ function App() {
     });
   }
 
-   // Function to handle text to speech
+  // Function to handle text to speech
   const handleTTSSubmit = (event: any) => {
     event.preventDefault();
     
-    speakText(speechText).then((value) => {
+    speakText(text).then((value) => {
       setSpeechURL(value)
+      
       console.log("The url of the speak text query is below") 
-      console.log(value) 
+      console.log(value)
   
     });
   }
+
+  const onSubmit = (e: any)  => {
+    e.preventDefault();
+    // console.log(e.target.btn.value);
+    // console.log(e.target.text.value); //??
+    // console.log(e.state.value); //??
+    console.log("The value of the input is below:")
+    console.log(e)
+    //console.log(e.target[0].value)
+    console.log(e.nativeEvent.submitter.value)
+    if (e.nativeEvent.submitter.value === "Speak") {
+      handleTTSSubmit(e);
+    }
+    else if(e.nativeEvent.submitter.value === "Summarize"){
+      handleSumSubmit(e);
+    }
+  };
 
   const onclick = async () => {
     let [tab] = await chrome.tabs.query({active: true})
@@ -81,7 +96,9 @@ function App() {
 
   console.log("Text to be analyzed")
   console.log(text)
-  console.log(speechText)
+  console.log("The speech URL is set below:")
+  console.log(speechURL)
+  // console.log(speechText)
     
   return (
     <>
@@ -93,55 +110,14 @@ function App() {
             <button onClick={onclick}>Transfer Highlighted Text</button>
             <br></br>
             {/* Text to Speech Button */}
-            <div id="textToSynth">
+            <div id="textToSynth">  
               {/* <input autofocus size="23" type="text" id="textEntry" value="It's very good to meet you."/> */}
               {/* <button class="btn default" onClick="speakText()">Synthesize</button> */}
               {/* <p id="result">Enter text above then click Synthesize</p> */}
 
-              <form onSubmit={handleTTSSubmit}>
+              <form onSubmit={onSubmit}>
                       <input type="submit" value="Speak"/>
-
-                      {/* <button onClick={() => } type="button" id="summarization" className="inputButtons">
-                        Summarize
-                      </button> */}
-
-                      <textarea 
-                        id="manual_input" 
-                        name="manual_input" 
-                        placeholder="Enter your text to Speak..."
-                        value={speechText}
-                        onChange={(e) => setSpeechText(e.target.value)}
-                      >
-                      </textarea>
-              </form>
-            </div>
-            <audio id="audioPlayback" controls>
-              <source id="audioSource" type="audio/mp3" src={speechURL}></source>
-              document.getElementById("audioPlayback").load(); // why no complain?
-            </audio>
-            <AudioPlayer
-              autoPlay
-              src={speechURL}
-              showSkipControls={true}
-              showJumpControls={true}
-              showFilledProgress={true}
-              showFilledVolume={true}
-              hasDefaultKeyBindings={true}
-              autoPlayAfterSrcChange={true}
-              // other props here
-              // TODO: need more? need to customize...
-            />
-            {/* Text Summarization Button */}
-            <div>
-                <h4>Please insert text into the text block below:</h4>
-                <div id="input_with_buttons">
-                    {/* <!-- On button click, call the API necessary to do the function, pull element value to upload the text through JS--> */}
-                    {/* <button type="button" id="textToSpeech" className="inputButtons">Text to Speech</button> */}
-                    
-                    
-                    <form onSubmit={handleSumSubmit}>
                       <input type="submit" value="Summarize"/>
-
                       {/* <button onClick={() => } type="button" id="summarization" className="inputButtons">
                         Summarize
                       </button> */}
@@ -154,22 +130,47 @@ function App() {
                         onChange={(e) => setText(e.target.value)}
                       >
                       </textarea>
-                    </form>
-                    
-                    <br></br>
-                    <div>
-                      <h4>The resulting output will be displayed below:</h4>
-                      <textarea 
-                        id="manual_output" 
-                        name="manual_output" 
-                        placeholder="Result from AI summarization..."
-                        value={response}
-                        >
-                      </textarea>
-                  </div>
-                    {/* <button type="button" id="clearTextButton" onClick="document.getElementById('manual_input').value = ''">Clear Text</button> */}
-                </div>  
-            </div>   
+              </form>
+            </div>
+            {/*<audio id="audioPlayback" controls>
+              <source id="audioSource" type="audio/mp3" src={speechURL}></source>
+              {/* document.getElementById("audioPlayback").load(); // why no complain? */}
+            {/* </audio> */}
+            <div id="audio_container">
+              <AudioPlayer 
+                autoPlay
+                src={speechURL}
+                showSkipControls={false}
+                showJumpControls={true}
+                showFilledProgress={true}
+                showFilledVolume={false}
+                hasDefaultKeyBindings={false}
+                autoPlayAfterSrcChange={false}
+                style={{
+                  backgroundColor: 'black',
+                  border: '1px solid #ccc',
+                  padding: '10px',
+                  width: '300px',
+                  borderRadius: '5px',
+                  // Add more inline styles here
+                }}
+                // other props here
+                // TODO: need more? need to customize...
+              />
+            </div>
+  
+            <br></br>
+            <div>
+              <h4>AI generated text summary:</h4>
+              <textarea 
+                id="manual_output" 
+                name="manual_output" 
+                placeholder="Result from AI summarization..."
+                value={response}
+                >
+              </textarea>
+            </div>
+              {/* <button type="button" id="clearTextButton" onClick="document.getElementById('manual_input').value = ''">Clear Text</button> */}
         </div>   
     </>
   )
