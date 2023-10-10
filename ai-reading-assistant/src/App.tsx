@@ -130,7 +130,8 @@ function App() {
             </div>
   
             <div>
-              <h4>AI-Generated Summary:</h4>
+              <br></br>
+              <h5>AI-Generated Summary:</h5>
               <textarea 
                 id="manual_output" 
                 name="manual_output" 
