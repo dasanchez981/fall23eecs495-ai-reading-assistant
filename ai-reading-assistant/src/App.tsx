@@ -4,22 +4,13 @@ import { summaryCall } from './components/SummaryCall'
 import { speakText } from './components/SpeakText'
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
+import Button from 'react-bootstrap/Button';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [text, setText] = useState("")
-  // const [speechText, setSpeechText] = useState("")
-  // const [highlightText, setHighlightText] = useState("")
   const [speechURL, setSpeechURL] = useState("")
   const [response, setResponse] = useState("")
-
-  // chrome.action.onClicked.addListener((tab)=>{
-  //   chrome.scripting.executeScript({
-  //       target: { tabId: tab.id! },
-  //       func: () => {
-  //         alert("hello!")
-  //       }
-  //   });
-  // });
 
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
   
@@ -60,12 +51,8 @@ function App() {
 
   const onSubmit = (e: any)  => {
     e.preventDefault();
-    // console.log(e.target.btn.value);
-    // console.log(e.target.text.value); //??
-    // console.log(e.state.value); //??
     console.log("The value of the input is below:")
     console.log(e)
-    //console.log(e.target[0].value)
     console.log(e.nativeEvent.submitter.value)
     if (e.nativeEvent.submitter.value === "Speak") {
       handleTTSSubmit(e);
@@ -92,35 +79,25 @@ function App() {
     });
   }
 
-
-
   console.log("Text to be analyzed")
   console.log(text)
   console.log("The speech URL is set below:")
   console.log(speechURL)
-  // console.log(speechText)
     
   return (
     <>
       <div id="sidebar_container">
             <header>
-                <h1>AI-Powered Reading Assistant (AIRA)</h1>
+                <h2>AI-Powered Reading Assistant (AIRA)</h2>
             </header>
             <br></br>
-            <button onClick={onclick}>Transfer Highlighted Text</button>
+            <Button onClick={onclick} variant="warning" id="highlight">Transfer Highlighted Text</Button>
             <br></br>
-            {/* Text to Speech Button */}
             <div id="textToSynth">  
-              {/* <input autofocus size="23" type="text" id="textEntry" value="It's very good to meet you."/> */}
-              {/* <button class="btn default" onClick="speakText()">Synthesize</button> */}
-              {/* <p id="result">Enter text above then click Synthesize</p> */}
 
               <form onSubmit={onSubmit}>
-                      <input type="submit" value="Speak"/>
+                      <input type="submit" value="Speak" id="speakbutton"/>
                       <input type="submit" value="Summarize"/>
-                      {/* <button onClick={() => } type="button" id="summarization" className="inputButtons">
-                        Summarize
-                      </button> */}
 
                       <textarea 
                         id="manual_input" 
@@ -132,10 +109,6 @@ function App() {
                       </textarea>
               </form>
             </div>
-            {/*<audio id="audioPlayback" controls>
-              <source id="audioSource" type="audio/mp3" src={speechURL}></source>
-              {/* document.getElementById("audioPlayback").load(); // why no complain? */}
-            {/* </audio> */}
             <div id="audio_container">
               <AudioPlayer 
                 autoPlay
@@ -147,21 +120,17 @@ function App() {
                 hasDefaultKeyBindings={false}
                 autoPlayAfterSrcChange={false}
                 style={{
-                  backgroundColor: 'black',
+                  backgroundColor: 'white',
                   border: '1px solid #ccc',
                   padding: '10px',
                   width: '300px',
                   borderRadius: '5px',
-                  // Add more inline styles here
                 }}
-                // other props here
-                // TODO: need more? need to customize...
               />
             </div>
   
-            <br></br>
             <div>
-              <h4>AI generated text summary:</h4>
+              <h4>AI-Generated Summary:</h4>
               <textarea 
                 id="manual_output" 
                 name="manual_output" 
@@ -170,7 +139,6 @@ function App() {
                 >
               </textarea>
             </div>
-              {/* <button type="button" id="clearTextButton" onClick="document.getElementById('manual_input').value = ''">Clear Text</button> */}
         </div>   
     </>
   )

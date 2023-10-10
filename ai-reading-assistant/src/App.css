@@ -29,9 +29,17 @@ html, body{
   
 }
 
+#speakbutton{
+  margin-right:10px;
+}
+
 #audio_container {
   display: flex;
   justify-content: center;
+}
+
+#highlight {
+  margin-bottom: 30px;
 }
 
 #sidebar_container{
