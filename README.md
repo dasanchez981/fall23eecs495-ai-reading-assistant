@@ -21,6 +21,7 @@
 ```npm install @aws-sdk/client-polly```
 ```npm install @aws-sdk/polly-request-presigner```
 ```npm install --save @types/chrome```
+```npm install react-bootstrap bootstrap```
 ```npm run build```
 
 4) To load "dist" folder as a chrome extension:
