@@ -3,10 +3,16 @@
     "version": "1.0.0",
     "name": "AI Reading Assistant Extension",
     "action": {
-        "default_popup": "index.html"
+        "default_title": "Click to open panel"
+    },
+    "side_panel": {
+        "default_path": "index.html"
     },
     "permissions": [
-        "scripting"
+        "sidePanel",
+        "activeTab",
+        "scripting",
+        "tabs"
     ],
     "host_permissions": [
         "http://*/*",

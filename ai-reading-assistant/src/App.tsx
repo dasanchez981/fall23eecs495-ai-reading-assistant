@@ -12,6 +12,20 @@ function App() {
   const [speechURL, setSpeechURL] = useState("")
   const [response, setResponse] = useState("")
 
+  // chrome.action.onClicked.addListener((tab)=>{
+  //   chrome.scripting.executeScript({
+  //       target: { tabId: tab.id! },
+  //       func: () => {
+  //         alert("hello!")
+  //       }
+  //   });
+  // });
+
+  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
+  
+    
+  
+
   // Chrome background listener
   chrome.runtime.onMessage.addListener((message) => {
     if (message.action === 'setText') {
@@ -63,6 +77,32 @@ function App() {
     });
   }
 
+  const moveSide = async () => {
+    let [tab] = await chrome.tabs.query({active: true})
+    if (tab.url?.startsWith("chrome://")) return undefined;
+    // This can't access React variables so need to send through Chrome API
+    chrome.scripting.executeScript({
+      target: { tabId: tab.id! },
+      func: () => {
+        if(!(document.getElementsByTagName("html")[0].style.marginLeft == "380px")){
+          // let originHTML = document.getElementsByTagName("html")[0].style.marginLeft = "380px";
+          let iframe = document.createElement("iframe");
+          iframe.id = 'extensionSidebar';
+          document.body.appendChild(iframe);
+      
+          let extURL = chrome.runtime.getURL('index.html');
+          iframe.src=extURL;
+          iframe.scrolling="no";
+      
+          // iframe.style="position: fixed; top: 0; height: 100%; left: 0; width: 354px; padding:10px 13px; background-color:#D3D9DE; z-index: 99999; margin: 0;";
+        }else{
+            document.getElementsByTagName("html")[0].style.marginLeft = "0px";
+            document.getElementById('extensionSidebar')!.remove();
+        }
+      }
+    });
+  }
+
   console.log("Text to be analyzed")
   console.log(text)
   console.log(speechText)
@@ -74,6 +114,7 @@ function App() {
                 <h1>AI-Powered Reading Assistant (AIRA)</h1>
             </header>
             <br></br>
+            <button onClick={moveSide}>Move to Side</button>
             <button onClick={onclick}>Transfer Highlighted Text</button>
             <br></br>
             {/* Text to Speech Button */}
