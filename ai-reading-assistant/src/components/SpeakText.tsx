@@ -40,11 +40,12 @@ export async function speakText(text: string) {
 
     // Set the parameters
     const speechParams = {
+        Engine: "neural",
         OutputFormat: "mp3", // For example, 'mp3'
         SampleRate: "16000", // For example, '16000
         Text: text, // The 'speakText' function supplies this value
         TextType: "text", // For example, "text"
-        VoiceId: "Matthew", // For example, "Matthew"
+        VoiceId: "Joanna", // For example, "Matthew"
     };
 
     // Create the Polly service object and presigner object
