@@ -10,6 +10,7 @@ const openai = new OpenAI({
 
 
 export async function summaryCall(text: string) {
+
     const chatCompletion = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       // TODO: Think about using choices[0]["finish_reason"] output to warn user
@@ -17,7 +18,7 @@ export async function summaryCall(text: string) {
       messages: [
         {
           "role": "system",
-          "content": "Provide a concise summary of the text you are provided with for increased human understanding and reading comprehension. Generate no more than 5 sentences. The summary must contain less words than the input text provided by the user."
+          "content": "Provide a concise summary of the text you are provided with for increased human understanding and reading comprehension. Generate no more than 3 sentences. The summary must contain less words than the input text provided by the user."
         },
         {
           "role": "user",
