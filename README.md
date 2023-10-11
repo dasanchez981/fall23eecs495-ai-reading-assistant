@@ -2,7 +2,7 @@
 
 ## EECS 495 Staff: Setup Instructions
 
-Please reach out to 495-ai-reading-assistant@umich.edu via email if there are any questions/issues regarding the instructions below and we will try out best to promptly reply!
+Please reach out to 495-ai-reading-assistant@umich.edu via email if there are any questions/issues regarding the instructions below and we will try our best to promptly reply!
 
 ### Local Machine
 
