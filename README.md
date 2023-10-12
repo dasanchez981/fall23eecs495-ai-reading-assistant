@@ -1,6 +1,6 @@
 # fall23eecs495-ai-reading-assistant
 
-## EECS 495 Staff: Read Here!
+## EECS 495 Staff: Welcome! 
 
 Please contact 495-ai-reading-assistant@umich.edu via email if there are any questions/issues regarding the instructions below and the team will work to resolve!
 
