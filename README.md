@@ -7,10 +7,16 @@ Please reach out to 495-ai-reading-assistant@umich.edu via email if there are an
 ### Chrome Extension Setup
 
 1) Download the dist.tar.gz (shared via Google Drive) to your local machine
+
+![step1](doc/step1.png)
    
 2) Untar the folder and you should have a 'dist' folder available
 
+![step2](doc/step2.png)
+
 3) This dist folder should have the contents shown below
+
+![step3](doc/step3.png)
 
 5) Now go back to your Chrome Web Browser
 
