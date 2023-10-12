@@ -18,20 +18,34 @@ Please reach out to 495-ai-reading-assistant@umich.edu via email if there are an
 
 ![step3](doc/step3.png)
 
-5) Now go back to your Chrome Web Browser
+4) Now go back to your Chrome Web Browser and navigate to chrome://extensions
 
-6) Navigate to chrome://extensions
+![step4](doc/step3.5.png)
 
-6) Toggle "Developer mode" ON in top right hand corner of page
+5) Toggle "Developer mode" ON in top right hand corner of page
 
-7) Click "Load unpacked" button in top left hand corner of page
+6) Click "Load unpacked" button in top left hand corner of page
 
-8) Navigate to the "dist" folder you downloaded earlier and select it
+![step5-6](doc/step4.png)
 
-9) Now you should see "AI-Reading-Assistant" as one of your extensions
+7) Navigate to the "dist" folder you downloaded earlier and select it
 
-10) Click on puzzle piece in the top right hand corner of browser window
+![step7](doc/step5.png)
 
-11) Navigate and go to "AI Reading Assistant Extension" and select pin icon
+8) Now you should see "AI-Reading-Assistant" as one of your extensions
 
-12) Now you can see the extension and interact with it by clicking on its icon
+9) Click on puzzle piece in the top right hand corner of browser window and pin the extension
+
+![step9](doc/step6.png)
+
+10) Click on the 'SidePanel' icon at the top right of your browser toolbar
+
+![step10](doc/step7.png)
+
+11) Click on the 'SidePanel' dropdown and select the extension
+
+![step11](doc/step8.png)
+
+12) Now the browser window should looks as below. Enjoy!
+
+![step12](doc/step9.png)
