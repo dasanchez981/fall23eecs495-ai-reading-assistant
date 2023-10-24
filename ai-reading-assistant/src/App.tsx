@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [text, setText] = useState("")
+  const [audioType, setAudioType] = useState("")
   const [speechURL, setSpeechURL] = useState("")
   const [response, setResponse] = useState("")
 
@@ -37,16 +38,28 @@ function App() {
   }
 
   // Function to handle text to speech
-  const handleTTSSubmit = (event: any) => {
-    event.preventDefault();
-    
-    speakText(text).then((value) => {
-      setSpeechURL(value)
-      
-      console.log("The url of the speak text query is below") 
-      console.log(value)
+  const handleTTSSubmit = (e: any) => {
+    e.preventDefault();
+    if (e.nativeEvent.submitter.value === "Speak") {
+      speakText(text).then((value) => {
+        setSpeechURL(value)
+        setAudioType("Speaking highlighted text...")
   
-    });
+        console.log("The url of the speak text query is below") 
+        console.log(value)
+    
+      });
+    }
+    else if(e.nativeEvent.submitter.value === "SpeakSum"){
+      speakText(response).then((value) => {
+        setSpeechURL(value)
+        setAudioType("Speaking text summary...")
+        console.log("The url of the speak summary text query is below") 
+        console.log(value)
+    
+      });
+    }
+    
   }
 
   const onSubmit = (e: any)  => {
@@ -54,7 +67,7 @@ function App() {
     console.log("The value of the input is below:")
     console.log(e)
     console.log(e.nativeEvent.submitter.value)
-    if (e.nativeEvent.submitter.value === "Speak") {
+    if (e.nativeEvent.submitter.value === "Speak" || e.nativeEvent.submitter.value==="SpeakSum") {
       handleTTSSubmit(e);
     }
     else if(e.nativeEvent.submitter.value === "Summarize"){
@@ -79,10 +92,12 @@ function App() {
     });
   }
 
-  console.log("Text to be analyzed")
-  console.log(text)
-  console.log("The speech URL is set below:")
-  console.log(speechURL)
+  // console.log("Text to be analyzed")
+  // console.log(text)
+  // console.log("The speech URL is set below:")
+  // console.log(speechURL)
+  // console.log("Value of audio type: ")
+  // console.log(audioType)
     
   return (
     <>
@@ -93,22 +108,7 @@ function App() {
             <br></br>
             <Button onClick={onclick} variant="warning" id="highlight">Transfer Highlighted Text</Button>
             <br></br>
-            <div id="textToSynth">  
-
-              <form onSubmit={onSubmit}>
-                      <input type="submit" value="Speak" id="speakbutton"/>
-                      <input type="submit" value="Summarize"/>
-
-                      <textarea 
-                        id="manual_input" 
-                        name="manual_input" 
-                        placeholder="Enter your text to Speak/Summarize..."
-                        value={text}
-                        onChange={(e) => setText(e.target.value)}
-                      >
-                      </textarea>
-              </form>
-            </div>
+            <p id="audioIndicator"> {audioType} </p>
             <div id="audio_container">
               <AudioPlayer 
                 autoPlay
@@ -128,18 +128,37 @@ function App() {
                 }}
               />
             </div>
-  
+            <div id="textToSynth">  
+
+              <form onSubmit={onSubmit}>
+                      <input type="submit" value="Speak" id="speakbutton"/>
+                      <input type="submit" value="Summarize"/>
+
+                      <textarea 
+                        id="manual_input" 
+                        name="manual_input" 
+                        placeholder="Enter your text to Speak/Summarize..."
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                      >
+                      </textarea>
+              </form>
+            </div>
             <div>
               <br></br>
               <h5>AI-Generated Summary:</h5>
-              <textarea 
-                id="manual_output" 
-                name="manual_output" 
-                placeholder="Result from AI summarization..."
-                value={response}
-                >
-              </textarea>
+              <form onSubmit={onSubmit}>
+                <input type="submit" value="SpeakSum" id="speakbutton"/>
+                <textarea 
+                  id="manual_output" 
+                  name="manual_output" 
+                  placeholder="Result from AI summarization..."
+                  value={response}
+                  >
+                </textarea>
+              </form>
             </div>
+            
         </div>   
     </>
   )
