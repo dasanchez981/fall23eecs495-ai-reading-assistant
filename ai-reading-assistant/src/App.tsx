@@ -40,7 +40,7 @@ function App() {
   // Function to handle text to speech
   const handleTTSSubmit = (e: any) => {
     e.preventDefault();
-    if (e.nativeEvent.submitter.value === "Speak") {
+    if (e.nativeEvent.submitter.id === "speakbutton") {
       speakText(text).then((value) => {
         setSpeechURL(value)
         setAudioType("Speaking highlighted text...")
@@ -50,7 +50,7 @@ function App() {
     
       });
     }
-    else if(e.nativeEvent.submitter.value === "SpeakSum"){
+    else if(e.nativeEvent.submitter.id === "speakSumbutton"){
       speakText(response).then((value) => {
         setSpeechURL(value)
         setAudioType("Speaking text summary...")
@@ -67,10 +67,10 @@ function App() {
     console.log("The value of the input is below:")
     console.log(e)
     console.log(e.nativeEvent.submitter.value)
-    if (e.nativeEvent.submitter.value === "Speak" || e.nativeEvent.submitter.value==="SpeakSum") {
+    if (e.nativeEvent.submitter.id === "speakbutton" || e.nativeEvent.submitter.id==="speakSumbutton") {
       handleTTSSubmit(e);
     }
-    else if(e.nativeEvent.submitter.value === "Summarize"){
+    else if(e.nativeEvent.submitter.id === "sumbutton"){
       handleSumSubmit(e);
     }
   };
@@ -131,8 +131,8 @@ function App() {
             <div id="textToSynth">  
 
               <form onSubmit={onSubmit}>
-                      <input type="submit" value="Speak" id="speakbutton"/>
-                      <input type="submit" value="Summarize"/>
+                      <input type="submit" value="Speak Text" id="speakbutton"/>
+                      <input type="submit" value="Summarize" id="sumbutton"/>
 
                       <textarea 
                         id="manual_input" 
@@ -148,7 +148,7 @@ function App() {
               <br></br>
               <h5>AI-Generated Summary:</h5>
               <form onSubmit={onSubmit}>
-                <input type="submit" value="SpeakSum" id="speakbutton"/>
+                <input type="submit" value="Speak Summary" id="speakSumbutton"/>
                 <textarea 
                   id="manual_output" 
                   name="manual_output" 
