@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "version": "1.0.0",
-    "name": "AI Reading Assistant Extension",
+    "name": "AI Reading Assistant",
     "action": {
         "default_popup": "index.html",
         "default_title": "Click to open panel"
@@ -13,12 +13,16 @@
         "sidePanel",
         "activeTab",
         "scripting",
-        "tabs"
+        "tabs", 
+        "contextMenus"
     ],
     "host_permissions": [
         "http://*/*",
         "https://*/*"
     ],
+    "background": {
+        "service_worker": "service-worker.js"
+    },
     "icons": {
         "32": "icon.png"
     }
