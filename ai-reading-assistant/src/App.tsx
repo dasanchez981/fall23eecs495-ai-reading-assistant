@@ -16,9 +16,9 @@ function App() {
   const [response, setResponse] = useState("")
 
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
-  
-   // Chrome background listener to receive messages from context menu items in service-worker.js
-   chrome.runtime.onMessage.addListener(({ name, data }) => {
+
+  // Chrome background listener to receive messages from context menu items in service-worker.js
+  chrome.runtime.onMessage.addListener(({ name, data }) => {
     if (name === 'summarize-text') {
       console.log("Received message to summarize from service-worker.js!");
       console.log(data)

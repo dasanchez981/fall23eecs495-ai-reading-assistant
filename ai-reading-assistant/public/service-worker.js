@@ -54,6 +54,14 @@ function setupContextMenu() {
     }
   });
 
+  // TODO: Fix bug with having many tabs open causes duplicate messages to be sent out 
+  // probably issue with extension not being limited to specific tab
+  // chrome.runtime.sendMessage may be too general for us
+  // https://developer.chrome.com/docs/extensions/reference/tabs/ can help
+  // Below code can be tried out to fix:
+  // chrome.tabs.sendMessage(tab.id, {action: "write", data: getData()}, function (response) { 
+  //   console.log(response,"!!!!");});
+
   // TODO: Issue-> context menu items appear once installed even when side panel closed
   // Solution: Catch this condition (i.e. when user clicks on summarize) 
   // and alert user with popup to open side panel for context menu functionality
