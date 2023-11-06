@@ -23,7 +23,7 @@ function setupContextMenu() {
   
   // Ensures clicking on icon leads to extension opening in sidePanel
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
-  
+
   // Extension needs to be refreshed to activate any changes here
   chrome.runtime.onInstalled.addListener(() => {
     console.log("Installed extension")
@@ -31,30 +31,49 @@ function setupContextMenu() {
   });
 
   // Triggers whenever a context menu item is clicked, sends data to App.tsx for functionality
-  chrome.contextMenus.onClicked.addListener((data) => {
+  chrome.contextMenus.onClicked.addListener((data, tab) => {
     console.log("Clicked on context menu item")
-
-    if (data.menuItemId === 'summarize-text') {
-      console.log("Sending message to summarize to App.tsx!")
-      chrome.runtime.sendMessage({
-          name: 'summarize-text',
-          data: { value: data.selectionText }
-      });
-    }
-    else if (data.menuItemId === 'text-to-speech') {
-        console.log("Sending message to speak to App.tsx!")
+    // Open the SidePanel so that message can be received
+    chrome.sidePanel.open({ windowId: tab.windowId })
+    // Pause execution for 10 seconds
+    setTimeout(() => { 
+      // Now only process menu item functionality
+      if (data.menuItemId === 'summarize-text') {
+        console.log("Sending message to summarize to App.tsx!")
         chrome.runtime.sendMessage({
-            name: 'text-to-speech',
+            name: 'summarize-text',
             data: { value: data.selectionText }
         });
-    }
-    else if (data.menuItemId === 'text-focus') {
-        console.log("Sending message to focus text to App.tsx!")
-        chrome.runtime.sendMessage({
-            name: 'text-focus',
-            data: { value: data.selectionText }
-        });
-    }
+      }
+      else if (data.menuItemId === 'text-to-speech') {
+          console.log("Sending message to speak to App.tsx!")
+          chrome.runtime.sendMessage({
+              name: 'text-to-speech',
+              data: { value: data.selectionText }
+          });
+      }
+      else if (data.menuItemId === 'text-focus') {
+          console.log("Sending message to focus text to App.tsx!")
+          chrome.runtime.sendMessage({
+              name: 'text-focus',
+              data: { value: data.selectionText }
+          });
+          // May need unique ids to eliminate span later
+          chrome.scripting.executeScript({
+            target: { tabId: tab.id},
+            func: () => {
+              console.log("executing focus script on webpage");
+              var selection= window.getSelection()?.getRangeAt(0);
+              var selectedText = selection?.extractContents();
+              var span= document.createElement("span"); //this span surrounds the highlighted text
+              span.style.backgroundColor = "yellow";
+              span.appendChild(selectedText);
+              selection?.insertNode(span);
+            }
+          });
+        }
+    }, 5000);
+    console.log('Done pausing execution for 5s'); 
   });
 
   // TODO: Fix bug with having many tabs open causes duplicate messages to be sent out 
