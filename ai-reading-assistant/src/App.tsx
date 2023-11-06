@@ -10,125 +10,132 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // import Form from 'react-bootstrap/Form';
 
 function App() {
-  const [text, setText] = useState("")
-  const [audioType, setAudioType] = useState("")
-  const [speechURL, setSpeechURL] = useState("")
-  const [response, setResponse] = useState("")   
+  const [text, setText] = useState("");
+  const [audioType, setAudioType] = useState("");
+  const [speechURL, setSpeechURL] = useState("");
+  const [response, setResponse] = useState("");
+
+  // TODO: Issues with registration, need to look into
+  //       could be issue with relative path of service worker in manifest.json
+  //       could be manifest.json placement in 'public' folder
+  // need to do some googling with the error we received from the log from webpage when extension is pulled up):
+  // Uncaught (in promise) TypeError: Failed to register a ServiceWorker for scope ('chrome-extension://pplhamfepnchefgdhmdafjfhnajcabhm/public/') with script ('chrome-extension://pplhamfepnchefgdhmdafjfhnajcabhm/public/service-worker.js'): An unknown error occurred when fetching the script.
+
+  // navigator.serviceWorker.register("service-worker.js");
+  // navigator.serviceWorker.ready.then((registration) => {
+  //   registration.active?.postMessage(
+  //     "SidePanel has been opened!",
+  //   );
+  // });
 
   // Chrome background listener to receive messages from context menu items in service-worker.js
   chrome.runtime.onMessage.addListener(({ name, data }) => {
-    if (name === 'summarize-text') {
+    if (name === "summarize-text") {
       console.log("Received message to summarize from service-worker.js!");
-      console.log(data.value)
+      console.log(data.value);
       summaryCall(data.value).then((value) => {
-        setResponse(value)
-        console.log("The value of the text summary query is below") 
-        console.log(value) 
+        setResponse(value);
+        console.log("The value of the text summary query is below");
+        console.log(value);
       });
-    }
-    else if (name === 'text-to-speech') {
-      console.log("Received message to speak from service-worker.js!")
-      console.log(data)
+    } else if (name === "text-to-speech") {
+      console.log("Received message to speak from service-worker.js!");
+      console.log(data);
       speakText(data.value).then((value) => {
-        setSpeechURL(value)
-        setAudioType("Speaking highlighted text...")
-        console.log("The url of the speak text query is below") 
-        console.log(value)
+        setSpeechURL(value);
+        setAudioType("Speaking highlighted text...");
+        console.log("The url of the speak text query is below");
+        console.log(value);
       });
-    }
-    else if (name === 'text-focus') {
-      console.log("Received message to focus text from service-worker.js!")
-      console.log(data)
+    } else if (name === "text-focus") {
+      console.log("Received message to focus text from service-worker.js!");
+      console.log(data);
     }
   });
-  
+
   // Function to handle summaries
   const handleSumSubmit = (event: any) => {
     event.preventDefault();
-    
+
     summaryCall(text).then((value) => {
-      setResponse(value)
-      console.log("The value of the text summary query is below") 
-      console.log(value) 
-      
+      setResponse(value);
+      console.log("The value of the text summary query is below");
+      console.log(value);
     });
-  }
+  };
 
   // Function to handle text to speech
   const handleTTSSubmit = (e: any) => {
     e.preventDefault();
     if (e.nativeEvent.submitter.id === "speakbutton") {
       speakText(text).then((value) => {
-        setSpeechURL(value)
-        setAudioType("Speaking highlighted text...")
-  
-        console.log("The url of the speak text query is below") 
-        console.log(value)
-    
-      });
-    }
-    else if(e.nativeEvent.submitter.id === "speakSumbutton"){
-      speakText(response).then((value) => {
-        setSpeechURL(value)
-        setAudioType("Speaking text summary...")
-        console.log("The url of the speak summary text query is below") 
-        console.log(value)
-    
-      });
-    }
-    
-  }
+        setSpeechURL(value);
+        setAudioType("Speaking highlighted text...");
 
-  const onSubmit = (e: any)  => {
-    e.preventDefault();
-    console.log("The value of the input is below:")
-    console.log(e)
-    console.log(e.nativeEvent.submitter.value)
-    if (e.nativeEvent.submitter.id === "speakbutton" || e.nativeEvent.submitter.id==="speakSumbutton") {
-      handleTTSSubmit(e);
+        console.log("The url of the speak text query is below");
+        console.log(value);
+      });
+    } else if (e.nativeEvent.submitter.id === "speakSumbutton") {
+      speakText(response).then((value) => {
+        setSpeechURL(value);
+        setAudioType("Speaking text summary...");
+        console.log("The url of the speak summary text query is below");
+        console.log(value);
+      });
     }
-    else if(e.nativeEvent.submitter.id === "sumbutton"){
+  };
+
+  const onSubmit = (e: any) => {
+    e.preventDefault();
+    console.log("The value of the input is below:");
+    console.log(e);
+    console.log(e.nativeEvent.submitter.value);
+    if (
+      e.nativeEvent.submitter.id === "speakbutton" ||
+      e.nativeEvent.submitter.id === "speakSumbutton"
+    ) {
+      handleTTSSubmit(e);
+    } else if (e.nativeEvent.submitter.id === "sumbutton") {
       handleSumSubmit(e);
     }
   };
 
   // This is experimental approach to implementing toolbar functionality
-  // Right now the 'Activate Toolbar' button has to be pressed in order for the toolbar 
+  // Right now the 'Activate Toolbar' button has to be pressed in order for the toolbar
   // listener to be activated
   const onclick = async () => {
-    let [tab] = await chrome.tabs.query({active: true})
+    let [tab] = await chrome.tabs.query({ active: true });
     if (tab.url?.startsWith("chrome://")) return undefined;
-    console.log("Toolbar has been activated")
+    console.log("Toolbar has been activated");
     // This can't access React variables so need to send through Chrome API
     chrome.scripting.executeScript({
       target: { tabId: tab.id! },
       func: () => {
-        console.log("Executing script on webpage to add listener")
+        console.log("Executing script on webpage to add listener");
         document.addEventListener("click", () => {
-          const selection = window.getSelection()
-          const highlighted = window.getSelection()?.toString()
-          console.log("Within toolbar listener")
+          const selection = window.getSelection();
+          const highlighted = window.getSelection()?.toString();
+          console.log("Within toolbar listener");
           //console.log(highlighted);
-          if(highlighted != '') {
-            console.log("If shown then activate toolbar works!")
+          if (highlighted != "") {
+            console.log("If shown then activate toolbar works!");
             console.log("Selection location: ");
-            console.log(selection?.getRangeAt(0))
-            console.log("bounding rectangle:")
-            console.log(selection?.getRangeAt(0).getBoundingClientRect())
-            
-            
+            console.log(selection?.getRangeAt(0));
+            console.log("bounding rectangle:");
+            console.log(selection?.getRangeAt(0).getBoundingClientRect());
+
             // Both methods may need to extend an HTMLElement and then appended like in iFrame method
             // Extending HTML element is involved and requires a lot of code and coordination
             // In consideration but need to think about, see https://github.com/MariusBongarts/medium-highlighter
             // for example of what we might have to do
-            
+
             // *** Popover Method***
             // <Popover>
             //   <div className="popover">
             //       <b>B</b>
             //   </div>
             // </Popover>
-            
+
             // *** Manual IFrame Method ***
             // var rect = selection?.getRangeAt(0).getBoundingClientRect();
             // var elem = document.createElement("iframe");
@@ -174,10 +181,10 @@ function App() {
             }*/
           }
         });
-      }
+      },
     });
-  }
-    
+  };
+
   return (
     <>
       <div id="sidebar_container">
