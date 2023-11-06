@@ -21,6 +21,9 @@ function setupContextMenu() {
     });
   }
   
+  // Ensures clicking on icon leads to extension opening in sidePanel
+  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
+  
   // Extension needs to be refreshed to activate any changes here
   chrome.runtime.onInstalled.addListener(() => {
     console.log("Installed extension")
