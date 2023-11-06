@@ -6,17 +6,17 @@ function setupContextMenu() {
     console.log("Added context items to menu")
     chrome.contextMenus.create({
       id: 'summarize-text',
-      title: '🍆 Summarize 📚📝',
+      title: 'Summarize 📚📝',
       contexts: ['selection']
     });
     chrome.contextMenus.create({
         id: 'text-to-speech',
-        title: '🍆 Speak 🗣️💬🔊',
+        title: 'Speak 🗣️💬🔊',
         contexts: ['selection']
     });
     chrome.contextMenus.create({
         id: 'text-focus',
-        title: '🍆 Text Focus 👀🔍',
+        title: 'Text Focus 👀🔍',
         contexts: ['selection']
     });
   }

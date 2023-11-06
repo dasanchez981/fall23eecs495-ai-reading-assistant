@@ -13,7 +13,7 @@ function App() {
   const [text, setText] = useState("")
   const [audioType, setAudioType] = useState("")
   const [speechURL, setSpeechURL] = useState("")
-  const [response, setResponse] = useState("")
+  const [response, setResponse] = useState("")   
 
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
 
@@ -21,11 +21,22 @@ function App() {
   chrome.runtime.onMessage.addListener(({ name, data }) => {
     if (name === 'summarize-text') {
       console.log("Received message to summarize from service-worker.js!");
-      console.log(data)
+      console.log(data.value)
+      summaryCall(data.value).then((value) => {
+        setResponse(value)
+        console.log("The value of the text summary query is below") 
+        console.log(value) 
+      });
     }
     else if (name === 'text-to-speech') {
       console.log("Received message to speak from service-worker.js!")
       console.log(data)
+      speakText(data.value).then((value) => {
+        setSpeechURL(value)
+        setAudioType("Speaking highlighted text...")
+        console.log("The url of the speak text query is below") 
+        console.log(value)
+      });
     }
     else if (name === 'text-focus') {
       console.log("Received message to focus text from service-worker.js!")
