@@ -29,7 +29,7 @@ function setupContextMenu() {
     console.log("Installed extension")
     setupContextMenu();
   });
-  
+
   // Triggers whenever a context menu item is clicked, sends data to App.tsx for functionality
   chrome.contextMenus.onClicked.addListener((data, tab) => {
     console.log("Clicked on context menu item")
@@ -62,12 +62,32 @@ function setupContextMenu() {
           target: { tabId: tab.id},
           func: () => {
             console.log("executing focus script on webpage");
-            var selection= window.getSelection()?.getRangeAt(0);
-            var selectedText = selection?.extractContents();
-            var span= document.createElement("span"); //this span surrounds the highlighted text
+            // var selection= window.getSelection()?.getRangeAt(0);
+            // var selectedText = selection?.extractContents();
+            // var span= document.createElement("span"); //this span surrounds the highlighted text
+            // span.style.backgroundColor = "yellow";
+            // span.appendChild(selectedText);
+            // selection?.insertNode(span);
+
+            // Issue with multiple spans of same id, id needs to be unique
+            const selectedText = window.getSelection();
+            const selectedRange = selectedText.getRangeAt(0);
+            let span = document.createElement("span");
+            span.id = 'ancestor';
+            span.appendChild(selectedRange.extractContents());
+            selectedRange.insertNode(span)
+            var ancestor = document.querySelector('#ancestor');
+            var descendants = ancestor.querySelectorAll('*');
+            
+            for (var i = 0; i < descendants.length; i++) {
+              // console.log(descendants[i].getElementsByTagName('div')) //trying to filter elements that we don't want to highlight (e.g. div elements)
+              // Maybe filter by tag??
+              console.log("Going through descendants now!!")
+              console.log(descendants[i]);
+              descendants[i].style.backgroundColor = 'yellow'; // Your styles here
+            }
+            
             span.style.backgroundColor = "yellow";
-            span.appendChild(selectedText);
-            selection?.insertNode(span);
           }
         });
       }
