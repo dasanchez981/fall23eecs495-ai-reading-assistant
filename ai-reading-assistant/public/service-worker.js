@@ -29,12 +29,7 @@ function setupContextMenu() {
     console.log("Installed extension")
     setupContextMenu();
   });
-
-  // This must be in `service-worker.js`, listener to see if sidePanel open
-  // addEventListener("message", (event) => {
-  //   console.log(`Message received: ${event.data}`);
-  // });
-
+  
   // Triggers whenever a context menu item is clicked, sends data to App.tsx for functionality
   chrome.contextMenus.onClicked.addListener((data, tab) => {
     console.log("Clicked on context menu item")
@@ -79,7 +74,7 @@ function setupContextMenu() {
     // Expected output: "Success!"
     }, 250);
     // Pause execution for 5 seconds
-    console.log('Done pausing execution for 50ms'); 
+    console.log('Done pausing execution for 250ms'); 
   });
 
   
@@ -91,7 +86,3 @@ function setupContextMenu() {
   // Below code can be tried out to fix:
   // chrome.tabs.sendMessage(tab.id, {action: "write", data: getData()}, function (response) { 
   //   console.log(response,"!!!!");});
-
-  // TODO: Issue-> context menu items appear once installed even when side panel closed
-  // Solution: Catch this condition (i.e. when user clicks on summarize) 
-  // and alert user with popup to open side panel for context menu functionality

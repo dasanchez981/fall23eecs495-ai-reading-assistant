@@ -4,7 +4,6 @@ import { summaryCall } from './components/SummaryCall'
 import { speakText } from './components/SpeakText'
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
-import Button from 'react-bootstrap/Button';
 // import Popover from "react-text-selection-popover";
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import Form from 'react-bootstrap/Form';
@@ -14,19 +13,6 @@ function App() {
   const [audioType, setAudioType] = useState("");
   const [speechURL, setSpeechURL] = useState("");
   const [response, setResponse] = useState("");
-
-  // TODO: Issues with registration, need to look into
-  //       could be issue with relative path of service worker in manifest.json
-  //       could be manifest.json placement in 'public' folder
-  // need to do some googling with the error we received from the log from webpage when extension is pulled up):
-  // Uncaught (in promise) TypeError: Failed to register a ServiceWorker for scope ('chrome-extension://pplhamfepnchefgdhmdafjfhnajcabhm/public/') with script ('chrome-extension://pplhamfepnchefgdhmdafjfhnajcabhm/public/service-worker.js'): An unknown error occurred when fetching the script.
-
-  // navigator.serviceWorker.register("service-worker.js");
-  // navigator.serviceWorker.ready.then((registration) => {
-  //   registration.active?.postMessage(
-  //     "SidePanel has been opened!",
-  //   );
-  // });
 
   // Chrome background listener to receive messages from context menu items in service-worker.js
   chrome.runtime.onMessage.addListener(({ name, data }) => {
@@ -100,90 +86,6 @@ function App() {
     }
   };
 
-  // This is experimental approach to implementing toolbar functionality
-  // Right now the 'Activate Toolbar' button has to be pressed in order for the toolbar
-  // listener to be activated
-  const onclick = async () => {
-    let [tab] = await chrome.tabs.query({ active: true });
-    if (tab.url?.startsWith("chrome://")) return undefined;
-    console.log("Toolbar has been activated");
-    // This can't access React variables so need to send through Chrome API
-    chrome.scripting.executeScript({
-      target: { tabId: tab.id! },
-      func: () => {
-        console.log("Executing script on webpage to add listener");
-        document.addEventListener("click", () => {
-          const selection = window.getSelection();
-          const highlighted = window.getSelection()?.toString();
-          console.log("Within toolbar listener");
-          //console.log(highlighted);
-          if (highlighted != "") {
-            console.log("If shown then activate toolbar works!");
-            console.log("Selection location: ");
-            console.log(selection?.getRangeAt(0));
-            console.log("bounding rectangle:");
-            console.log(selection?.getRangeAt(0).getBoundingClientRect());
-
-            // Both methods may need to extend an HTMLElement and then appended like in iFrame method
-            // Extending HTML element is involved and requires a lot of code and coordination
-            // In consideration but need to think about, see https://github.com/MariusBongarts/medium-highlighter
-            // for example of what we might have to do
-
-            // *** Popover Method***
-            // <Popover>
-            //   <div className="popover">
-            //       <b>B</b>
-            //   </div>
-            // </Popover>
-
-            // *** Manual IFrame Method ***
-            // var rect = selection?.getRangeAt(0).getBoundingClientRect();
-            // var elem = document.createElement("iframe");
-            // document.body.appendChild(elem);
-            // elem.setAttribute("style", "position: fixed; height: 50px; width: 50px; padding:10px 13px; background-color:#D3D9DE; z-index: 99999; margin: 0;");
-            // let element = document.createElement("iframe");
-            // document.body.appendChild(element);
-            // element.setAttribute("style", "position: fixed; top: 0; height: 50px; left: 0; width: 50px; padding:10px 13px; background-color:#D3D9DE; z-index: 99999; margin: 0;");
-            // elem.setAttribute("style",`top: ${rect?.top}`)
-            // elem.setAttribute("style",`left: ${rect?.left}`)
-            //https://stackoverflow.com/questions/1589721/get-selected-text-position-and-place-an-element-next-to-it/1589912#1589912
-            /*var range = selection?.getRangeAt(0).cloneRange()
-            range?.collapse(false)
-            var markerEl = document.createElement("span");
-            markerEl.appendChild( document.createTextNode("\ufeff") );
-            range?.insertNode(markerEl);
-
-            if (markerEl) {
-              // Lazily create element to be placed next to the selection
-              var selectionEl;
-              if (!selectionEl) {
-                  selectionEl = document.createElement("div");
-                  selectionEl.style.border = "solid darkblue 1px";
-                  selectionEl.style.backgroundColor = "lightgoldenrodyellow";
-                  selectionEl.innerHTML = "&lt;- selection";
-                  selectionEl.style.position = "absolute";
-  
-                  document.body.appendChild(selectionEl);
-              }
-              var obj = markerEl;
-              var left = 0, top = 0;
-              do {
-                  left += obj.offsetLeft;
-                  top += obj.offsetTop;
-              } while (obj = obj.offsetParent);
-
-                  // Move the button into place.
-                  // Substitute your jQuery stuff in here
-                  selectionEl.style.left = left + "px";
-                  selectionEl.style.top = top + "px";
-
-                  markerEl.parentNode?.removeChild(markerEl);
-            }*/
-          }
-        });
-      },
-    });
-  };
 
   return (
     <>
@@ -199,9 +101,6 @@ function App() {
                 label="Enable toolbar"
               />
             </Form> */}
-        <Button onClick={onclick} variant="warning" id="highlight">
-          Activate Toolbar (Deprecated)
-        </Button>
         <br></br>
         <p id="audioIndicator"> {audioType} </p>
         {/* TODO: Figure out why audio playback being goofy */}
