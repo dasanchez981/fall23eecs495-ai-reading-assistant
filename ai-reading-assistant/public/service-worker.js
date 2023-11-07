@@ -73,21 +73,33 @@ function setupContextMenu() {
             const selectedText = window.getSelection();
             const selectedRange = selectedText.getRangeAt(0);
             let span = document.createElement("span");
-            span.id = 'ancestor';
+            span.classList.add('ancestor');
             span.appendChild(selectedRange.extractContents());
             selectedRange.insertNode(span)
-            var ancestor = document.querySelector('#ancestor');
-            var descendants = ancestor.querySelectorAll('*');
+            var ancestors = document.querySelectorAll('.ancestor');
             
-            for (var i = 0; i < descendants.length; i++) {
-              // console.log(descendants[i].getElementsByTagName('div')) //trying to filter elements that we don't want to highlight (e.g. div elements)
-              // Maybe filter by tag??
-              console.log("Going through descendants now!!")
-              console.log(descendants[i]);
-              descendants[i].style.backgroundColor = 'yellow'; // Your styles here
-            }
-            
-            span.style.backgroundColor = "yellow";
+            // Iterate through all ancestors
+            for (var j = 0; j < ancestors.length; j++) {
+              
+              // Get descendants of specific ancestor
+              var descendants = ancestors[j].querySelectorAll('*');
+              // Set ancestor span properties
+              // ancestors[j].style.backgroundColor = 'yellow';
+              // ancestors[j].style.fontFamily = 'Comic Sans MS';
+              // ancestors[j].style.fontSize = '12px'; // 2vw
+              ancestors[j].style.lineHeight = '500%';
+
+              // Iterate through all descendants of that ancestor
+              for (var i = 0; i < descendants.length; i++) {
+                console.log("Going through descendants now!!");
+                console.log(descendants[i]);
+                // Set properties of descendant span
+                // descendants[i].style.fontFamily = 'Comic Sans MS'; // Your styles here
+                // descendants[i].style.fontSize = '12px'; // 2vw
+                descendants[i].style.lineHeight = '500%';
+              }
+                // span.style.backgroundColor = "yellow";
+            }; 
           }
         });
       }
