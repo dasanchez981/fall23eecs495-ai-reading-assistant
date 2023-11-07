@@ -94,6 +94,7 @@ function setupContextMenu() {
                 console.log("Going through descendants now!!");
                 console.log(descendants[i]);
                 // Set properties of descendant span
+                // descendants[i].style.backgroundColor = 'yellow';
                 // descendants[i].style.fontFamily = 'Comic Sans MS'; // Your styles here
                 // descendants[i].style.fontSize = '12px'; // 2vw
                 descendants[i].style.lineHeight = '500%';
