@@ -5,8 +5,10 @@ import { speakText } from './components/SpeakText'
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 // import Popover from "react-text-selection-popover";
+// import { AiFillQuestionCircle } from 'react-icons/AiFillQuestionCircle';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import Form from 'react-bootstrap/Form';
+import { Popover, OverlayTrigger } from 'react-bootstrap';
 
 function App() {
   const [text, setText] = useState("");
@@ -86,6 +88,15 @@ function App() {
     }
   };
 
+  // Tooltip at top of UI to help users
+  const help_popover = (
+    <Popover id="help-popup" style={{ zIndex: 9999 }}>
+        <Popover.Body>
+            <p><b> Insert extension instructions here! </b></p>
+        </Popover.Body>
+    </Popover>
+    );
+
 
   return (
     <>
@@ -94,6 +105,13 @@ function App() {
           <h2>AI-Powered Reading Assistant (AIRA)</h2>
         </header>
         <br></br>
+        <div>
+          <OverlayTrigger trigger={["hover", "focus"]} placement="bottom" overlay={help_popover}>
+              <span style={{ cursor: 'pointer' }}>
+                  <p>?</p>
+              </span>
+          </OverlayTrigger>
+          </div>
         {/* <Form>
               <Form.Check // prettier-ignore
                 type="switch"
@@ -101,6 +119,10 @@ function App() {
                 label="Enable toolbar"
               />
             </Form> */}
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
         <br></br>
         <p id="audioIndicator"> {audioType} </p>
         {/* TODO: Figure out why audio playback being goofy */}

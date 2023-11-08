@@ -24,6 +24,7 @@
     "react-bootstrap": "^2.9.0",
     "react-dom": "^18.2.0",
     "react-h5-audio-player": "^3.9.0",
+    "react-icons": "^4.11.0",
     "react-text-selection-popover": "^2.0.2"
   },
   "devDependencies": {
