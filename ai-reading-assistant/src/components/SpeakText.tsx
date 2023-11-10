@@ -40,7 +40,7 @@ export async function speakText(text: string) {
         // Process to convert Polly presigned URL to a blob
         // blob object plays nicely with html/react audio player
         async function downloadPollyAudio(url: string) {
-            
+            // Catch error for invalid input
             try {
               const response = await fetch(url);
               const arrayBuffer = await response.arrayBuffer();

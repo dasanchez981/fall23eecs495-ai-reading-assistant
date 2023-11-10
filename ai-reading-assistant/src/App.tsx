@@ -16,6 +16,8 @@ function App() {
   const [audioType, setAudioType] = useState("");
   const [speechURL, setSpeechURL] = useState("");
   const [response, setResponse] = useState("");
+  const [loadingSum, setLoadingSum] = useState(false);
+  const [loadingSpeech, setLoadingSpeech] = useState(false);
   console.log(speechURL)
 
   // Chrome background listener to receive messages from context menu items in service-worker.js
@@ -23,17 +25,25 @@ function App() {
     if (name === "summarize-text") {
       console.log("Received message to summarize from service-worker.js!");
       console.log(data.value);
+      // Activate loading indicator 
+      setLoadingSum(true)
       summaryCall(data.value).then((value) => {
         setResponse(value);
+        // Deactivate loading indicator
+        setLoadingSum(false)
         console.log("The value of the text summary query is below");
         console.log(value);
       });
     } else if (name === "text-to-speech") {
       console.log("Received message to speak from service-worker.js!");
       console.log(data);
+      // Activate loading indicator 
+      setLoadingSpeech(true)
       speakText(data.value).then((value) => {
         const audioUrl = URL.createObjectURL(value!);
         setSpeechURL(audioUrl);
+        // Deactivate loading indicator
+        setLoadingSpeech(false)
         setAudioType("Speaking highlighted text...");
         console.log("The url of the speak text query is below");
         console.log(value);
@@ -47,9 +57,12 @@ function App() {
   // Function to handle summaries
   const handleSumSubmit = (event: any) => {
     event.preventDefault();
-
+    // Activate loading indicator 
+    setLoadingSum(true)
     summaryCall(text).then((value) => {
       setResponse(value);
+      // Deactivate loading indicator
+      setLoadingSum(false)
       console.log("The value of the text summary query is below");
       console.log(value);
     });
@@ -58,19 +71,28 @@ function App() {
   // Function to handle text to speech
   const handleTTSSubmit = (e: any) => {
     e.preventDefault();
+    // Activate loading indicator 
+    setLoadingSpeech(true)
+
     if (e.nativeEvent.submitter.id === "speakbutton") {
       speakText(text).then((value) => {
         const audioUrl = URL.createObjectURL(value!);
         setSpeechURL(audioUrl);
+        // Deactivate loading indicator
+        setLoadingSpeech(false)
         setAudioType("Speaking highlighted text...");
 
         console.log("The url of the speak text query is below");
         console.log(value);
       });
-    } else if (e.nativeEvent.submitter.id === "speakSumbutton") {
+    } 
+    
+    else if (e.nativeEvent.submitter.id === "speakSumbutton") {
       speakText(response).then((value) => {
         const audioUrl = URL.createObjectURL(value!);
         setSpeechURL(audioUrl);
+        // Deactivate loading indicator
+        setLoadingSpeech(false)
         setAudioType("Speaking text summary...");
         console.log("The url of the speak summary text query is below");
         console.log(value);
@@ -139,7 +161,7 @@ function App() {
                   <p>?</p>
               </span>
           </OverlayTrigger>
-          </div>
+        </div>
         {/* <Form>
               <Form.Check // prettier-ignore
                 type="switch"
@@ -152,27 +174,43 @@ function App() {
         <br></br>
         <br></br>
         <br></br>
-        <p id="audioIndicator"> {audioType} </p>
-        {/* TODO: Figure out why audio playback being goofy */}
-        <div id="audio_container">
-          <AudioPlayer
-            autoPlay
-            src={speechURL}
-            showSkipControls={false}
-            showJumpControls={true}
-            showFilledProgress={true}
-            showFilledVolume={false}
-            hasDefaultKeyBindings={false}
-            autoPlayAfterSrcChange={false}
-            style={{
-              backgroundColor: "white",
-              border: "1px solid #ccc",
-              padding: "10px",
-              width: "300px",
-              borderRadius: "5px",
-            }}
-          />
+        <div>
+          {loadingSpeech ? (
+              <div className="spinner-border" role="status">
+                <span className="sr-only"></span>
+              </div>
+          ) : (
+            <p id="audioIndicator">
+              {audioType}
+            </p>
+          )}
         </div>
+        
+        {/* If no speech is available then hide player from user */}
+        {speechURL ? (
+          <div id="audio_container">
+            <AudioPlayer
+              autoPlay
+              src={speechURL}
+              showSkipControls={false}
+              showJumpControls={true}
+              showFilledProgress={true}
+              showFilledVolume={false}
+              hasDefaultKeyBindings={false}
+              autoPlayAfterSrcChange={false}
+              style={{
+                backgroundColor: "white",
+                border: "1px solid #ccc",
+                padding: "10px",
+                width: "300px",
+                borderRadius: "5px",
+              }}
+            />
+        </div>
+        ) : (
+          <p>Utilize text-to-speech to activate player </p>
+        )}
+
         <div id="textToSynth">
           <form onSubmit={onSubmit}>
             <input type="submit" value="Speak Text" id="speakbutton" />
@@ -190,6 +228,12 @@ function App() {
         <div>
           <br></br>
           <h5>AI-Generated Summary:</h5>
+          {/* Loading indicator shows when backend is processing */}
+          {loadingSum && (
+            <div className="spinner-border" role="status">
+              <span className="sr-only"></span>
+            </div>
+          )}
           <form onSubmit={onSubmit}>
             <input type="submit" value="Speak Summary" id="speakSumbutton" />
             <textarea
