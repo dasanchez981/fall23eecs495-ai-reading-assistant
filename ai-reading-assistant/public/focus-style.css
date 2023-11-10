@@ -1,9 +1,20 @@
 
+@font-face {
+  font-family: 'OpenDyslexic-Regular';
+  src: url('./OpenDyslexic-Regular.otf') format('opentype'),
+       url('./OpenDyslexic-Regular.woff') format('woff'),
+       url('./OpenDyslexic-Regular.woff2') format('woff2');
+
+  /* you may need to provide different formats for different browsers */
+}
+
+
 .ancestor{
   /*background-color: orange;*/
-  line-height: 500%;
-  font-family: 'Comic Sans MS'; 
-  font-size: 12px;
+  line-height: 200%;
+  font-family: 'OpenDyslexic-Regular'; 
+  font-size: 2vw
   /*font-family: "Comic Sans MS", "Comic Sans", cursive;*/
   /*font-size: 12px;*/
 }
+
