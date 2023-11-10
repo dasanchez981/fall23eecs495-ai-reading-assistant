@@ -16,6 +16,7 @@ function App() {
   const [audioType, setAudioType] = useState("");
   const [speechURL, setSpeechURL] = useState("");
   const [response, setResponse] = useState("");
+  console.log(speechURL)
 
   // Chrome background listener to receive messages from context menu items in service-worker.js
   chrome.runtime.onMessage.addListener(({ name, data }) => {
@@ -31,7 +32,8 @@ function App() {
       console.log("Received message to speak from service-worker.js!");
       console.log(data);
       speakText(data.value).then((value) => {
-        setSpeechURL(value);
+        const audioUrl = URL.createObjectURL(value!);
+        setSpeechURL(audioUrl);
         setAudioType("Speaking highlighted text...");
         console.log("The url of the speak text query is below");
         console.log(value);
@@ -58,7 +60,8 @@ function App() {
     e.preventDefault();
     if (e.nativeEvent.submitter.id === "speakbutton") {
       speakText(text).then((value) => {
-        setSpeechURL(value);
+        const audioUrl = URL.createObjectURL(value!);
+        setSpeechURL(audioUrl);
         setAudioType("Speaking highlighted text...");
 
         console.log("The url of the speak text query is below");
@@ -66,7 +69,8 @@ function App() {
       });
     } else if (e.nativeEvent.submitter.id === "speakSumbutton") {
       speakText(response).then((value) => {
-        setSpeechURL(value);
+        const audioUrl = URL.createObjectURL(value!);
+        setSpeechURL(audioUrl);
         setAudioType("Speaking text summary...");
         console.log("The url of the speak summary text query is below");
         console.log(value);
