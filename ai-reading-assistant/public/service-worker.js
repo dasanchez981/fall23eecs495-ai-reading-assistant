@@ -20,7 +20,17 @@ function setupContextMenu() {
         contexts: ['selection']
     });
   }
-  
+  //whenever a tab's url is updated, this runs in the tab whose url was changed. 
+  //inserts a css file for ancestor styling so webpage has access to the css file
+  chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    if (changeInfo.status == 'complete') {
+        chrome.scripting.insertCSS({
+            target: {tabId: tabId},
+            files: ["focus-style.css"]
+        });
+    }
+ })
+ 
   // Ensures clicking on icon leads to extension opening in sidePanel
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
 
@@ -87,8 +97,8 @@ function setupContextMenu() {
               // ancestors[j].style.backgroundColor = 'yellow';
               // ancestors[j].style.fontFamily = 'Comic Sans MS';
               // ancestors[j].style.fontSize = '12px'; // 2vw
-              ancestors[j].style.lineHeight = '500%';
-
+              //ancestors[j].style.lineHeight = '500%';
+              ancestors[j].classList.add('ancestor'); 
               // Iterate through all descendants of that ancestor
               for (var i = 0; i < descendants.length; i++) {
                 console.log("Going through descendants now!!");
@@ -97,7 +107,8 @@ function setupContextMenu() {
                 // descendants[i].style.backgroundColor = 'yellow';
                 // descendants[i].style.fontFamily = 'Comic Sans MS'; // Your styles here
                 // descendants[i].style.fontSize = '12px'; // 2vw
-                descendants[i].style.lineHeight = '500%';
+                //descendants[i].style.lineHeight = '500%';
+                descendants[i].classList.add('ancestor');
               }
                 // span.style.backgroundColor = "yellow";
             }; 

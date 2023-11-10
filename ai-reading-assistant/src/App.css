@@ -6,6 +6,18 @@
   /* margin-top: -300px; */
 }
 
+/*TEMPORARY BUTTON STUFF*/
+.resfocus{
+  width: 50%;
+ }
+ #resfocuscontainer{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+ }
+ /*END TEMPORARY BUTTON STUFF*/
+ 
+
 .logo {
   height: 6em;
   padding: 1.5em;

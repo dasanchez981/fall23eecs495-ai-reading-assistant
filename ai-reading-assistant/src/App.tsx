@@ -9,6 +9,7 @@ import 'react-h5-audio-player/lib/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import Form from 'react-bootstrap/Form';
 import { Popover, OverlayTrigger } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
 
 function App() {
   const [text, setText] = useState("");
@@ -97,6 +98,25 @@ function App() {
     </Popover>
     );
 
+  const onResetFocus = async () => {
+    let [tab] = await chrome.tabs.query({active: true})
+    if (tab.url?.startsWith("chrome://")) return undefined;
+    // This can't access React variables so need to send through Chrome API
+    chrome.scripting.executeScript({
+      target: { tabId: tab.id! },
+      func: () => {
+        var focusedElements = document.querySelectorAll('.ancestor');
+        for(var j = 0; j < focusedElements.length; j++)
+        {
+          //can try removing spans themselves too
+          focusedElements[j].classList.remove('ancestor');
+        }
+      }
+    });
+    console.log("Reset!");
+  }
+   
+
 
   return (
     <>
@@ -104,6 +124,10 @@ function App() {
         <header>
           <h2>AI-Powered Reading Assistant (AIRA)</h2>
         </header>
+        <br></br>
+        <div id="resfocuscontainer">
+         <Button className = "resfocus" variant="secondary" onClick={onResetFocus}>Reset Focus</Button>{' '}
+       </div>
         <br></br>
         <div>
           <OverlayTrigger trigger={["hover", "focus"]} placement="bottom" overlay={help_popover}>
