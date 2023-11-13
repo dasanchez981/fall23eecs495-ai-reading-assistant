@@ -119,7 +119,10 @@ function App() {
   const help_popover = (
     <Popover id="help-popup" style={{ zIndex: 9999 }}>
         <Popover.Body>
-            <p><b> Insert extension instructions here! </b></p>
+            <p><b> 
+            Please highlight text on any webpage and select the relevant 
+            functionality you desire from the context menu!
+            </b></p>
         </Popover.Body>
     </Popover>
     );
@@ -148,7 +151,7 @@ function App() {
     <>
       <div id="sidebar_container">
         <header>
-          <h2>AI-Powered Reading Assistant (AIRA)</h2>
+          <h2>Supportive AI-Reading Assistant (SARA)</h2>
         </header>
         <br></br>
         <div id="resfocuscontainer">
@@ -157,18 +160,11 @@ function App() {
         <br></br>
         <div>
           <OverlayTrigger trigger={["hover", "focus"]} placement="bottom" overlay={help_popover}>
-              <span style={{ cursor: 'pointer' }}>
-                  <p>?</p>
+              <span style={{ cursor: 'pointer', textDecoration: 'underline' }}>
+                  <p>HELP</p>
               </span>
           </OverlayTrigger>
         </div>
-        {/* <Form>
-              <Form.Check // prettier-ignore
-                type="switch"
-                id="toolbar-mode"
-                label="Enable toolbar"
-              />
-            </Form> */}
         <br></br>
         <br></br>
         <br></br>
@@ -211,20 +207,7 @@ function App() {
           <p>Utilize text-to-speech to activate player </p>
         )}
 
-        <div id="textToSynth">
-          <form onSubmit={onSubmit}>
-            <input type="submit" value="Speak Text" id="speakbutton" />
-            <input type="submit" value="Summarize" id="sumbutton" />
-
-            <textarea
-              id="manual_input"
-              name="manual_input"
-              placeholder="Enter your text to Speak/Summarize..."
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-            ></textarea>
-          </form>
-        </div>
+        
         <div>
           <br></br>
           <h5>AI-Generated Summary:</h5>
@@ -236,11 +219,28 @@ function App() {
           )}
           <form onSubmit={onSubmit}>
             <input type="submit" value="Speak Summary" id="speakSumbutton" />
-            <textarea
+            <textarea 
+              style={{height: "500px"}}
               id="manual_output"
               name="manual_output"
               placeholder="Result from AI summarization..."
               value={response}
+            ></textarea>
+          </form>
+        </div>
+        
+        {/* Hiding this on UI for now since now integrated well */}
+        <div id="textToSynth" style={{ display: 'none' }}>
+          <form onSubmit={onSubmit}>
+            <input type="submit" value="Speak Text" id="speakbutton" />
+            <input type="submit" value="Summarize" id="sumbutton" />
+
+            <textarea
+              id="manual_input"
+              name="manual_input"
+              placeholder="Enter your text to Speak/Summarize..."
+              value={text}
+              onChange={(e) => setText(e.target.value)}
             ></textarea>
           </form>
         </div>
