@@ -2,8 +2,9 @@ import { useState } from 'react'
 import './App.css'
 import { summaryCall } from './components/SummaryCall'
 import { speakText } from './components/SpeakText'
-import AudioPlayer from 'react-h5-audio-player';
-import 'react-h5-audio-player/lib/styles.css';
+// import AudioPlayer from 'react-h5-audio-player';
+import ReactPlayer from 'react-player';
+// import 'react-h5-audio-player/lib/styles.css';
 // import Popover from "react-text-selection-popover";
 // import { AiFillQuestionCircle } from 'react-icons/AiFillQuestionCircle';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -142,6 +143,29 @@ function App() {
   //   console.log("Reset!");
   // }
    
+  function toggleMenu()
+  {
+     let subMenu = document.getElementById("subMenu");
+     subMenu?.classList.toggle("open-menu");
+  }
+
+  const changeCSS = async () => {
+      console.log("Triggered change CSS")
+      //  let [tab] = await chrome.tabs.query({active: true})
+      //  if (tab.url?.startsWith("chrome://")) return undefined;
+      //  var fontSize = document.querySelector('#fontSizeSelect');
+      //  var fontStyle = document.querySelector('#fontStyleSelect');
+      //  var lineSpace = document.querySelector("#lineSpacingSelect");
+      //  // This can't access React variables so need to send through Chrome API
+      //  chrome.scripting.executeScript({
+      //    target: { tabId: tab.id! },
+      //     func: () => {
+            
+            
+            
+      //     }
+      // });   
+  }
 
 
   return (
@@ -150,9 +174,51 @@ function App() {
         <header>
           <div id='logoImage'></div>
           <h2 id='titleName'>Supportive AI Reading Assistant</h2>
-          <div id='settingsIcon'></div>
+          <div id='settingsIcon' onClick={toggleMenu}></div>
+          <div className="hero">
+           <div className = "sub-menu-wrap" id="subMenu">
+             <div className ="sub-menu">
+               <div className = "dropdown-font-size">
+
+                 <label htmlFor="font-size-select">
+                   Choose a Font Size:
+                 </label>
+                 <select className="font-size-select" onChange={changeCSS} id = "fontSizeSelect">
+                   <option value="12px">12px</option>
+                   <option value="20px">20px</option>
+                 </select>
+
+
+               </div>
+               <div className="dropdown-style-select">
+                 <label htmlFor="font-style-select">
+                   Choose a Font Style:
+                 </label>
+                 <select className="font-style-select" onChange={changeCSS} id = "fontStyleSelect">
+                   <option value="dyslexie">Dyslexie</option>
+                   <option value="times-new-roman">Times New Roman</option>
+                 </select>
+               </div>
+               <div className="dropdown-spacing-select">
+                 <label htmlFor="line-spacing-select">
+                   Choose a Line Spacing:
+                 </label>
+                 <select className="line-spacing-select" onChange={changeCSS} id = "lineSpacingSelect">
+                   <option value="two-hundred">200%</option>
+                   <option value="five-hundred">500%</option>
+                 </select>
+               </div>
+             </div>
+           </div>
+          </div>
         </header>
-        <p id='helpHover'>HELP</p>
+        <div id='helpHover'>
+          <span id='helpHeading'>HELP</span>
+          <div id='helpTooltip'>
+            Please highlight text on any webpage and right click. <br></br>
+            Then, select the desired tool from the AI Reading Assistant menu!
+          </div>
+        </div>
         {/* <div id="resfocuscontainer">
          <Button className = "resfocus" variant="secondary" onClick={onResetFocus}>Reset Focus</Button>{' '}
        </div> */}
@@ -180,29 +246,21 @@ function App() {
               </p>
             )}
           </div>
-          {/* {speechURL ? ( */}
-            <div id="audio_container">
-              <AudioPlayer
-                autoPlay
-                src={speechURL}
-                showSkipControls={false}
-                showJumpControls={true}
-                showFilledProgress={true}
-                showFilledVolume={false}
-                hasDefaultKeyBindings={false}
-                autoPlayAfterSrcChange={false}
-                style={{
-                  backgroundColor: "white",
-                  border: "1px solid #ccc",
-                  padding: "10px",
-                  width: "100%",
-                  borderRadius: "5px",
-                }}
+          
+          <div id="audio_container">
+            {speechURL ? (
+              <ReactPlayer
+                url={speechURL}
+                playing={true}
+                controls={true}
+                playbackRate={1.0} // Adjust the playback rate as needed
+                width="100%"
+                height="50px"
               />
-            </div>
-          {/* ) : (
-            <h4>Utilize text-to-speech to activate player </h4>
-          )} */}
+            ) : (
+              <h4>Utilize text-to-speech to activate player </h4>
+            )}
+          </div>
         </div>
         <br></br>
         <br></br>
@@ -245,4 +303,5 @@ function App() {
   );
 }
 
-export default App
+
+export default App;

@@ -1,3 +1,4 @@
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -17,6 +18,29 @@
   align-items: center;
  }
  /*END TEMPORARY BUTTON STUFF*/
+
+
+ /*STYLING FOR DROPDOWN MENU */
+.sub-menu{
+  background-color: lightgray;
+ }
+ .sub-menu-wrap{
+  position: absolute;
+  /*top: 100%;*/
+  right: 10%;
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height 0.5s;
+ }
+ 
+ 
+ .sub-menu-wrap.open-menu{
+  max-height: 400px;
+ }
+ 
+ 
+ /*END STYLING FOR DROPDOWN MENU*/
+ 
  
 
 .logo {
@@ -143,8 +167,32 @@ header{
 }
 
 #helpHover{
+  display: flex;
   text-align: right;
+  justify-content: flex-end;
+  align-content: flex-end;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+#helpHover:hover #helpTooltip{
+  display: block;
+}
+#helpHeading{
   text-decoration: underline;
+}
+#helpTooltip{
+  text-align: left;
+  display: none;
+  background-color: white;
+  color: black;
+  border: 2px solid black;
+  position: absolute;
+  width: fit-content;
+  max-width: 80%;
+  padding: 3px;
+  z-index: 5;
+  right: 10px;
+  top: 135px;
 }
 
 #settingsIcon{
@@ -169,8 +217,9 @@ body{
 
 #textToSpeechControls{
   width: 100%;
-  max-width: 400px;
+  max-width: 600px;
   display: grid;
+  align-items: end;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 0.75fr 1.25fr;
 }
