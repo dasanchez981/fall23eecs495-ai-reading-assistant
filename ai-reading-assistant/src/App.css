@@ -3,7 +3,8 @@
   margin: 0 auto;
   padding: 0;
   text-align: center;
-  /* margin-top: -300px; */
+  position: relative;
+  top: -110px;
 }
 
 /*TEMPORARY BUTTON STUFF*/
@@ -33,12 +34,15 @@
 
 /* EXPERIMENTAL STYLING FROM TESTING EXTENSION */
 
-html, body{
+html, body, #root{
   /* height: 1000px; */
   /* EXPERIMENTAL WIDTH */
-  width: 400px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: revert-layer;
   /* overflow: scroll; */
-  
+  background-color:#c5d5e2;
 }
 
 #speakbutton{
@@ -62,17 +66,14 @@ html, body{
   top: 0;
   /* height: 100%; */
   left: 0;
-  width: 354px;
+  width: 100%;
   padding:10px 13px;
-  /* background-color:#D3D9DE; */
-  z-index: 99999;
-  
-  
 }
 
 #manual_input, #manual_output{
-  height: 150px;
-  width: 300px;
+  height: 100%;
+  min-height: 200px;
+  width: 80%;
 }
 
 #input_with_buttons{
@@ -124,6 +125,108 @@ html, body{
   padding: 2em;
 }
 
-/* .read-the-docs {
-  color: #888;
-} */
+header{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+  top: 10px;
+  padding-right: 10px;
+}
+
+#logoImage{
+  background-image: url("../public/Logo.png");
+  min-height: 100px;
+  min-width: 110px;
+  background-size: 110px 100px;
+  margin-right: 10px;
+}
+
+#helpHover{
+  text-align: right;
+  text-decoration: underline;
+}
+
+#settingsIcon{
+  background-image: url("../public/settingsIcon.png");
+  height: 25px;
+  min-width: 25px;
+  background-size: 25px 25px;
+  position: absolute;
+  right: 0px;
+  top: 10px;
+}
+
+#titleName{
+  text-align: left;
+  padding-right: 30px;
+}
+
+body{
+  display: block;
+}
+
+
+#textToSpeechControls{
+  width: 100%;
+  max-width: 400px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 0.75fr 1.25fr;
+}
+#ttsTitle{
+  text-align: left;
+  grid-column: 1 / span 4;
+  grid-row: 1;
+}
+#ttsSpinner{
+  display: flex;
+  justify-content: flex-end;
+  grid-column: 5;
+  grid-row: 1;
+}
+#audio_container{
+  grid-column: 1 / span 5;
+  grid-row: 2;
+}
+
+#textToSynth{ /* This is the manual text input box, hiding it for now bc removing from html breaks things*/
+  display: none;
+}
+
+div#summaryOutput{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 5fr;
+}
+#sumTitle{
+  text-align: left;
+  grid-column: 1/span 3;
+  grid-row: 1;
+}
+#spinner{
+  grid-column: 4;
+  grid-row: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+#summaryForm{
+  display: flex;
+  grid-column: 1 / span 5;
+  grid-row: 2;
+  width: 100%;
+}
+
+
+
+input#speakSumbutton{
+  background-image: url("../public/audioIcon.png");
+  background-color: rgb(182, 182, 182);
+  height: 50px;
+  width: 50px;
+  background-size: 45px 45px;
+  margin-left: 10px;
+}
+input:active{
+  background-color: grey;
+}

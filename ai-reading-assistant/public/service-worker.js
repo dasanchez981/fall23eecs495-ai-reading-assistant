@@ -19,6 +19,11 @@ function setupContextMenu() {
         title: 'Text Focus 👀🔍',
         contexts: ['selection']
     });
+    chrome.contextMenus.create({
+      id: 'text-unfocus',
+      title: 'Reset Focus ❌🔍',
+      contexts: ['selection']
+  });
   }
   //whenever a tab's url is updated, this runs in the tab whose url was changed. 
   //inserts a css file for ancestor styling so webpage has access to the css file
@@ -112,6 +117,18 @@ function setupContextMenu() {
               }
                 // span.style.backgroundColor = "yellow";
             }; 
+          }
+        });
+      }else if(data.menuItemId === 'text-unfocus'){
+        chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          func: () => {
+            var focusedElements = document.querySelectorAll('.ancestor');
+            for(var j = 0; j < focusedElements.length; j++)
+            {
+              //can try removing spans themselves too
+              focusedElements[j].classList.remove('ancestor');
+            }
           }
         });
       }

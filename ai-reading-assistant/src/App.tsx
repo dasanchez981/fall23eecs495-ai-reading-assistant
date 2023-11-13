@@ -8,8 +8,8 @@ import 'react-h5-audio-player/lib/styles.css';
 // import { AiFillQuestionCircle } from 'react-icons/AiFillQuestionCircle';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import Form from 'react-bootstrap/Form';
-import { Popover, OverlayTrigger } from 'react-bootstrap';
-import Button from 'react-bootstrap/Button';
+//import { Popover, OverlayTrigger } from 'react-bootstrap';
+//import Button from 'react-bootstrap/Button';
 
 function App() {
   const [text, setText] = useState("");
@@ -116,31 +116,31 @@ function App() {
   };
 
   // Tooltip at top of UI to help users
-  const help_popover = (
-    <Popover id="help-popup" style={{ zIndex: 9999 }}>
-        <Popover.Body>
-            <p><b> Insert extension instructions here! </b></p>
-        </Popover.Body>
-    </Popover>
-    );
+  // const help_popover = (
+  //   <Popover id="help-popup" style={{ zIndex: 9999 }}>
+  //       <Popover.Body>
+  //           <p><b> Insert extension instructions here! </b></p>
+  //       </Popover.Body>
+  //   </Popover>
+  //   );
 
-  const onResetFocus = async () => {
-    let [tab] = await chrome.tabs.query({active: true})
-    if (tab.url?.startsWith("chrome://")) return undefined;
-    // This can't access React variables so need to send through Chrome API
-    chrome.scripting.executeScript({
-      target: { tabId: tab.id! },
-      func: () => {
-        var focusedElements = document.querySelectorAll('.ancestor');
-        for(var j = 0; j < focusedElements.length; j++)
-        {
-          //can try removing spans themselves too
-          focusedElements[j].classList.remove('ancestor');
-        }
-      }
-    });
-    console.log("Reset!");
-  }
+  // const onResetFocus = async () => {
+  //   let [tab] = await chrome.tabs.query({active: true})
+  //   if (tab.url?.startsWith("chrome://")) return undefined;
+  //   // This can't access React variables so need to send through Chrome API
+  //   chrome.scripting.executeScript({
+  //     target: { tabId: tab.id! },
+  //     func: () => {
+  //       var focusedElements = document.querySelectorAll('.ancestor');
+  //       for(var j = 0; j < focusedElements.length; j++)
+  //       {
+  //         //can try removing spans themselves too
+  //         focusedElements[j].classList.remove('ancestor');
+  //       }
+  //     }
+  //   });
+  //   console.log("Reset!");
+  // }
    
 
 
@@ -148,69 +148,64 @@ function App() {
     <>
       <div id="sidebar_container">
         <header>
-          <h2>AI-Powered Reading Assistant (AIRA)</h2>
+          <div id='logoImage'></div>
+          <h2 id='titleName'>Supportive AI Reading Assistant</h2>
+          <div id='settingsIcon'></div>
         </header>
-        <br></br>
-        <div id="resfocuscontainer">
+        <p id='helpHover'>HELP</p>
+        {/* <div id="resfocuscontainer">
          <Button className = "resfocus" variant="secondary" onClick={onResetFocus}>Reset Focus</Button>{' '}
-       </div>
+       </div> */}
         <br></br>
-        <div>
+        {/* <div>
           <OverlayTrigger trigger={["hover", "focus"]} placement="bottom" overlay={help_popover}>
               <span style={{ cursor: 'pointer' }}>
                   <p>?</p>
               </span>
           </OverlayTrigger>
-        </div>
-        {/* <Form>
-              <Form.Check // prettier-ignore
-                type="switch"
-                id="toolbar-mode"
-                label="Enable toolbar"
-              />
-            </Form> */}
+        </div> */}
         <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <div>
-          {loadingSpeech ? (
-              <div className="spinner-border" role="status">
-                <span className="sr-only"></span>
-              </div>
-          ) : (
-            <p id="audioIndicator">
-              {audioType}
-            </p>
-          )}
-        </div>
         
         {/* If no speech is available then hide player from user */}
-        {speechURL ? (
-          <div id="audio_container">
-            <AudioPlayer
-              autoPlay
-              src={speechURL}
-              showSkipControls={false}
-              showJumpControls={true}
-              showFilledProgress={true}
-              showFilledVolume={false}
-              hasDefaultKeyBindings={false}
-              autoPlayAfterSrcChange={false}
-              style={{
-                backgroundColor: "white",
-                border: "1px solid #ccc",
-                padding: "10px",
-                width: "300px",
-                borderRadius: "5px",
-              }}
-            />
+        <div id='textToSpeechControls'>
+          <h5 id='ttsTitle'>Text-To-Speech-Controls:</h5>
+          <div id='ttsSpinner'>
+            {loadingSpeech ? (
+                <div className="spinner-border" role="status">
+                  <span className="sr-only"></span>
+                </div>
+            ) : (
+              <p id="audioIndicator">
+                {audioType}
+              </p>
+            )}
+          </div>
+          {/* {speechURL ? ( */}
+            <div id="audio_container">
+              <AudioPlayer
+                autoPlay
+                src={speechURL}
+                showSkipControls={false}
+                showJumpControls={true}
+                showFilledProgress={true}
+                showFilledVolume={false}
+                hasDefaultKeyBindings={false}
+                autoPlayAfterSrcChange={false}
+                style={{
+                  backgroundColor: "white",
+                  border: "1px solid #ccc",
+                  padding: "10px",
+                  width: "100%",
+                  borderRadius: "5px",
+                }}
+              />
+            </div>
+          {/* ) : (
+            <h4>Utilize text-to-speech to activate player </h4>
+          )} */}
         </div>
-        ) : (
-          <p>Utilize text-to-speech to activate player </p>
-        )}
-
+        <br></br>
+        <br></br>
         <div id="textToSynth">
           <form onSubmit={onSubmit}>
             <input type="submit" value="Speak Text" id="speakbutton" />
@@ -225,23 +220,24 @@ function App() {
             ></textarea>
           </form>
         </div>
-        <div>
-          <br></br>
-          <h5>AI-Generated Summary:</h5>
+        <div id='summaryOutput'>
+          <h5 id='sumTitle'>Generated Summary:</h5>
           {/* Loading indicator shows when backend is processing */}
-          {loadingSum && (
+          <div id='spinner'>
+            {loadingSum && (
             <div className="spinner-border" role="status">
               <span className="sr-only"></span>
             </div>
-          )}
-          <form onSubmit={onSubmit}>
-            <input type="submit" value="Speak Summary" id="speakSumbutton" />
+            )}
+          </div>
+          <form id='summaryForm' onSubmit={onSubmit}>
             <textarea
               id="manual_output"
               name="manual_output"
               placeholder="Result from AI summarization..."
               value={response}
             ></textarea>
+            <input type="submit" value="" id="speakSumbutton" />
           </form>
         </div>
       </div>
