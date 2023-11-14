@@ -295,7 +295,10 @@ function App() {
               placeholder="Result from AI summarization..."
               value={response}
             ></textarea>
-            <input type="submit" value="" id="speakSumbutton" />
+            <div id='speakHover'>
+              <input type="submit" value="" id="speakSumbutton" />
+              <div id="speakSumTooltip">Speak Text</div>
+            </div>
           </form>
         </div>
       </div>

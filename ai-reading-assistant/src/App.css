@@ -277,5 +277,21 @@ input#speakSumbutton{
   margin-left: 10px;
 }
 input:active{
-  background-color: grey;
+  background-color: rgb(98, 98, 98);
+}
+
+#speakHover:hover #speakSumTooltip{
+  display: block;
+}
+#speakSumTooltip{
+  display: none;
+  background-color: rgb(182, 182, 182);
+  color: black;
+  border: 2px solid black;
+  border-radius: 10px;
+  position: absolute;
+  z-index: 5;
+  left: 80%;
+  font-size: medium;
+  padding: 2px 4px;
 }
