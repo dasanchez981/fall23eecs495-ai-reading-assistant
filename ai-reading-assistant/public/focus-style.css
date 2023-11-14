@@ -1,7 +1,7 @@
  :root{
   --line-spacing: 200%;
   --selected-size: 2vw;
-  --selected-style: 'OpenDyslexic-Bold-Italic'; 
+  --selected-style: 'OpenDyslexic-Regular'; 
   } 
 @font-face {
   font-family: 'OpenDyslexic-Regular';

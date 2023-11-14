@@ -245,7 +245,7 @@ function App() {
                    Choose a Font Style:
                  </label>
                  <select className="font-style-select" onChange={changeCSS} id = "fontStyleSelect">
-                   <option value="OpenDyslexic-Bold-Italic">Dyslexie</option>
+                   <option value="OpenDyslexic-Regular">Dyslexie</option>
                    <option value="times-new-roman">Times New Roman</option>
                  </select>
                </div>
