@@ -149,25 +149,75 @@ function App() {
      subMenu?.classList.toggle("open-menu");
   }
 
+  chrome.tabs.onActivated.addListener(function (activeInfo) {
+    var fontSize = (document.getElementById('fontSizeSelect') as HTMLInputElement).value;
+    var fontStyle = (document.getElementById('fontStyleSelect') as HTMLInputElement).value;
+    var lineSpace = (document.getElementById('lineSpacingSelect') as HTMLInputElement).value;
+    console.log(fontSize);
+    chrome.scripting.executeScript({
+      target: { tabId: activeInfo.tabId! },
+      func: (fontSize, lineSpace, fontStyle) => {
+         console.log(fontSize);
+         document.documentElement.style.setProperty('--selected-size', fontSize);
+         document.documentElement.style.setProperty('--line-spacing', lineSpace);
+         document.documentElement.style.setProperty('--selected-style', fontStyle);
+        
+        
+       },
+       args: [fontSize, lineSpace, fontStyle]
+   });
+   
+ })
+ 
+ 
+ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
+    var fontSize = (document.getElementById('fontSizeSelect') as HTMLInputElement).value;
+    var fontStyle = (document.getElementById('fontStyleSelect') as HTMLInputElement).value;
+    var lineSpace = (document.getElementById('lineSpacingSelect') as HTMLInputElement).value;
+    console.log(fontSize);
+    if(changeInfo.status == 'complete')
+    {
+      chrome.scripting.executeScript({
+        target: { tabId: tabId! },
+        func: (fontSize, lineSpace, fontStyle) => {
+           console.log(fontSize);
+           document.documentElement.style.setProperty('--selected-size', fontSize);
+           document.documentElement.style.setProperty('--line-spacing', lineSpace);
+           document.documentElement.style.setProperty('--selected-style', fontStyle);
+          
+          
+         },
+         args: [fontSize, lineSpace, fontStyle]
+     });
+    }
+   
+ })
+ 
+ 
+  //This is required for when a user makes changes right then and there on the webpage,
+  //will apply it to the current webpage
   const changeCSS = async () => {
       console.log("Triggered change CSS")
-      //  let [tab] = await chrome.tabs.query({active: true})
-      //  if (tab.url?.startsWith("chrome://")) return undefined;
-      //  var fontSize = document.querySelector('#fontSizeSelect');
-      //  var fontStyle = document.querySelector('#fontStyleSelect');
-      //  var lineSpace = document.querySelector("#lineSpacingSelect");
-      //  // This can't access React variables so need to send through Chrome API
-      //  chrome.scripting.executeScript({
-      //    target: { tabId: tab.id! },
-      //     func: () => {
-            
-            
-            
-      //     }
-      // });   
+       let [tab] = await chrome.tabs.query({active: true})
+       if (tab.url?.startsWith("chrome://")) return undefined;
+       var fontSize = (document.getElementById('fontSizeSelect') as HTMLInputElement).value;
+       var fontStyle = (document.getElementById('fontStyleSelect') as HTMLInputElement).value;
+       var lineSpace = (document.getElementById('lineSpacingSelect') as HTMLInputElement).value;
+        console.log(fontSize);
+       // This can't access React variables so need to send through Chrome API
+       chrome.scripting.executeScript({
+         target: { tabId: tab.id! },
+          func: (fontSize, lineSpace, fontStyle) => {
+            console.log(fontSize);
+            document.documentElement.style.setProperty('--selected-size', fontSize);
+            document.documentElement.style.setProperty('--line-spacing', lineSpace);
+            document.documentElement.style.setProperty('--selected-style', fontStyle);
+           
+          },
+          args: [fontSize, lineSpace, fontStyle]
+      });  
   }
-
-
+ 
   return (
     <>
       <div id="sidebar_container">
@@ -184,8 +234,8 @@ function App() {
                    Choose a Font Size:
                  </label>
                  <select className="font-size-select" onChange={changeCSS} id = "fontSizeSelect">
-                   <option value="12px">12px</option>
-                   <option value="20px">20px</option>
+                   <option value="2vw">2vw</option>
+                   <option value="3vw">3vw</option>
                  </select>
 
 
@@ -195,7 +245,7 @@ function App() {
                    Choose a Font Style:
                  </label>
                  <select className="font-style-select" onChange={changeCSS} id = "fontStyleSelect">
-                   <option value="dyslexie">Dyslexie</option>
+                   <option value="OpenDyslexic-Bold-Italic">Dyslexie</option>
                    <option value="times-new-roman">Times New Roman</option>
                  </select>
                </div>
@@ -204,8 +254,8 @@ function App() {
                    Choose a Line Spacing:
                  </label>
                  <select className="line-spacing-select" onChange={changeCSS} id = "lineSpacingSelect">
-                   <option value="two-hundred">200%</option>
-                   <option value="five-hundred">500%</option>
+                   <option value="200%">200%</option>
+                   <option value="500%">500%</option>
                  </select>
                </div>
              </div>

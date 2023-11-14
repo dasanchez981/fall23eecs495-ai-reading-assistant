@@ -1,8 +1,8 @@
-/* :root{
+ :root{
   --line-spacing: 200%;
-  --selected-size: 2em;
-  --selected-style: 'OpenDyslexic'; 
-} */
+  --selected-size: 2vw;
+  --selected-style: 'OpenDyslexic-Bold-Italic'; 
+  } 
 @font-face {
   font-family: 'OpenDyslexic-Regular';
   src: url('chrome-extension://__MSG_@@extension_id__/fonts/OpenDyslexic-Regular.otf') format('opentype'),
@@ -43,9 +43,9 @@
   /*font-size: 12px;*/
 
     /*background-color: orange;*/
-    line-height: 200%;
-    font-family: 'OpenDyslexic-Bold-Italic'; 
-    font-size: 2vw
+    line-height: var(--line-spacing);
+    font-family: var(--selected-style);
+    font-size: var(--selected-size);
     /*font-family: "Comic Sans MS", "Comic Sans", cursive;*/
     /*font-size: 12px;*/
   
