@@ -19,7 +19,7 @@ export async function speakText(text: string) {
 
     // Set the parameters
     const speechParams = {
-        Engine: "standard", // TODO: For Sonika and Danny change to 'standard' engine, for Raj change to 'neural' engine
+        Engine: "neural", // TODO: For Sonika and Danny change to 'standard' engine, for Raj change to 'neural' engine
         OutputFormat: "mp3", // For example, 'mp3'
         SampleRate: "16000", // For example, '16000
         Text: text, // The 'speakText' function supplies this value
