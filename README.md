@@ -6,7 +6,7 @@ Please contact 495-ai-reading-assistant@umich.edu via email if there are any que
 
 ### Chrome Extension Setup
 
-1) Download the dist.tar.gz (shared via Google Drive) to your local machine
+1) Download the dist-beta.tgz (shared via Google Drive) to your local machine
 
 ![step1](doc/step1.png)
    
