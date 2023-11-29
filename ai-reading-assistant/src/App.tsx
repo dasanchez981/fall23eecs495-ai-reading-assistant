@@ -28,8 +28,29 @@ function App() {
       console.log(data.value);
       // Activate loading indicator 
       setLoadingSum(true)
+
+      // Set a variable to track whether loading indicator should be deactivated
+      let shouldDeactivateLoading = true;
+
+      // Set a timeout for 60 seconds
+      const loadingTimeout = setTimeout(() => {
+        // If the summaryCall hasn't returned, deactivate the loading indicator
+        if (shouldDeactivateLoading) {
+          setLoadingSum(false);
+          console.log("Loading indicator deactivated after 60 seconds");
+        }
+        alert("The summary call took too long!")
+      }, 60000); // 60 seconds
+
+
       summaryCall(data.value).then((value) => {
+        // Clear the timeout, as the summaryCall has returned
+        clearTimeout(loadingTimeout);
+
         setResponse(value);
+
+        // Deactivate loading indicator only if the timeout hasn't already occurred
+        shouldDeactivateLoading = false;
         // Deactivate loading indicator
         setLoadingSum(false)
         console.log("The value of the text summary query is below");
@@ -40,9 +61,29 @@ function App() {
       console.log(data);
       // Activate loading indicator 
       setLoadingSpeech(true)
+
+      // Set a variable to track whether loading indicator should be deactivated
+      let shouldDeactivateLoading = true;
+
+      // Set a timeout for 60 seconds
+      const loadingTimeout = setTimeout(() => {
+        // If the summaryCall hasn't returned, deactivate the loading indicator
+        if (shouldDeactivateLoading) {
+          setLoadingSpeech(false);
+          console.log("Loading indicator deactivated after 60 seconds");
+        }
+        alert("The text-to-speech call took too long!")
+      }, 60000); // 60 seconds
+
       speakText(data.value).then((value) => {
+        // Clear the timeout, as the summaryCall has returned
+        clearTimeout(loadingTimeout);
+
         const audioUrl = URL.createObjectURL(value!);
         setSpeechURL(audioUrl);
+
+        // Deactivate loading indicator only if the timeout hasn't already occurred
+        shouldDeactivateLoading = false;
         // Deactivate loading indicator
         setLoadingSpeech(false)
         setAudioType("Speaking highlighted text...");
@@ -57,15 +98,30 @@ function App() {
 
   // Function to handle summaries
   const handleSumSubmit = (event: any) => {
+    // Deprecated code!!!!!!
+    console.log("IN SUMMARY SUBMIT")
     event.preventDefault();
+
     // Activate loading indicator 
     setLoadingSum(true)
+
+    // Set a variable to track whether loading indicator should be deactivated
+    // let shouldDeactivateLoading = true;
+    console.log("Submitted summary HERE")
+    // Set a timeout for 60 seconds
+    
+    
     summaryCall(text).then((value) => {
+      console.log("IN SUMMARY SUBMIT")
       setResponse(value);
       // Deactivate loading indicator
-      setLoadingSum(false)
-      console.log("The value of the text summary query is below");
-      console.log(value);
+      // Clear the timeout, as the summaryCall has returned
+      // clearTimeout(loadingTimeout);
+      // Deactivate loading indicator only if the timeout hasn't already occurred
+      // shouldDeactivateLoading = false;
+      // setLoadingSum(false)
+      // console.log("The value of the text summary query is below");
+      // console.log(value);
     });
   };
 
@@ -142,11 +198,29 @@ function App() {
   //   });
   //   console.log("Reset!");
   // }
+  function checkNeedCloseMenu(e:any)
+  {
+      console.log(e)
+      let subMenu = document.getElementById("subMenu")
+      let dropdownClicked = e.target.parentNode.className
+      if(dropdownClicked !== "dropdown-style-select" && dropdownClicked !== "dropdown-font-size" && dropdownClicked !== "dropdown-spacing-select" &&
+      dropdownClicked !== "sub-menu" && dropdownClicked !== "sub-menu-wrap open-menu")
+      {
+          if(subMenu?.classList.contains("open-menu"))
+          {
+            subMenu.classList.remove("open-menu")
+          }
+          
+      }
+  }
+  document.body.addEventListener("click", (e) => checkNeedCloseMenu(e), false)
    
-  function toggleMenu()
+  function toggleMenu(e:any)
   {
      let subMenu = document.getElementById("subMenu");
      subMenu?.classList.toggle("open-menu");
+
+     e.stopPropagation()
   }
 
   chrome.tabs.onActivated.addListener(function (activeInfo) {
@@ -224,12 +298,12 @@ function App() {
         <header>
           <div id='logoImage'></div>
           <h2 id='titleName'>Supportive AI Reading Assistant</h2>
-          <div id='settingsIcon' onClick={toggleMenu}></div>
+          <div id='settingsIcon' onClick={(e) => toggleMenu(e)}></div>
           <div className="hero">
            <div className = "sub-menu-wrap" id="subMenu">
              <div className ="sub-menu">
+               <h2>Text Focus Features: </h2>
                <div className = "dropdown-font-size">
-
                  <label htmlFor="font-size-select">
                    Choose a Font Size:
                  </label>
@@ -237,8 +311,6 @@ function App() {
                    <option value="2vw">2vw</option>
                    <option value="3vw">3vw</option>
                  </select>
-
-
                </div>
                <div className="dropdown-style-select">
                  <label htmlFor="font-style-select">
@@ -262,11 +334,20 @@ function App() {
            </div>
           </div>
         </header>
-        <div id='helpHover'>
-          <span id='helpHeading'>HELP</span>
-          <div id='helpTooltip'>
-            Please highlight text on any webpage and right click. <br></br>
-            Then, select the desired tool from the AI Reading Assistant menu!
+        <div id='helpContainer'>
+          <div id='helpHover'>
+            <span id='helpHeading'>HELP</span>
+            {/* Bug #14 */}
+            <div id='helpTooltip'>
+              Please highlight text on any webpage and right click. <br></br>
+              Then, select the desired options from the AI Reading Assistant menu!
+
+              Summarize: Condenses selected text into digestable summary using ChatGPT
+              Speak: Reads aloud selected text 
+              Text Focus: Adds on custom styling for enhanced readability
+              Reset Page Focus: Eliminates all custom user styling on webpage
+              
+            </div>
           </div>
         </div>
         {/* <div id="resfocuscontainer">
@@ -284,7 +365,7 @@ function App() {
         
         {/* If no speech is available then hide player from user */}
         <div id='textToSpeechControls'>
-          <h5 id='ttsTitle'>Text-To-Speech-Controls:</h5>
+          <h5 id='ttsTitle'>Text-To-Speech Controls:</h5>
           <div id='ttsSpinner'>
             {loadingSpeech ? (
                 <div className="spinner-border" role="status">
@@ -345,10 +426,13 @@ function App() {
               placeholder="Result from AI summarization..."
               value={response}
             ></textarea>
-            <div id='speakHover'>
-              <input type="submit" value="" id="speakSumbutton" />
-              <div id="speakSumTooltip">Speak Text</div>
-            </div>
+            {/* Bug #13 */}
+            {response && (
+              <div id='speakHover'>
+                <input type="submit" value="" id="speakSumbutton" />
+                <div id="speakSumTooltip">Speak Text</div>
+              </div>
+            )}
           </form>
         </div>
       </div>

@@ -21,7 +21,7 @@ function setupContextMenu() {
     });
     chrome.contextMenus.create({
       id: 'text-unfocus',
-      title: 'Reset Focus ❌🔍',
+      title: 'Reset Page Focus ❌🔍',
       contexts: ['selection']
   });
   }
@@ -123,6 +123,7 @@ function setupContextMenu() {
         chrome.scripting.executeScript({
           target: { tabId: tab.id },
           func: () => {
+            alert("You are about to reset text focus on the whole webpage. OK?")
             var focusedElements = document.querySelectorAll('.ancestor');
             for(var j = 0; j < focusedElements.length; j++)
             {

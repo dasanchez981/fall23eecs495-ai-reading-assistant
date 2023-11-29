@@ -166,13 +166,14 @@ header{
   margin-right: 10px;
 }
 
+#helpContainer{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
 #helpHover{
-  display: flex;
   text-align: right;
-  justify-content: flex-end;
-  align-content: flex-end;
-  flex-direction: column;
-  flex-wrap: wrap;
+  grid-column: 5;
+  width: fit-content;
 }
 #helpHover:hover #helpTooltip{
   display: block;
@@ -225,7 +226,7 @@ body{
 }
 #ttsTitle{
   text-align: left;
-  grid-column: 1 / span 4;
+  grid-column: 1 / span 3;
   grid-row: 1;
 }
 #ttsSpinner{
@@ -280,6 +281,9 @@ input:active{
   background-color: rgb(98, 98, 98);
 }
 
+#speakHover{
+  height: fit-content;
+}
 #speakHover:hover #speakSumTooltip{
   display: block;
 }
