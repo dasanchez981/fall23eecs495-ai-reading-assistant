@@ -340,12 +340,15 @@ function App() {
             {/* Bug #14 */}
             <div id='helpTooltip'>
               Please highlight text on any webpage and right click. <br></br>
-              Then, select the desired options from the AI Reading Assistant menu!
-
-              Summarize: Condenses selected text into digestable summary using ChatGPT
-              Speak: Reads aloud selected text 
-              Text Focus: Adds on custom styling for enhanced readability
-              Reset Page Focus: Eliminates all custom user styling on webpage
+              Then, select the desired options from the AI Reading Assistant menu!<br></br>
+              -------------------------------------<br></br>
+              <strong>Summarize:</strong> Condenses selected text into digestable summary using ChatGPT<br></br>
+              -------------------------------------<br></br>
+              <strong>Speak:</strong> Reads aloud selected text <br></br>
+              -------------------------------------<br></br>
+              <strong>Text Focus:</strong> Adds on custom styling for enhanced readability<br></br>
+              -------------------------------------<br></br>
+              <strong>Reset Page Focus:</strong> Eliminates all custom user styling on webpage
               
             </div>
           </div>
