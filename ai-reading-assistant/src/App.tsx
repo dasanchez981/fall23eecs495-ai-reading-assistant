@@ -330,6 +330,16 @@ function App() {
                    <option value="500%">500%</option>
                  </select>
                </div>
+               <h2>Text-to-Speech Voice</h2>
+               <div className="dropdown-voice-select">
+                 <label htmlFor="voice-select">
+                   Choose a Line Spacing:
+                 </label>
+                 <select className="voice-select" onChange={changeCSS} id = "voiceSelect">
+                   <option value="200%">200%</option>
+                   <option value="500%">500%</option>
+                 </select>
+               </div>
              </div>
            </div>
           </div>
@@ -420,6 +430,12 @@ function App() {
             )}
           </div>
           <form id='summaryForm' onSubmit={onSubmit}>
+            <textarea
+              id="manual_output"
+              name="manual_output"
+              placeholder="Customize summary to your needs!..."
+              value={response}
+            ></textarea>
             <textarea
               id="manual_output"
               name="manual_output"
