@@ -302,10 +302,10 @@ function App() {
       });  
   }
 
-<<<<<<< HEAD
+// <<<<<<< HEAD
   console.log("Value of user customization")
   console.log(customSum)
-=======
+// =======
   const toggleManual = async () => {
     console.log("Toggling manual input")
     let title = document.getElementById('manualTitle');
@@ -342,7 +342,7 @@ function App() {
 
     }
   }
->>>>>>> 31db5b5c9e1fc83dcd764fb7711b8f26e16a0c21
+// >>>>>>> 31db5b5c9e1fc83dcd764fb7711b8f26e16a0c21
  
   return (
     <>
