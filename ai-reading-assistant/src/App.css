@@ -69,10 +69,6 @@ html, body, #root{
   background-color:#c5d5e2;
 }
 
-#speakbutton{
-  margin-right:10px;
-}
-
 #audio_container {
   display: flex;
   justify-content: center;
@@ -91,7 +87,7 @@ html, body, #root{
   /* height: 100%; */
   left: 0;
   width: 100%;
-  padding:10px 13px;
+  padding:10px 20px 10px 13px;
 }
 
 #manual_input, #manual_output{
@@ -115,11 +111,6 @@ html, body, #root{
   font-weight: bold;
   height: 40px;
   grid-column: span 2;
-}
-
-#manual_input{
-  grid-column: span 4;
-  grid-row: 2 / 3;
 }
 
 #clearTextButton{
@@ -240,9 +231,57 @@ body{
   grid-row: 2;
 }
 
-#textToSynth{ /* This is the manual text input box, hiding it for now bc removing from html breaks things*/
-  display: none;
+
+
+
+#manualGrid{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
 }
+#toggleManualButton{
+  text-align: center;
+  font-size: small;
+  grid-column: 5;
+  grid-row: 1;
+  width: 75%;
+  height: fit-content;
+}
+#manualTitle{
+  text-align: left;
+  grid-column: 1/span 4;
+  grid-row: 1;
+}
+#manualForm{
+  display: none;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 4fr;
+  grid-column: 1 / span 5;
+  grid-row: 2;
+  width: 100%;
+  justify-items: center;
+}
+#manual_input{
+  width: 100%;
+  grid-column: 1 / span 4;
+  grid-row: 1 /span 3;
+}
+#speakbutton{
+  font-size: smaller;
+  grid-column: 5;
+  grid-row: 1;
+  height: fit-content;
+  width: fit-content;
+}
+#sumbutton{
+  font-size: smaller;
+  grid-column: 5;
+  grid-row: 2;
+  height: fit-content;
+  width: fit-content;
+}
+
+
 
 div#summaryOutput{
   display: grid;

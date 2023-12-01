@@ -302,8 +302,47 @@ function App() {
       });  
   }
 
+<<<<<<< HEAD
   console.log("Value of user customization")
   console.log(customSum)
+=======
+  const toggleManual = async () => {
+    console.log("Toggling manual input")
+    let title = document.getElementById('manualTitle');
+    let button = document.getElementById('toggleManualButton') as HTMLInputElement;
+    if(document.getElementById('manualForm')?.style.display == ''){
+      document.getElementById('manualForm')?.style.setProperty("display", "grid");
+      document.getElementById('manualGrid')?.style.setProperty("grid-template-rows", "1fr 5fr");
+      if(title != undefined){
+        title.textContent = "Manually Input Text: ";
+      }
+      if(button != undefined){
+        button.value = "ON"
+      }
+
+    }else if(document.getElementById('manualForm')?.style.display == 'none'){
+      document.getElementById('manualForm')?.style.setProperty("display", "grid");
+      document.getElementById('manualGrid')?.style.setProperty("grid-template-rows", "1fr 5fr");
+      if(title != undefined){
+        title.textContent = "Manually Input Text: ";
+      }
+      if(button != undefined){
+        button.value = "ON"
+      }
+
+    }else if(document.getElementById('manualForm')?.style.display == 'grid'){
+      document.getElementById('manualForm')?.style.setProperty("display", "none");
+      document.getElementById('manualGrid')?.style.setProperty("grid-template-rows", "1fr 1fr");
+      if(title != undefined){
+        title.textContent = "Toggle Manual Input: ";
+      }
+      if(button != undefined){
+        button.value = "OFF"
+      }
+
+    }
+  }
+>>>>>>> 31db5b5c9e1fc83dcd764fb7711b8f26e16a0c21
  
   return (
     <>
@@ -414,19 +453,21 @@ function App() {
         </div>
         <br></br>
         <br></br>
-        <div id="textToSynth">
-          <form onSubmit={onSubmit}>
-            <input type="submit" value="Speak Text" id="speakbutton" />
-            <input type="submit" value="Summarize" id="sumbutton" />
+        <div id='manualGrid'>
+          <h5 id='manualTitle'>Toggle Manual Input:</h5>
+          <input type="button" id='toggleManualButton' onClick={toggleManual} value="OFF"></input>
+            <form id='manualForm' onSubmit={onSubmit}>
+              <input type="submit" value="Speak Text" id="speakbutton" />
+              <input type="submit" value="Summarize" id="sumbutton" />
 
-            <textarea
-              id="manual_input"
-              name="manual_input"
-              placeholder="Enter your text to Speak/Summarize..."
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-            ></textarea>
-          </form>
+              <textarea
+                id="manual_input"
+                name="manual_input"
+                placeholder="Input your text to Speak/Summarize..."
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+              ></textarea>
+            </form>
         </div>
         <div id='summaryOutput'>
           <h5 id='sumTitle'>Generated Summary:</h5>
