@@ -285,6 +285,7 @@ body{
 
 /* ========== BEGIN OUTPUT SUMMARY AREA CSS ==========*/
 div#summaryOutput{
+  height: 300px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 5fr;
