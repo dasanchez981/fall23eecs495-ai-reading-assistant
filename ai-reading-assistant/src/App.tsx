@@ -18,11 +18,6 @@ function App() {
   // const [isMenuOpen, setIsMenuOpen] = useState(false);
   console.log(speechURL)
 
-  // const ref = useRef()
-  // console.log(ref)
-  // console.log(isMenuOpen)
-  // setIsMenuOpen(false)
-
   // Chrome background listener to receive messages from context menu items in service-worker.js
   chrome.runtime.onMessage.addListener(({ name, data }) => {
 
@@ -46,10 +41,12 @@ function App() {
       }, 60000); // 60 seconds
 
       // Store the current custom summary value
-      const customization = customSum;
+      // const customization = customSum;
       
       console.log("Doing a summary call")
-      summaryCall(customization, data.value).then((value) => {
+      summaryCall(customSum, data.value).then((value) => {
+        console.log("Value of customization:")
+        console.log(customSum)
         // Clear the timeout, as the summaryCall has returned
         clearTimeout(loadingTimeout);
 
@@ -178,20 +175,24 @@ function App() {
   };
 
   const handleCustomSum = (e: any) => {
+    e.preventDefault();
     // Set the value of customSum using setCustomSum
     console.log(e)
     console.log("Inside custom summary")
-    setCustomSum(customSumText)
+    const newSum = customSumText
+    setCustomSum(newSum)
     console.log("Text that user wants:")
     console.log(customSumText)
+    // console.log(customSum)
     // Set the value of customSum using setCustomSum
     // setCustomSum(value);
   };
 
   const onSubmit = (e: any) => {
     e.preventDefault();
-    console.log("The value of the input is below:");
-    console.log(e);
+    console.log("inside onSubmit")
+    // console.log("The value of the input is below:");
+    // console.log(e);
     console.log(e.nativeEvent.submitter.id);
     if (
       e.nativeEvent.submitter.id === "speakbutton" ||
@@ -303,8 +304,6 @@ function App() {
   }
 
 // <<<<<<< HEAD
-  console.log("Value of user customization")
-  console.log(customSum)
 // =======
   const toggleManual = async () => {
     console.log("Toggling manual input")
