@@ -6,7 +6,7 @@ import { getSynthesizeSpeechUrl } from "@aws-sdk/polly-request-presigner";
 import { Buffer } from 'buffer';
 
 // Function invoked by button click
-export async function speakText(text: string) {
+export async function speakText(text: string, voice: string, voice_type:string) {
 
     // Create the Polly service client, assigning your credentials
     const client = new Polly({
@@ -19,12 +19,12 @@ export async function speakText(text: string) {
 
     // Set the parameters
     const speechParams = {
-        Engine: "long-form", // TODO: For Sonika and Danny change to 'standard' engine, for Raj change to 'neural' engine
+        Engine: voice_type, // TODO: For Sonika and Danny change to 'standard' engine, for Raj change to 'neural' engine
         OutputFormat: "mp3", // For example, 'mp3'
         SampleRate: "16000", // For example, '16000
         Text: text, // The 'speakText' function supplies this value
         TextType: "text", // For example, "text"
-        VoiceId: "Danielle", // For example, "Matthew"
+        VoiceId: voice, // For example, "Matthew"
     };
 
     // Synthesize with full polly.

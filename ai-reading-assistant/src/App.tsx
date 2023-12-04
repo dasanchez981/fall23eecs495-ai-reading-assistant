@@ -2,29 +2,27 @@ import { useState } from 'react'
 import './App.css'
 import { summaryCall } from './components/SummaryCall'
 import { speakText } from './components/SpeakText'
-// import AudioPlayer from 'react-h5-audio-player';
 import ReactPlayer from 'react-player';
-// import 'react-h5-audio-player/lib/styles.css';
-// import Popover from "react-text-selection-popover";
-// import { AiFillQuestionCircle } from 'react-icons/AiFillQuestionCircle';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import Form from 'react-bootstrap/Form';
-//import { Popover, OverlayTrigger } from 'react-bootstrap';
-//import Button from 'react-bootstrap/Button';
+
 
 function App() {
   const [text, setText] = useState("");
+  const [customSum, setCustomSum] = useState("");
+  const [customSumText, setCustomSumText] = useState("");
   const [audioType, setAudioType] = useState("");
   const [speechURL, setSpeechURL] = useState("");
   const [response, setResponse] = useState("");
   const [loadingSum, setLoadingSum] = useState(false);
   const [loadingSpeech, setLoadingSpeech] = useState(false);
+  // const [isMenuOpen, setIsMenuOpen] = useState(false);
   console.log(speechURL)
 
   // Chrome background listener to receive messages from context menu items in service-worker.js
   chrome.runtime.onMessage.addListener(({ name, data }) => {
+
     if (name === "summarize-text") {
-      console.log("Received message to summarize from service-worker.js!");
+      // console.log("Received message to summarize from service-worker.js!");
       console.log(data.value);
       // Activate loading indicator 
       setLoadingSum(true)
@@ -42,8 +40,13 @@ function App() {
         alert("The summary call took too long!")
       }, 60000); // 60 seconds
 
-
-      summaryCall(data.value).then((value) => {
+      // Store the current custom summary value
+      // const customization = customSum;
+      
+      console.log("Doing a summary call")
+      summaryCall(customSum, data.value).then((value) => {
+        console.log("Value of customization:")
+        console.log(customSum)
         // Clear the timeout, as the summaryCall has returned
         clearTimeout(loadingTimeout);
 
@@ -53,9 +56,11 @@ function App() {
         shouldDeactivateLoading = false;
         // Deactivate loading indicator
         setLoadingSum(false)
-        console.log("The value of the text summary query is below");
-        console.log(value);
+        // console.log("The value of the text summary query is below");
+        // console.log(value);
       });
+
+
     } else if (name === "text-to-speech") {
       console.log("Received message to speak from service-worker.js!");
       console.log(data);
@@ -74,8 +79,15 @@ function App() {
         }
         alert("The text-to-speech call took too long!")
       }, 60000); // 60 seconds
-
-      speakText(data.value).then((value) => {
+      
+      var voice = (document.getElementById('voiceSelect') as HTMLInputElement).value;
+      var voice_type = "long-form";
+      if(voice === "Joanna" || voice === "Matthew")
+      {
+        voice_type = "neural";
+      }
+        
+      speakText(data.value, voice, voice_type).then((value) => {
         // Clear the timeout, as the summaryCall has returned
         clearTimeout(loadingTimeout);
 
@@ -111,7 +123,7 @@ function App() {
     // Set a timeout for 60 seconds
     
     
-    summaryCall(text).then((value) => {
+    summaryCall(customSum, text).then((value) => {
       console.log("IN SUMMARY SUBMIT")
       setResponse(value);
       // Deactivate loading indicator
@@ -130,9 +142,14 @@ function App() {
     e.preventDefault();
     // Activate loading indicator 
     setLoadingSpeech(true)
-
+    var voice = (document.getElementById('voiceSelect') as HTMLInputElement).value;
+    var voice_type = "long-form";
+    if(voice === "Joanna" || voice === "Matthew")
+    {
+      voice_type = "neural";
+    }
     if (e.nativeEvent.submitter.id === "speakbutton") {
-      speakText(text).then((value) => {
+      speakText(text, voice, voice_type).then((value) => {
         const audioUrl = URL.createObjectURL(value!);
         setSpeechURL(audioUrl);
         // Deactivate loading indicator
@@ -145,7 +162,7 @@ function App() {
     } 
     
     else if (e.nativeEvent.submitter.id === "speakSumbutton") {
-      speakText(response).then((value) => {
+      speakText(response, voice, voice_type).then((value) => {
         const audioUrl = URL.createObjectURL(value!);
         setSpeechURL(audioUrl);
         // Deactivate loading indicator
@@ -157,11 +174,26 @@ function App() {
     }
   };
 
+  const handleCustomSum = (e: any) => {
+    e.preventDefault();
+    // Set the value of customSum using setCustomSum
+    console.log(e)
+    console.log("Inside custom summary")
+    const newSum = customSumText
+    setCustomSum(newSum)
+    console.log("Text that user wants:")
+    console.log(customSumText)
+    // console.log(customSum)
+    // Set the value of customSum using setCustomSum
+    // setCustomSum(value);
+  };
+
   const onSubmit = (e: any) => {
     e.preventDefault();
-    console.log("The value of the input is below:");
-    console.log(e);
-    console.log(e.nativeEvent.submitter.value);
+    console.log("inside onSubmit")
+    // console.log("The value of the input is below:");
+    // console.log(e);
+    console.log(e.nativeEvent.submitter.id);
     if (
       e.nativeEvent.submitter.id === "speakbutton" ||
       e.nativeEvent.submitter.id === "speakSumbutton"
@@ -170,34 +202,13 @@ function App() {
     } else if (e.nativeEvent.submitter.id === "sumbutton") {
       handleSumSubmit(e);
     }
+    else if (e.nativeEvent.submitter.id === "custSumButton") {
+      handleCustomSum(e);
+    }
   };
 
-  // Tooltip at top of UI to help users
-  // const help_popover = (
-  //   <Popover id="help-popup" style={{ zIndex: 9999 }}>
-  //       <Popover.Body>
-  //           <p><b> Insert extension instructions here! </b></p>
-  //       </Popover.Body>
-  //   </Popover>
-  //   );
 
-  // const onResetFocus = async () => {
-  //   let [tab] = await chrome.tabs.query({active: true})
-  //   if (tab.url?.startsWith("chrome://")) return undefined;
-  //   // This can't access React variables so need to send through Chrome API
-  //   chrome.scripting.executeScript({
-  //     target: { tabId: tab.id! },
-  //     func: () => {
-  //       var focusedElements = document.querySelectorAll('.ancestor');
-  //       for(var j = 0; j < focusedElements.length; j++)
-  //       {
-  //         //can try removing spans themselves too
-  //         focusedElements[j].classList.remove('ancestor');
-  //       }
-  //     }
-  //   });
-  //   console.log("Reset!");
-  // }
+
   function checkNeedCloseMenu(e:any)
   {
       console.log(e)
@@ -215,13 +226,13 @@ function App() {
   }
   document.body.addEventListener("click", (e) => checkNeedCloseMenu(e), false)
    
-  function toggleMenu(e:any)
+  /*function toggleMenu(e:any)
   {
      let subMenu = document.getElementById("subMenu");
      subMenu?.classList.toggle("open-menu");
 
      e.stopPropagation()
-  }
+  }*/
 
   chrome.tabs.onActivated.addListener(function (activeInfo) {
     var fontSize = (document.getElementById('fontSizeSelect') as HTMLInputElement).value;
@@ -292,7 +303,9 @@ function App() {
       });  
   }
 
-  const toggleManual = async () => { //might also change the min-height of html element, 950px is ideal
+// <<<<<<< HEAD
+// =======
+  const toggleManual = async () => {
     console.log("Toggling manual input")
     let title = document.getElementById('manualTitle');
     let button = document.getElementById('toggleManualButton') as HTMLInputElement;
@@ -321,6 +334,7 @@ function App() {
 
     }
   }
+// >>>>>>> 31db5b5c9e1fc83dcd764fb7711b8f26e16a0c21
 
   // const copyToClipboard = async () => {
   //   var summField = document.getElementById('manual_output') as HTMLInputElement;
@@ -333,7 +347,7 @@ function App() {
         <header>
           <div id='logoImage'></div>
           <h2 id='titleName'>Supportive AI Reading Assistant</h2>
-          <div id='settingsIcon' onClick={(e) => toggleMenu(e)}></div>
+          <div id='settingsIcon'></div>
           <div className="hero">
            <div className = "sub-menu-wrap" id="subMenu">
              <div className ="sub-menu">
@@ -365,6 +379,18 @@ function App() {
                    <option value="500%">500%</option>
                  </select>
                </div>
+               <h2>Text-to-Speech Voice</h2>
+               <div className="dropdown-voice-select">
+                 <label htmlFor="voice-select">
+                   Choose a Line Spacing:
+                 </label>
+                 <select className="voice-select" onChange={changeCSS} id = "voiceSelect">
+                   <option value="Danielle">Danielle</option>
+                   <option value="Joanna">Joanna</option>
+                   <option value="Matthew">Matthew</option>
+                   <option value="Gregory">Gregory</option>
+                 </select>
+               </div>
              </div>
            </div>
           </div>
@@ -388,17 +414,8 @@ function App() {
             </div>
           </div>
         </div>
-        {/* <div id="resfocuscontainer">
-         <Button className = "resfocus" variant="secondary" onClick={onResetFocus}>Reset Focus</Button>{' '}
-       </div> */}
+        
         <br></br>
-        {/* <div>
-          <OverlayTrigger trigger={["hover", "focus"]} placement="bottom" overlay={help_popover}>
-              <span style={{ cursor: 'pointer' }}>
-                  <p>?</p>
-              </span>
-          </OverlayTrigger>
-        </div> */}
         <br></br>
         
         {/* If no speech is available then hide player from user */}
@@ -458,14 +475,26 @@ function App() {
             </div>
             )}
           </div>
+          
+          <form id='customizeSummaryForm' onSubmit={onSubmit}>
+            <input type="submit" value="Set Custom Summary" id="custSumButton" />
+            <textarea
+              id="customize_summary"
+              name="customize_summary"
+              placeholder="Customize the summary to your needs..."
+              value={customSumText}
+              onChange={(e) => setCustomSumText(e.target.value)}
+            ></textarea>   
+          </form>
+          
           <form id='summaryForm' onSubmit={onSubmit}>
+          
             <textarea
               id="manual_output"
               name="manual_output"
               placeholder="Result from AI summarization..."
               value={response}
             ></textarea>
-            {/* Bug #13 */}
             {response && (
               <div id='speakHover'>
                 <input type="submit" value="" id="speakSumbutton" />
