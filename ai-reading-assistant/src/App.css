@@ -23,6 +23,9 @@
  /*STYLING FOR DROPDOWN MENU */
 .sub-menu{
   background-color: lightgray;
+  padding: 10px;
+  text-align: left;
+  border-style: solid;
  }
  .sub-menu-wrap{
   position: absolute;
