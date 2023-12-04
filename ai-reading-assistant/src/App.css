@@ -27,7 +27,7 @@
  .sub-menu-wrap{
   position: absolute;
   /*top: 100%;*/
-  right: 10%;
+  right: 0;
   max-height: 0px;
   overflow: hidden;
   transition: max-height 0.5s;
@@ -206,7 +206,7 @@ body{
   display: block;
 }
 
-
+/* ========== BEGIN TEXT TO SPEECH CSS ==========*/
 #textToSpeechControls{
   width: 100%;
   max-width: 600px;
@@ -233,18 +233,19 @@ body{
 
 
 
-
+/* ========== BEGIN MANUAL INPUT TOGGLE CSS ==========*/
 #manualGrid{
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: 1fr;
+  margin-bottom: 20px;
 }
 #toggleManualButton{
   text-align: center;
   font-size: small;
   grid-column: 5;
   grid-row: 1;
-  width: 75%;
+  width: 40px;
   height: fit-content;
 }
 #manualTitle{
@@ -259,7 +260,7 @@ body{
   grid-column: 1 / span 5;
   grid-row: 2;
   width: 100%;
-  justify-items: center;
+  justify-items: start;
 }
 #manual_input{
   width: 100%;
@@ -271,18 +272,18 @@ body{
   grid-column: 5;
   grid-row: 1;
   height: fit-content;
-  width: fit-content;
+  width: 80px;
 }
 #sumbutton{
   font-size: smaller;
   grid-column: 5;
   grid-row: 2;
   height: fit-content;
-  width: fit-content;
+  width: 80px;
 }
 
 
-
+/* ========== BEGIN OUTPUT SUMMARY AREA CSS ==========*/
 div#summaryOutput{
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
@@ -338,3 +339,7 @@ input:active{
   font-size: medium;
   padding: 2px 4px;
 }
+
+
+
+
