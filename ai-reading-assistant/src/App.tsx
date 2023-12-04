@@ -308,19 +308,10 @@ function App() {
     console.log("Toggling manual input")
     let title = document.getElementById('manualTitle');
     let button = document.getElementById('toggleManualButton') as HTMLInputElement;
-    if(document.getElementById('manualForm')?.style.display == ''){
+    if((document.getElementById('manualForm')?.style.display == '') || (document.getElementById('manualForm')?.style.display == 'none')){
       document.getElementById('manualForm')?.style.setProperty("display", "grid");
-      document.getElementById('manualGrid')?.style.setProperty("grid-template-rows", "1fr 5fr");
-      if(title != undefined){
-        title.textContent = "Manually Input Text: ";
-      }
-      if(button != undefined){
-        button.value = "ON"
-      }
-
-    }else if(document.getElementById('manualForm')?.style.display == 'none'){
-      document.getElementById('manualForm')?.style.setProperty("display", "grid");
-      document.getElementById('manualGrid')?.style.setProperty("grid-template-rows", "1fr 5fr");
+      document.getElementById('manualGrid')?.style.setProperty("grid-template-rows", "0.5fr 5fr");
+      document.documentElement.style.setProperty("min-height", "950px");
       if(title != undefined){
         title.textContent = "Manually Input Text: ";
       }
@@ -330,7 +321,9 @@ function App() {
 
     }else if(document.getElementById('manualForm')?.style.display == 'grid'){
       document.getElementById('manualForm')?.style.setProperty("display", "none");
-      document.getElementById('manualGrid')?.style.setProperty("grid-template-rows", "1fr 1fr");
+      document.getElementById('manualGrid')?.style.setProperty("grid-template-rows", "1fr");
+      document.documentElement.style.setProperty("min-height", "fit-content");
+      
       if(title != undefined){
         title.textContent = "Toggle Manual Input: ";
       }
@@ -341,6 +334,11 @@ function App() {
     }
   }
 // >>>>>>> 31db5b5c9e1fc83dcd764fb7711b8f26e16a0c21
+
+  // const copyToClipboard = async () => {
+  //   var summField = document.getElementById('manual_output') as HTMLInputElement;
+  //   navigator.clipboard.writeText(summField.value);
+  // }
  
   return (
     <>
@@ -449,7 +447,6 @@ function App() {
             )}
           </div>
         </div>
-        <br></br>
         <br></br>
         <div id='manualGrid'>
           <h5 id='manualTitle'>Toggle Manual Input:</h5>
