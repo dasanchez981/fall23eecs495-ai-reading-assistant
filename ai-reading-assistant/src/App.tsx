@@ -214,11 +214,10 @@ function App() {
 
   function checkNeedCloseMenu(e:any)
   {
-      console.log(e)
       let subMenu = document.getElementById("subMenu")
       let dropdownClicked = e.target.parentNode.className
       if(dropdownClicked !== "dropdown-style-select" && dropdownClicked !== "dropdown-font-size" && dropdownClicked !== "dropdown-spacing-select" &&
-      dropdownClicked !== "sub-menu" && dropdownClicked !== "sub-menu-wrap open-menu")
+      dropdownClicked !== "sub-menu" && dropdownClicked !== "sub-menu-wrap open-menu" && dropdownClicked !== "dropdown-voice-select")
       {
           if(subMenu?.classList.contains("open-menu"))
           {
@@ -229,13 +228,13 @@ function App() {
   }
   document.body.addEventListener("click", (e) => checkNeedCloseMenu(e), false)
    
-  /*function toggleMenu(e:any)
+  function toggleMenu(e:any)
   {
      let subMenu = document.getElementById("subMenu");
      subMenu?.classList.toggle("open-menu");
 
      e.stopPropagation()
-  }*/
+  }
 
   chrome.tabs.onActivated.addListener(function (activeInfo) {
     var fontSize = (document.getElementById('fontSizeSelect') as HTMLInputElement).value;
@@ -351,11 +350,11 @@ function App() {
         <header>
           <div id='logoImage'></div>
           <h2 id='titleName'>Supportive AI Reading Assistant</h2>
-          <div id='settingsIcon'></div>
+          <div id='settingsIcon' onClick = {toggleMenu}></div>
           <div className="hero">
            <div className = "sub-menu-wrap" id="subMenu">
              <div className ="sub-menu">
-               <h2>Text Focus Features: </h2>
+               <h2>Text Focus Options: </h2>
                <div className = "dropdown-font-size">
                  <label htmlFor="font-size-select">
                    Choose a Font Size:
@@ -383,10 +382,10 @@ function App() {
                    <option value="500%">500%</option>
                  </select>
                </div>
-               <h2>Text-to-Speech Voice</h2>
+               <h2>Text-to-Speech Voice:</h2>
                <div className="dropdown-voice-select">
                  <label htmlFor="voice-select">
-                   Choose a Line Spacing:
+                   Choose a Voice:
                  </label>
                  <select className="voice-select" onChange={changeCSS} id = "voiceSelect">
                    <option value="Danielle">Danielle</option>
