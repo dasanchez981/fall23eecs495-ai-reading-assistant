@@ -15,53 +15,63 @@ function App() {
   const [response, setResponse] = useState("");
   const [loadingSum, setLoadingSum] = useState(false);
   const [loadingSpeech, setLoadingSpeech] = useState(false);
-  const [totalCalls, setTotalCalls] = useState(0)
   // const [isMenuOpen, setIsMenuOpen] = useState(false);
   console.log(speechURL)
 
-  
+  // Add a variable to track the number of summaryCall requests
+  let summaryCallCount = 0;
+  console.log("The number of summary calls made")
+  console.log(summaryCallCount)
+
   // Chrome background listener to receive messages from context menu items in service-worker.js
   chrome.runtime.onMessage.addListener(({ name, data }) => {
 
     if (name === "summarize-text") {
-      // console.log("Received message to summarize from service-worker.js!");
-      console.log(data.value);
-      // Activate loading indicator 
-      setLoadingSum(true)
-
-      // Set a variable to track whether loading indicator should be deactivated
-      let shouldDeactivateLoading = true;
-
-      // Set a timeout for 60 seconds
-      const loadingTimeout = setTimeout(() => {
-        // If the summaryCall hasn't returned, deactivate the loading indicator
-        if (shouldDeactivateLoading) {
-          setLoadingSum(false);
-          console.log("Loading indicator deactivated after 60 seconds");
-        }
-        alert("The summary call took too long!")
-      }, 60000); // 60 seconds
-
       // Store the current custom summary value
       // const customization = customSum;
       
-      console.log("Doing a summary call")
-      setTotalCalls(totalCalls+1)
-      summaryCall(customSum, data.value).then((value) => {
-        console.log("Value of customization:")
-        console.log(customSum)
-        // Clear the timeout, as the summaryCall has returned
-        clearTimeout(loadingTimeout);
+      // Check if customSum is already set
+      // TODO: This is a quick workaround but look into making a Promise for state variable
+      if (customSum && summaryCallCount === 0) {
+        summaryCallCount++; // Increment the count
+        // console.log("Received message to summarize from service-worker.js!");
+        // console.log(data.value);
+        // Activate loading indicator 
+        // setLoadingSum(true)
 
-        setResponse(value);
+        // // Set a variable to track whether loading indicator should be deactivated
+        // let shouldDeactivateLoading = true;
 
-        // Deactivate loading indicator only if the timeout hasn't already occurred
-        shouldDeactivateLoading = false;
-        // Deactivate loading indicator
-        setLoadingSum(false)
-        // console.log("The value of the text summary query is below");
-        // console.log(value);
-      });
+        // // Set a timeout for 60 seconds
+        // const loadingTimeout = setTimeout(() => {
+        //   // If the summaryCall hasn't returned, deactivate the loading indicator
+        //   if (shouldDeactivateLoading) {
+        //     setLoadingSum(false);
+        //     console.log("Loading indicator deactivated after 60 seconds");
+        //   }
+        //   alert("The summary call took too long, refresh extension!")
+        // }, 60000); // 60 seconds
+
+        console.log("Doing a summary call")
+        summaryCall(customSum, data.value).then((value) => {
+          console.log("Value of customization:")
+          console.log(customSum)
+          // Clear the timeout, as the summaryCall has returned
+          // clearTimeout(loadingTimeout);
+
+          setResponse(value);
+
+          // Deactivate loading indicator only if the timeout hasn't already occurred
+          // shouldDeactivateLoading = false;
+          // Deactivate loading indicator
+          // setLoadingSum(false)
+          // console.log("The value of the text summary query is below");
+          // console.log(value);
+        });
+      }
+      else {
+        console.log("Custom sum is empty")
+      }
 
 
     } else if (name === "text-to-speech") {
@@ -185,7 +195,7 @@ function App() {
     const newSum = customSumText
     setCustomSum(newSum)
     console.log("Text that user wants:")
-    console.log(customSum)
+    console.log(customSumText)
     // console.log(customSum)
     // Set the value of customSum using setCustomSum
     // setCustomSum(value);
@@ -336,7 +346,7 @@ function App() {
 
     }
   }
-  console.log(totalCalls)
+
 // >>>>>>> 31db5b5c9e1fc83dcd764fb7711b8f26e16a0c21
 
   // const copyToClipboard = async () => {
