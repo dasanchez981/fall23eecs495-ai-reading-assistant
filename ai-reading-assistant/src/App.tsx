@@ -15,9 +15,11 @@ function App() {
   const [response, setResponse] = useState("");
   const [loadingSum, setLoadingSum] = useState(false);
   const [loadingSpeech, setLoadingSpeech] = useState(false);
+  const [totalCalls, setTotalCalls] = useState(0)
   // const [isMenuOpen, setIsMenuOpen] = useState(false);
   console.log(speechURL)
 
+  
   // Chrome background listener to receive messages from context menu items in service-worker.js
   chrome.runtime.onMessage.addListener(({ name, data }) => {
 
@@ -44,6 +46,7 @@ function App() {
       // const customization = customSum;
       
       console.log("Doing a summary call")
+      setTotalCalls(totalCalls+1)
       summaryCall(customSum, data.value).then((value) => {
         console.log("Value of customization:")
         console.log(customSum)
@@ -182,7 +185,7 @@ function App() {
     const newSum = customSumText
     setCustomSum(newSum)
     console.log("Text that user wants:")
-    console.log(customSumText)
+    console.log(customSum)
     // console.log(customSum)
     // Set the value of customSum using setCustomSum
     // setCustomSum(value);
@@ -341,6 +344,7 @@ function App() {
 
     }
   }
+  console.log(totalCalls)
 // >>>>>>> 31db5b5c9e1fc83dcd764fb7711b8f26e16a0c21
  
   return (
