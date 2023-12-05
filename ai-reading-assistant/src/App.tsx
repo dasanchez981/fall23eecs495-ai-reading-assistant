@@ -8,69 +8,74 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [text, setText] = useState("");
-  const [customSum, setCustomSum] = useState("");
-  const [customSumText, setCustomSumText] = useState("");
   const [audioType, setAudioType] = useState("");
   const [speechURL, setSpeechURL] = useState("");
   const [response, setResponse] = useState("");
   const [loadingSum, setLoadingSum] = useState(false);
   const [loadingSpeech, setLoadingSpeech] = useState(false);
-  // const [isMenuOpen, setIsMenuOpen] = useState(false);
-  console.log(speechURL)
 
-  // Add a variable to track the number of summaryCall requests
-  let summaryCallCount = 0;
-  console.log("The number of summary calls made")
-  console.log(summaryCallCount)
+  function countWords(inputString: string): number {
+    // Use a regular expression to split the string into words
+    const wordsArray = inputString.split(/\s+/);
+
+    // Filter out empty strings in case there are multiple spaces between words
+    const filteredWordsArray = wordsArray.filter(word => word !== '');
+
+    // Return the length of the array, which represents the number of words
+    return filteredWordsArray.length;
+  }
 
   // Chrome background listener to receive messages from context menu items in service-worker.js
   chrome.runtime.onMessage.addListener(({ name, data }) => {
 
     if (name === "summarize-text") {
-      // Store the current custom summary value
-      // const customization = customSum;
-      
-      // Check if customSum is already set
-      // TODO: This is a quick workaround but look into making a Promise for state variable
-      if (customSum && summaryCallCount === 0) {
-        summaryCallCount++; // Increment the count
-        // console.log("Received message to summarize from service-worker.js!");
-        // console.log(data.value);
-        // Activate loading indicator 
-        // setLoadingSum(true)
+      console.log("Received message to summarize from service-worker.js!");
+      console.log(data);
+      // Activate loading indicator
+      setLoadingSum(true);
 
-        // // Set a variable to track whether loading indicator should be deactivated
-        // let shouldDeactivateLoading = true;
+      // Set a variable to track whether loading indicator should be deactivated
+      let shouldDeactivateLoading = true;
 
-        // // Set a timeout for 60 seconds
-        // const loadingTimeout = setTimeout(() => {
-        //   // If the summaryCall hasn't returned, deactivate the loading indicator
-        //   if (shouldDeactivateLoading) {
-        //     setLoadingSum(false);
-        //     console.log("Loading indicator deactivated after 60 seconds");
-        //   }
-        //   alert("The summary call took too long, refresh extension!")
-        // }, 60000); // 60 seconds
+      // Set a timeout for 60 seconds
+      const loadingTimeout = setTimeout(() => {
+        // If the summaryCall hasn't returned, deactivate the loading indicator
+        if (shouldDeactivateLoading) {
+          setLoadingSum(false);
+          console.log("Loading indicator for summary deactivated after 60 seconds");
+        }
+        alert("The summary call took too long!");
+      }, 60000); // 60 seconds
 
-        console.log("Doing a summary call")
-        summaryCall(customSum, data.value).then((value) => {
-          console.log("Value of customization:")
-          console.log(customSum)
+
+      const numWords = countWords(data.value);
+      console.log("Number of words detected")
+      console.log(numWords)
+      // Establish lower and upper limit on summaryCall
+      if ((numWords > 5) && (numWords < 1000)) {
+        console.log("Doing a summary call");
+        summaryCall(data.value).then((value) => {
           // Clear the timeout, as the summaryCall has returned
-          // clearTimeout(loadingTimeout);
+          clearTimeout(loadingTimeout);
 
           setResponse(value);
+          console.log("The summary call returned: ");
+          console.log(value);
 
           // Deactivate loading indicator only if the timeout hasn't already occurred
-          // shouldDeactivateLoading = false;
+          shouldDeactivateLoading = false;
           // Deactivate loading indicator
-          // setLoadingSum(false)
-          // console.log("The value of the text summary query is below");
-          // console.log(value);
+          setLoadingSum(false);
         });
       }
       else {
-        console.log("Custom sum is empty")
+        alert("Your selected text is out of bounds at " + numWords + " words. Acceptable range is from 5 to 1000 words")
+        // Clear the timeout, as the summaryCall has returned
+        clearTimeout(loadingTimeout);
+        // Deactivate loading indicator only if the timeout hasn't already occurred
+        shouldDeactivateLoading = false;
+        // Deactivate loading indicator
+        setLoadingSum(false);
       }
 
 
@@ -88,7 +93,7 @@ function App() {
         // If the summaryCall hasn't returned, deactivate the loading indicator
         if (shouldDeactivateLoading) {
           setLoadingSpeech(false);
-          console.log("Loading indicator deactivated after 60 seconds");
+          console.log("Loading indicator for speech deactivated after 60 seconds");
         }
         alert("The text-to-speech call took too long!")
       }, 60000); // 60 seconds
@@ -121,36 +126,60 @@ function App() {
     }
   });
 
-  // Function to handle summaries
-  const handleSumSubmit = (event: any) => {
-    // Deprecated code!!!!!!
-    console.log("IN SUMMARY SUBMIT")
-    event.preventDefault();
-
-    // Activate loading indicator 
-    setLoadingSum(true)
+  // Function to handle manual input summaries
+  const handleSumSubmit = (e: any) => {
+    e.preventDefault();
+    // Activate loading indicator
+    setLoadingSum(true);
 
     // Set a variable to track whether loading indicator should be deactivated
-    // let shouldDeactivateLoading = true;
-    console.log("Submitted summary HERE")
+    let shouldDeactivateLoading = true;
+
     // Set a timeout for 60 seconds
-    
-    
-    summaryCall(customSum, text).then((value) => {
-      console.log("IN SUMMARY SUBMIT")
-      setResponse(value);
-      // Deactivate loading indicator
+    const loadingTimeout = setTimeout(() => {
+      // If the summaryCall hasn't returned, deactivate the loading indicator
+      if (shouldDeactivateLoading) {
+        setLoadingSum(false);
+        console.log("Loading indicator for summary deactivated after 60 seconds");
+      }
+      alert("The summary call took too long!");
+    }, 60000); // 60 seconds
+
+
+    const numWords = countWords(text);
+    console.log("Number of words detected")
+    console.log(numWords)
+    // Establish lower and upper limit on summaryCall
+    if ((numWords > 5) && (numWords < 1000)) {
+      console.log("Doing a summary call");
+      summaryCall(text).then((value) => {
+        // Clear the timeout, as the summaryCall has returned
+        clearTimeout(loadingTimeout);
+
+        setResponse(value);
+        console.log("The summary call returned: ");
+        console.log(value);
+
+        // Deactivate loading indicator only if the timeout hasn't already occurred
+        shouldDeactivateLoading = false;
+        // Deactivate loading indicator
+        setLoadingSum(false);
+      });
+    }
+    else {
+      alert("Your selected text is out of bounds at " + numWords + " words. Acceptable range is from 5 to 1000 words")
       // Clear the timeout, as the summaryCall has returned
-      // clearTimeout(loadingTimeout);
+      clearTimeout(loadingTimeout);
       // Deactivate loading indicator only if the timeout hasn't already occurred
-      // shouldDeactivateLoading = false;
-      // setLoadingSum(false)
-      // console.log("The value of the text summary query is below");
-      // console.log(value);
-    });
+      shouldDeactivateLoading = false;
+      // Deactivate loading indicator
+      setLoadingSum(false);
+    }
+
+    
   };
 
-  // Function to handle text to speech
+  // Function to handle manual text to speech
   const handleTTSSubmit = (e: any) => {
     e.preventDefault();
     // Activate loading indicator 
@@ -187,25 +216,11 @@ function App() {
     }
   };
 
-  const handleCustomSum = (e: any) => {
-    e.preventDefault();
-    // Set the value of customSum using setCustomSum
-    console.log(e)
-    console.log("Inside custom summary")
-    const newSum = customSumText
-    setCustomSum(newSum)
-    console.log("Text that user wants:")
-    console.log(customSumText)
-    // console.log(customSum)
-    // Set the value of customSum using setCustomSum
-    // setCustomSum(value);
-  };
 
   const onSubmit = (e: any) => {
     e.preventDefault();
     console.log("inside onSubmit")
-    // console.log("The value of the input is below:");
-    // console.log(e);
+
     console.log(e.nativeEvent.submitter.id);
     if (
       e.nativeEvent.submitter.id === "speakbutton" ||
@@ -214,9 +229,6 @@ function App() {
       handleTTSSubmit(e);
     } else if (e.nativeEvent.submitter.id === "sumbutton") {
       handleSumSubmit(e);
-    }
-    else if (e.nativeEvent.submitter.id === "custSumButton") {
-      handleCustomSum(e);
     }
   };
 
@@ -347,13 +359,7 @@ function App() {
     }
   }
 
-// >>>>>>> 31db5b5c9e1fc83dcd764fb7711b8f26e16a0c21
 
-  // const copyToClipboard = async () => {
-  //   var summField = document.getElementById('manual_output') as HTMLInputElement;
-  //   navigator.clipboard.writeText(summField.value);
-  // }
- 
   return (
     <>
       <div id="sidebar_container">
@@ -427,7 +433,7 @@ function App() {
             </div>
           </div>
         </div>
-        
+        <br></br>
         <br></br>
         <br></br>
         
@@ -488,17 +494,6 @@ function App() {
             </div>
             )}
           </div>
-          
-          <form id='customizeSummaryForm' onSubmit={onSubmit}>
-            <input type="submit" value="Set Custom Summary" id="custSumButton" />
-            <textarea
-              id="customize_summary"
-              name="customize_summary"
-              placeholder="Customize the summary to your needs..."
-              value={customSumText}
-              onChange={(e) => setCustomSumText(e.target.value)}
-            ></textarea>   
-          </form>
           
           <form id='summaryForm' onSubmit={onSubmit}>
           

@@ -7,11 +7,11 @@ const openai = new OpenAI({
 });
 
 
-export async function summaryCall(customization: string, text: string) {
+export async function summaryCall(text: string) {
     console.log("The value of the query is shown below:")
-    console.log(customization + " " + text)
+    console.log(text)
     const chatCompletion = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4',
       // TODO: Think about using choices[0]["finish_reason"] output to warn user
       // TODO: Have a limit on the user's text input so that there's enough tokens left for proper/complete summary
       messages: [
@@ -21,7 +21,7 @@ export async function summaryCall(customization: string, text: string) {
         },
         {
           "role": "user",
-          "content": customization + " " + text,
+          "content": text,
         },
       ],
       "temperature": 0,
