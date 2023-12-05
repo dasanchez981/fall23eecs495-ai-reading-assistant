@@ -33,8 +33,23 @@ function setupContextMenu() {
             target: {tabId: tabId},
             files: ["focus-style.css"]
         });
+        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+          console.log("In query tabs")
+          if (tabs[0].url.match('https:\/\/.*.wikipedia.org\/.*')) {
+            console.log("Tab match")
+            chrome.runtime.sendMessage({
+              name: 'tab-loaded',
+              data: { tabId: tabId }
+            });
+          }
+        });   
     }
- })
+  })
+
+
+
+     
+
  
   // Ensures clicking on icon leads to extension opening in sidePanel
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
@@ -60,7 +75,62 @@ function setupContextMenu() {
       });
     }
     else if (data.menuItemId === 'text-to-speech') {
-        console.log("Sending message to speak to App.tsx!")
+        console.log("Sending message to active tab to speak to App.tsx!")
+        // Get the active tab
+        // chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        //   var activeTab = tabs[0];
+        //   console.log("Active tab below:")
+        //   console.log(activeTab)
+          
+        //   // Check if there is an active tab
+        //   if (activeTab) {
+        //       // Send a message to the active tab
+        //       // chrome.tabs.sendMessage(activeTab.id, { name: 'text-to-speech', data: { value: data.selectionText }});
+        //       chrome.runtime.sendMessage({
+        //         name: 'text-to-speech',
+        //         data: { value: data.selectionText }
+        //       });
+        //     } else {
+        //       console.error('No active tab found.');
+        //   }
+        // });
+        // async function sendMessageToActiveTab() {
+        //   // console.log("Sending out message to tab")
+        //   // const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+        //   // console.log("Active tab below:")
+        //   // console.log(tab)
+        //   // console.log(tab.status)
+        //   // chrome.tabs.sendMessage(tab.id, {
+        //   //   name: 'text-to-speech',
+        //   //   data: { value: data.selectionText }
+        //   // });
+        //   // const response = await chrome.tabs.sendMessage(tab.id, message);
+        //   // chrome.tabs.onUpdated.addListener(function (updatedTabId, info) {
+        //   //   if (info.status === 'complete' && updatedTabId === tab.id) {
+        //   //     console.log("Tab is loaded");
+        //   //     chrome.tabs.sendMessage(updatedTabId, {
+        //   //       name: 'text-to-speech',
+        //   //       data: { value: data.selectionText }
+        //   //     });
+        //   //   }
+        //   // });
+          
+        //   // console.log("Response below:")
+        //   // console.log(response)
+        //   // TODO: Do something with the response.
+        // }
+        // sendMessageToActiveTab()
+
+        // console.log(tab)
+        // console.log(tab.status)
+        
+        // chrome.tabs.sendMessage(tab.id, {
+        //   name: 'text-to-speech',
+        //   data: { value: data.selectionText }
+        // });
+        
+        
+        // Solution that sent multiple messages:
         chrome.runtime.sendMessage({
             name: 'text-to-speech',
             data: { value: data.selectionText }

@@ -19,21 +19,46 @@ function App() {
   console.log(speechURL)
 
   // Add a variable to track the number of summaryCall requests
-  let summaryCallCount = 0;
-  console.log("The number of summary calls made")
-  console.log(summaryCallCount)
+  // let summaryCallCount = 0;
+  // console.log("The number of summary calls made")
+  // console.log(summaryCallCount)
 
   // Chrome background listener to receive messages from context menu items in service-worker.js
   chrome.runtime.onMessage.addListener(({ name, data }) => {
 
-    if (name === "summarize-text") {
+    if (name === 'tab-loaded') {
+      // Handle the tab-loaded message
+      console.log('Tab loaded:', data.tabId);
+    }
+
+    else if (name === "summarize-text") {
+      console.log("Doing a summary call")
+      summaryCall(data.value).then((value) => {
+        console.log("Value of customization:")
+        console.log(customSum)
+        // Clear the timeout, as the summaryCall has returned
+        // clearTimeout(loadingTimeout);
+
+        setResponse(value);
+
+        // Deactivate loading indicator only if the timeout hasn't already occurred
+        // shouldDeactivateLoading = false;
+        // Deactivate loading indicator
+        // setLoadingSum(false)
+        // console.log("The value of the text summary query is below");
+        // console.log(value);
+      });
       // Store the current custom summary value
       // const customization = customSum;
       
       // Check if customSum is already set
       // TODO: This is a quick workaround but look into making a Promise for state variable
-      if (customSum && summaryCallCount === 0) {
-        summaryCallCount++; // Increment the count
+      // TODO: Put flag for making work with no customSum
+      // var custSumStatus = (document.getElementById('toggleCustomSumButton') as HTMLInputElement).value;
+      // console.log(custSumStatus)
+      
+      // if ((customSum && summaryCallCount === 0) || custSumStatus === "OFF") {
+        // summaryCallCount++; // Increment the count
         // console.log("Received message to summarize from service-worker.js!");
         // console.log(data.value);
         // Activate loading indicator 
@@ -52,28 +77,7 @@ function App() {
         //   alert("The summary call took too long, refresh extension!")
         // }, 60000); // 60 seconds
 
-        console.log("Doing a summary call")
-        summaryCall(customSum, data.value).then((value) => {
-          console.log("Value of customization:")
-          console.log(customSum)
-          // Clear the timeout, as the summaryCall has returned
-          // clearTimeout(loadingTimeout);
-
-          setResponse(value);
-
-          // Deactivate loading indicator only if the timeout hasn't already occurred
-          // shouldDeactivateLoading = false;
-          // Deactivate loading indicator
-          // setLoadingSum(false)
-          // console.log("The value of the text summary query is below");
-          // console.log(value);
-        });
-      }
-      else {
-        console.log("Custom sum is empty")
-      }
-
-
+        
     } else if (name === "text-to-speech") {
       console.log("Received message to speak from service-worker.js!");
       console.log(data);
@@ -99,7 +103,7 @@ function App() {
       {
         voice_type = "neural";
       }
-        
+      console.log("Doing a speech call")
       speakText(data.value, voice, voice_type).then((value) => {
         // Clear the timeout, as the summaryCall has returned
         clearTimeout(loadingTimeout);
@@ -136,7 +140,7 @@ function App() {
     // Set a timeout for 60 seconds
     
     
-    summaryCall(customSum, text).then((value) => {
+    summaryCall(text).then((value) => {
       console.log("IN SUMMARY SUBMIT")
       setResponse(value);
       // Deactivate loading indicator
@@ -347,6 +351,39 @@ function App() {
     }
   }
 
+  const toggleCustomSum = async () => {
+    console.log("Toggling custom summarization feature")
+    let title = document.getElementById('customSumTitle');
+    let button = document.getElementById('toggleCustomSumButton') as HTMLInputElement;
+    if((document.getElementById('customizeSummaryForm')?.style.display == '') || (document.getElementById('customizeSummaryForm')?.style.display == 'none')){
+      document.getElementById('customizeSummaryForm')?.style.setProperty("display", "grid");
+      document.getElementById('customSumGrid')?.style.setProperty("grid-template-rows", "0.5fr 5fr");
+      document.documentElement.style.setProperty("min-height", "950px");
+      if(title != undefined){
+        title.textContent = "Customize Summary: ";
+      }
+      if(button != undefined){
+        button.value = "ON"
+      }
+
+    }else if(document.getElementById('customizeSummaryForm')?.style.display == 'grid'){
+      document.getElementById('customizeSummaryForm')?.style.setProperty("display", "none");
+      document.getElementById('customSumGrid')?.style.setProperty("grid-template-rows", "1fr");
+      document.documentElement.style.setProperty("min-height", "fit-content");
+      
+      if(title != undefined){
+        title.textContent = "Toggle Custom Summary: ";
+      }
+      if(button != undefined){
+        button.value = "OFF"
+      }
+    }
+
+
+
+
+  }
+
 // >>>>>>> 31db5b5c9e1fc83dcd764fb7711b8f26e16a0c21
 
   // const copyToClipboard = async () => {
@@ -478,6 +515,24 @@ function App() {
               ></textarea>
             </form>
         </div>
+        
+        <div id='customSumGrid'>
+          <h5 id='customSumTitle'>Toggle Custom Summary:</h5>
+          <input type="button" id='toggleCustomSumButton' onClick={toggleCustomSum} value="OFF"></input>
+            <form id='customizeSummaryForm' onSubmit={onSubmit}>
+              <input type="submit" value="Set Custom Summary" id="custSumButton" />
+              <textarea
+                id="customize_summary"
+                name="customize_summary"
+                placeholder="Customize the summary to your needs..."
+                value={customSumText}
+                onChange={(e) => setCustomSumText(e.target.value)}
+              ></textarea>   
+            </form>
+        </div>
+          
+
+
         <div id='summaryOutput'>
           <h5 id='sumTitle'>Generated Summary:</h5>
           {/* Loading indicator shows when backend is processing */}
@@ -488,17 +543,6 @@ function App() {
             </div>
             )}
           </div>
-          
-          <form id='customizeSummaryForm' onSubmit={onSubmit}>
-            <input type="submit" value="Set Custom Summary" id="custSumButton" />
-            <textarea
-              id="customize_summary"
-              name="customize_summary"
-              placeholder="Customize the summary to your needs..."
-              value={customSumText}
-              onChange={(e) => setCustomSumText(e.target.value)}
-            ></textarea>   
-          </form>
           
           <form id='summaryForm' onSubmit={onSubmit}>
           
