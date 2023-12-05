@@ -359,7 +359,6 @@ function App() {
     }
   }
 
-
   return (
     <>
       <div id="sidebar_container">
