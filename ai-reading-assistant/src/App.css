@@ -36,6 +36,9 @@
   transition: max-height 0.5s;
  }
  
+.hero {
+  z-index: 9999;
+}
  
  .sub-menu-wrap.open-menu{
   max-height: 400px;
