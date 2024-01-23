@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import { summaryCall } from './components/SummaryCall'
 import { speakText } from './components/SpeakText'
@@ -26,7 +26,9 @@ function App() {
   }
 
   // Chrome background listener to receive messages from context menu items in service-worker.js
-  chrome.runtime.onMessage.addListener(({ name, data }) => {
+  // Check if the listener is already added before adding it
+
+  const messageListener = ({ name, data }: { name: string; data: any }) => {
 
     if (name === "summarize-text") {
       console.log("Received message to summarize from service-worker.js!");
@@ -62,7 +64,7 @@ function App() {
           console.log("The summary call returned: ");
           console.log(value);
 
-          // Deactivate loading indicator only if the timeout hasn't already occurred
+          // Deactivate loading indiecator only if the timeout hasn't already occurred
           shouldDeactivateLoading = false;
           // Deactivate loading indicator
           setLoadingSum(false);
@@ -80,6 +82,7 @@ function App() {
 
 
     } else if (name === "text-to-speech") {
+      console.log("Let's fix this")
       console.log("Received message to speak from service-worker.js!");
       console.log(data);
       // Activate loading indicator 
@@ -124,7 +127,25 @@ function App() {
       console.log("Received message to focus text from service-worker.js!");
       console.log(data);
     }
-  });
+  };
+
+  // Ensure that this only adds a listener once to the receiver function messageListener
+  useEffect(() => {
+    // Issue is here!! Ensure listener only added once!
+    // Only add listener if not present on function
+    if (!chrome.runtime.onMessage.hasListener(messageListener)) {
+      console.log("Adding listener to message function")
+      // Add listener defined above
+      chrome.runtime.onMessage.addListener(messageListener);
+    }
+
+    // Clean up the listener when the component unmounts
+    return () => {
+      console.log("Removing listener from message function");
+      chrome.runtime.onMessage.removeListener(messageListener);
+    };
+
+  }, []); // Empty dependency array ensures the effect runs only once the component mounts
 
   // Function to handle manual input summaries
   const handleSumSubmit = (e: any) => {
