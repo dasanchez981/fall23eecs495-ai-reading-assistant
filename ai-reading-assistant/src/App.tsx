@@ -26,7 +26,7 @@ function App() {
   }
 
   // Chrome background listener to receive messages from context menu items in service-worker.js
-  // Check if the listener is already added before adding it
+  // Duplicate message bug officially fixed
 
   const messageListener = ({ name, data }: { name: string; data: any }) => {
 
