@@ -5,34 +5,34 @@ import { speakText } from './components/SpeakText'
 import ReactPlayer from 'react-player';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
+// This is the main extension function that runs when it is open
 function App() {
-  const [text, setText] = useState("");
-  const [audioType, setAudioType] = useState("");
-  const [speechURL, setSpeechURL] = useState("");
-  const [response, setResponse] = useState("");
-  const [loadingSum, setLoadingSum] = useState(false);
-  const [loadingSpeech, setLoadingSpeech] = useState(false);
+  // These are state variables used to hold relevant data for the extension
+  const [text, setText] = useState(""); // used to hold the text that will be spoken or summarized
+  const [audioType, setAudioType] = useState(""); // Used to print which audio type is being spoken (highlighted text or text summary)
+  const [speechURL, setSpeechURL] = useState(""); // Used to store the URL of the audio file that is being spoken
+  const [response, setResponse] = useState(""); // Used to store the response from the summary API call
+  const [loadingSum, setLoadingSum] = useState(false); // Shows whether to display summary loading indicator
+  const [loadingSpeech, setLoadingSpeech] = useState(false); // Shows whether to display speech loading indicator
 
+  // Used to limit the number of words allowed to be input by user
   function countWords(inputString: string): number {
     // Use a regular expression to split the string into words
     const wordsArray = inputString.split(/\s+/);
-
     // Filter out empty strings in case there are multiple spaces between words
     const filteredWordsArray = wordsArray.filter(word => word !== '');
-
     // Return the length of the array, which represents the number of words
     return filteredWordsArray.length;
   }
 
-  // Chrome background listener to receive messages from context menu items in service-worker.js
-  // Duplicate message bug officially fixed
-
+  // Function that uses Chrome background listener to receive messages from context menu items in service-worker.js
   const messageListener = ({ name, data }: { name: string; data: any }) => {
-
+    
+    // Summary context menu item
     if (name === "summarize-text") {
       console.log("Received message to summarize from service-worker.js!");
       console.log(data);
+      // TODO: Wrap up loading indicator stuff in a function
       // Activate loading indicator
       setLoadingSum(true);
 
@@ -50,6 +50,7 @@ function App() {
       }, 60000); // 60 seconds
 
 
+      // TODO: this code block resembles another code block in this file where we also have to establish a lower and upper limit on summaryCall
       const numWords = countWords(data.value);
       console.log("Number of words detected")
       console.log(numWords)
@@ -80,13 +81,13 @@ function App() {
         setLoadingSum(false);
       }
 
-
+    // Speech context menu option
     } else if (name === "text-to-speech") {
-      console.log("Let's fix this")
+      console.log("Let's fix this");
       console.log("Received message to speak from service-worker.js!");
       console.log(data);
-      // Activate loading indicator 
-      setLoadingSpeech(true)
+      // Activate loading indicator
+      setLoadingSpeech(true);
 
       // Set a variable to track whether loading indicator should be deactivated
       let shouldDeactivateLoading = true;
@@ -96,18 +97,22 @@ function App() {
         // If the summaryCall hasn't returned, deactivate the loading indicator
         if (shouldDeactivateLoading) {
           setLoadingSpeech(false);
-          console.log("Loading indicator for speech deactivated after 60 seconds");
+          console.log(
+            "Loading indicator for speech deactivated after 60 seconds"
+          );
         }
-        alert("The text-to-speech call took too long!")
+        alert("The text-to-speech call took too long!");
       }, 60000); // 60 seconds
-      
-      var voice = (document.getElementById('voiceSelect') as HTMLInputElement).value;
-      var voice_type = "long-form";
-      if(voice === "Joanna" || voice === "Matthew")
-      {
-        voice_type = "neural";
+
+      // get voice selection from dropdown menu
+      var voice = (document.getElementById("voiceSelect") as HTMLInputElement)
+        .value; // assumes voice is either Danielle or Gregory
+      var voice_type = "long-form"; // voices Danielle and Gregory require voice-type=long-form
+      // if the voice type selected is Joanna or Matthew, we know its not long form
+      if (voice === "Joanna" || voice === "Matthew") {
+        voice_type = "neural"; // voices "Joanna" and "Matthew" require voice-type=neural
       }
-        
+
       speakText(data.value, voice, voice_type).then((value) => {
         // Clear the timeout, as the summaryCall has returned
         clearTimeout(loadingTimeout);
@@ -118,11 +123,13 @@ function App() {
         // Deactivate loading indicator only if the timeout hasn't already occurred
         shouldDeactivateLoading = false;
         // Deactivate loading indicator
-        setLoadingSpeech(false)
+        setLoadingSpeech(false);
         setAudioType("Speaking highlighted text...");
         console.log("The url of the speak text query is below");
         console.log(value);
       });
+
+      // Text focus context menu option
     } else if (name === "text-focus") {
       console.log("Received message to focus text from service-worker.js!");
       console.log(data);
@@ -131,8 +138,7 @@ function App() {
 
   // Ensure that this only adds a listener once to the receiver function messageListener
   useEffect(() => {
-    // Issue is here!! Ensure listener only added once!
-    // Only add listener if not present on function
+    // Ensure listener only added once
     if (!chrome.runtime.onMessage.hasListener(messageListener)) {
       console.log("Adding listener to message function")
       // Add listener defined above
@@ -205,6 +211,9 @@ function App() {
     e.preventDefault();
     // Activate loading indicator 
     setLoadingSpeech(true)
+
+    // TODO: Wrap voice stuff in a function
+    // Gets voice selection from drop down menu
     var voice = (document.getElementById('voiceSelect') as HTMLInputElement).value;
     var voice_type = "long-form";
     if(voice === "Joanna" || voice === "Matthew")
@@ -237,24 +246,26 @@ function App() {
     }
   };
 
-
+  // Function to handle any manual input and direct to proper function 
   const onSubmit = (e: any) => {
     e.preventDefault();
     console.log("inside onSubmit")
 
     console.log(e.nativeEvent.submitter.id);
+    // Direct to TTSSubmit function
     if (
       e.nativeEvent.submitter.id === "speakbutton" ||
       e.nativeEvent.submitter.id === "speakSumbutton"
     ) {
       handleTTSSubmit(e);
+    // Direct to SumSubmit function
     } else if (e.nativeEvent.submitter.id === "sumbutton") {
       handleSumSubmit(e);
     }
   };
 
 
-
+  // Checks whether a click occurs outside of the drop down menu, and closes the menu if it does
   function checkNeedCloseMenu(e:any)
   {
       let subMenu = document.getElementById("subMenu")
@@ -269,6 +280,7 @@ function App() {
           
       }
   }
+  // Adds a click listener to the entire document, so that we can close the menu if clicked outside menu
   document.body.addEventListener("click", (e) => checkNeedCloseMenu(e), false)
    
   function toggleMenu(e:any)
@@ -279,6 +291,7 @@ function App() {
      e.stopPropagation()
   }
 
+  // Whenever a tab is open with extension sets CSS styling based on settings menu options
   chrome.tabs.onActivated.addListener(function (activeInfo) {
     var fontSize = (document.getElementById('fontSizeSelect') as HTMLInputElement).value;
     var fontStyle = (document.getElementById('fontStyleSelect') as HTMLInputElement).value;
@@ -299,7 +312,9 @@ function App() {
    
  })
  
- 
+ // Add a listener for when a tab is updated, and whenever a tab is updated,
+ // executes script within the webpage that sets CSS that was inserted by service worker 
+ // to the correct settings as specified by drop down menu
  chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
     var fontSize = (document.getElementById('fontSizeSelect') as HTMLInputElement).value;
     var fontStyle = (document.getElementById('fontStyleSelect') as HTMLInputElement).value;
@@ -348,8 +363,7 @@ function App() {
       });  
   }
 
-// <<<<<<< HEAD
-// =======
+
   const toggleManual = async () => {
     console.log("Toggling manual input")
     let title = document.getElementById('manualTitle');
