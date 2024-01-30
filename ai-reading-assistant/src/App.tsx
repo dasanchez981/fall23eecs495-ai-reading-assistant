@@ -27,11 +27,62 @@ function App() {
 
   /* START OF HELPER FUNCTIONS */
 
+  function startLoadingIndicator(name: string) {
+    // TODO: Wrap up loading indicator stuff in a function
+    // // Activate loading indicator
+    if (name === "summarize-text")
+    {
+      setLoadingSum(true);
+    }
+    else if (name === "text-to-speech") {
+      setLoadingSpeech(true);
+    }
+   
+
+    // Set a variable to track whether loading indicator should be deactivated
+    // let shouldDeactivateLoading = true;
+
+    // Set a timeout for 60 seconds
+    const loadingTimeout = setTimeout(() => {
+      // If the summaryCall hasn't returned, deactivate the loading indicator
+      if (name === "summarize-text")
+      {
+        setLoadingSum(false);
+      }
+      else if (name === "text-to-speech") {
+        setLoadingSpeech(false);
+      }
+      
+      console.log("Loading indicator for summary deactivated after 60 seconds");
+      // if (shouldDeactivateLoading) {
+      //   setLoadingSum(false);
+      //   console.log("Loading indicator for summary deactivated after 60 seconds");
+      // }
+      // Pause for 5 seconds before showing the alert
+      setTimeout(() => {
+        alert("The summary call took too long!");
+      }, 1000); // 1000 milliseconds = 1 seconds
+    }, 60000); // 60 seconds (60000)
+
+    return loadingTimeout
+  }
+
+  function stopLoadingIndicator(name:string, loadingTimeout: NodeJS.Timeout) {
+    // Clear the timeout, as the summaryCall has returned
+    clearTimeout(loadingTimeout);
+    // Deactivate loading indicator
+    if (name === "summarize-text")
+    {
+      setLoadingSum(false);
+    }
+    else if (name === "text-to-speech") {
+      setLoadingSpeech(false);
+    }
+  }
 
   /* END OF HELPER FUNCTIONS
 
   /* START OF CONTEXT MENU FUNCTIONS */
-
 
   // Function that uses Chrome background listener to receive messages from context menu items in service-worker.js
   const messageListener = ({ name, data }: { name: string; data: any }) => {
@@ -40,23 +91,7 @@ function App() {
     if (name === "summarize-text") {
       console.log("Received message to summarize from service-worker.js!");
       console.log(data);
-      // TODO: Wrap up loading indicator stuff in a function
-      // Activate loading indicator
-      setLoadingSum(true);
-
-      // Set a variable to track whether loading indicator should be deactivated
-      let shouldDeactivateLoading = true;
-
-      // Set a timeout for 60 seconds
-      const loadingTimeout = setTimeout(() => {
-        // If the summaryCall hasn't returned, deactivate the loading indicator
-        if (shouldDeactivateLoading) {
-          setLoadingSum(false);
-          console.log("Loading indicator for summary deactivated after 60 seconds");
-        }
-        alert("The summary call took too long!");
-      }, 60000); // 60 seconds
-
+      const timer = startLoadingIndicator(name)
 
       // TODO: this code block resembles another code block in this file where we also have to establish a lower and upper limit on summaryCall
       const numWords = countWords(data.value);
@@ -66,27 +101,17 @@ function App() {
       if ((numWords > 5) && (numWords < 1000)) {
         console.log("Doing a summary call");
         summaryCall(data.value).then((value) => {
-          // Clear the timeout, as the summaryCall has returned
-          clearTimeout(loadingTimeout);
 
           setResponse(value);
           console.log("The summary call returned: ");
           console.log(value);
-
-          // Deactivate loading indiecator only if the timeout hasn't already occurred
-          shouldDeactivateLoading = false;
-          // Deactivate loading indicator
-          setLoadingSum(false);
+          stopLoadingIndicator(name, timer)
         });
       }
       else {
+        stopLoadingIndicator(name, timer)
         alert("Your selected text is out of bounds at " + numWords + " words. Acceptable range is from 5 to 1000 words")
-        // Clear the timeout, as the summaryCall has returned
-        clearTimeout(loadingTimeout);
-        // Deactivate loading indicator only if the timeout hasn't already occurred
-        shouldDeactivateLoading = false;
-        // Deactivate loading indicator
-        setLoadingSum(false);
+        
       }
 
     // Speech context menu option
@@ -94,23 +119,7 @@ function App() {
       console.log("Let's fix this");
       console.log("Received message to speak from service-worker.js!");
       console.log(data);
-      // Activate loading indicator
-      setLoadingSpeech(true);
-
-      // Set a variable to track whether loading indicator should be deactivated
-      let shouldDeactivateLoading = true;
-
-      // Set a timeout for 60 seconds
-      const loadingTimeout = setTimeout(() => {
-        // If the summaryCall hasn't returned, deactivate the loading indicator
-        if (shouldDeactivateLoading) {
-          setLoadingSpeech(false);
-          console.log(
-            "Loading indicator for speech deactivated after 60 seconds"
-          );
-        }
-        alert("The text-to-speech call took too long!");
-      }, 60000); // 60 seconds
+      const timer = startLoadingIndicator(name)
 
       // get voice selection from dropdown menu
       var voice = (document.getElementById("voiceSelect") as HTMLInputElement)
@@ -122,16 +131,12 @@ function App() {
       }
 
       speakText(data.value, voice, voice_type).then((value) => {
-        // Clear the timeout, as the summaryCall has returned
-        clearTimeout(loadingTimeout);
 
+        // Important, creates URL from object
         const audioUrl = URL.createObjectURL(value!);
         setSpeechURL(audioUrl);
-
-        // Deactivate loading indicator only if the timeout hasn't already occurred
-        shouldDeactivateLoading = false;
-        // Deactivate loading indicator
-        setLoadingSpeech(false);
+        
+        stopLoadingIndicator(name, timer)
         setAudioType("Speaking highlighted text...");
         console.log("The url of the speak text query is below");
         console.log(value);
