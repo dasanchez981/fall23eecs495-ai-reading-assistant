@@ -25,6 +25,14 @@ function App() {
     return filteredWordsArray.length;
   }
 
+  /* START OF HELPER FUNCTIONS */
+
+
+  /* END OF HELPER FUNCTIONS
+
+  /* START OF CONTEXT MENU FUNCTIONS */
+
+
   // Function that uses Chrome background listener to receive messages from context menu items in service-worker.js
   const messageListener = ({ name, data }: { name: string; data: any }) => {
     
@@ -153,6 +161,10 @@ function App() {
 
   }, []); // Empty dependency array ensures the effect runs only once the component mounts
 
+  /* END OF CONTEXT MENU FUNCTIONS
+  
+  /* MANUAL INPUT FUNCTIONS BELOW */
+
   // Function to handle manual input summaries
   const handleSumSubmit = (e: any) => {
     e.preventDefault();
@@ -172,7 +184,7 @@ function App() {
       alert("The summary call took too long!");
     }, 60000); // 60 seconds
 
-
+    // TODO: This is duplicated code from line 55
     const numWords = countWords(text);
     console.log("Number of words detected")
     console.log(numWords)
@@ -264,7 +276,51 @@ function App() {
     }
   };
 
+  const toggleManual = async () => {
+    console.log("Toggling manual input");
+    let title = document.getElementById("manualTitle");
+    let button = document.getElementById(
+      "toggleManualButton"
+    ) as HTMLInputElement;
+    if (
+      document.getElementById("manualForm")?.style.display == "" ||
+      document.getElementById("manualForm")?.style.display == "none"
+    ) {
+      document
+        .getElementById("manualForm")
+        ?.style.setProperty("display", "grid");
+      document
+        .getElementById("manualGrid")
+        ?.style.setProperty("grid-template-rows", "0.5fr 5fr");
+      document.documentElement.style.setProperty("min-height", "950px");
+      if (title != undefined) {
+        title.textContent = "Manually Input Text: ";
+      }
+      if (button != undefined) {
+        button.value = "ON";
+      }
+    } else if (document.getElementById("manualForm")?.style.display == "grid") {
+      document
+        .getElementById("manualForm")
+        ?.style.setProperty("display", "none");
+      document
+        .getElementById("manualGrid")
+        ?.style.setProperty("grid-template-rows", "1fr");
+      document.documentElement.style.setProperty("min-height", "fit-content");
 
+      if (title != undefined) {
+        title.textContent = "Toggle Manual Input: ";
+      }
+      if (button != undefined) {
+        button.value = "OFF";
+      }
+    }
+  };
+
+  /* END OF MANUAL INPUT FUNCTIONS */
+  
+  /* START OF FUNCTIONS RELATED TO SETTINGS MENU IMPLEMENTATION */
+ 
   // Checks whether a click occurs outside of the drop down menu, and closes the menu if it does
   function checkNeedCloseMenu(e:any)
   {
@@ -280,6 +336,7 @@ function App() {
           
       }
   }
+
   // Adds a click listener to the entire document, so that we can close the menu if clicked outside menu
   document.body.addEventListener("click", (e) => checkNeedCloseMenu(e), false)
    
@@ -312,14 +369,14 @@ function App() {
    
  })
  
- // Add a listener for when a tab is updated, and whenever a tab is updated,
- // executes script within the webpage that sets CSS that was inserted by service worker 
- // to the correct settings as specified by drop down menu
+ // Adds a listener for when a new URL is navigated to in a tab
  chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
+  // Get options from settings menu
     var fontSize = (document.getElementById('fontSizeSelect') as HTMLInputElement).value;
     var fontStyle = (document.getElementById('fontStyleSelect') as HTMLInputElement).value;
     var lineSpace = (document.getElementById('lineSpacingSelect') as HTMLInputElement).value;
     console.log(fontSize);
+    // Insert CSS text focus settings into the new website in the tab
     if(changeInfo.status == 'complete')
     {
       chrome.scripting.executeScript({
@@ -339,17 +396,18 @@ function App() {
  })
  
  
-  //This is required for when a user makes changes right then and there on the webpage,
-  //will apply it to the current webpage
+  // Handles changing of text focus settings while on current active webpage
   const changeCSS = async () => {
       console.log("Triggered change CSS")
        let [tab] = await chrome.tabs.query({active: true})
        if (tab.url?.startsWith("chrome://")) return undefined;
+       // Get options from settings menu
        var fontSize = (document.getElementById('fontSizeSelect') as HTMLInputElement).value;
        var fontStyle = (document.getElementById('fontStyleSelect') as HTMLInputElement).value;
        var lineSpace = (document.getElementById('lineSpacingSelect') as HTMLInputElement).value;
         console.log(fontSize);
        // This can't access React variables so need to send through Chrome API
+       // Insert new values for CSS variables into the webpage
        chrome.scripting.executeScript({
          target: { tabId: tab.id! },
           func: (fontSize, lineSpace, fontStyle) => {
@@ -362,38 +420,8 @@ function App() {
           args: [fontSize, lineSpace, fontStyle]
       });  
   }
-
-
-  const toggleManual = async () => {
-    console.log("Toggling manual input")
-    let title = document.getElementById('manualTitle');
-    let button = document.getElementById('toggleManualButton') as HTMLInputElement;
-    if((document.getElementById('manualForm')?.style.display == '') || (document.getElementById('manualForm')?.style.display == 'none')){
-      document.getElementById('manualForm')?.style.setProperty("display", "grid");
-      document.getElementById('manualGrid')?.style.setProperty("grid-template-rows", "0.5fr 5fr");
-      document.documentElement.style.setProperty("min-height", "950px");
-      if(title != undefined){
-        title.textContent = "Manually Input Text: ";
-      }
-      if(button != undefined){
-        button.value = "ON"
-      }
-
-    }else if(document.getElementById('manualForm')?.style.display == 'grid'){
-      document.getElementById('manualForm')?.style.setProperty("display", "none");
-      document.getElementById('manualGrid')?.style.setProperty("grid-template-rows", "1fr");
-      document.documentElement.style.setProperty("min-height", "fit-content");
-      
-      if(title != undefined){
-        title.textContent = "Toggle Manual Input: ";
-      }
-      if(button != undefined){
-        button.value = "OFF"
-      }
-
-    }
-  }
-
+  /* END OF SETTINGS MENU FUNCTIONS */
+  
   return (
     <>
       <div id="sidebar_container">
