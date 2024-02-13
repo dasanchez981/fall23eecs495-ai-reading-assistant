@@ -126,7 +126,7 @@ function App() {
         .value; // assumes voice is either Danielle or Gregory
       var voice_type = "long-form"; // voices Danielle and Gregory require voice-type=long-form
       // if the voice type selected is Joanna or Matthew, we know its not long form
-      if (voice === "Joanna" || voice === "Matthew") {
+      if (voice === "Joanna" || voice === "Matthew" || voice === "Joanna (News)" || voice === "Matthew (News)") {
         voice_type = "neural"; // voices "Joanna" and "Matthew" require voice-type=neural
       }
 
@@ -233,7 +233,7 @@ function App() {
     // Gets voice selection from drop down menu
     var voice = (document.getElementById('voiceSelect') as HTMLInputElement).value;
     var voice_type = "long-form";
-    if(voice === "Joanna" || voice === "Matthew")
+    if (voice === "Joanna" || voice === "Matthew" || voice === "Joanna (News)" || voice === "Matthew (News)")
     {
       voice_type = "neural";
     }
@@ -474,6 +474,8 @@ function App() {
                    <option value="Danielle">Danielle</option>
                    <option value="Joanna">Joanna</option>
                    <option value="Matthew">Matthew</option>
+                   <option value="Joanna (News)">Joanna (News)</option>
+                   <option value="Matthew (News)">Matthew (News)</option>
                    <option value="Gregory">Gregory</option>
                  </select>
                </div>

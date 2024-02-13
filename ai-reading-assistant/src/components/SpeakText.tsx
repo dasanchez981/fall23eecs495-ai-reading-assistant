@@ -17,15 +17,35 @@ export async function speakText(text: string, voice: string, voice_type:string) 
         }),
     });
 
+
     // Set the parameters
-    const speechParams = {
-        Engine: voice_type, // TODO: For Sonika and Danny change to 'standard' engine, for Raj change to 'neural' engine
+    let speechParams = {
+        Engine: voice_type, 
         OutputFormat: "mp3", // For example, 'mp3'
         SampleRate: "16000", // For example, '16000
         Text: text, // The 'speakText' function supplies this value
         TextType: "text", // For example, "text"
         VoiceId: voice, // For example, "Matthew"
     };
+
+    if (voice === "Matthew (News)" || voice === "Joanna (News)") {
+        // Text to be synthesized with newscaster
+        const text_with_ssml = '<speak><amazon:domain name="news">' + text + '</amazon:domain></speak>'
+        
+        // Change speech Params
+        speechParams["Text"] = text_with_ssml
+        speechParams["TextType"] = "ssml"
+
+        if (voice === "Matthew (News)") {
+            speechParams["VoiceId"] = "Matthew"
+        }
+
+        if (voice === "Joanna (News)") {
+            speechParams["VoiceId"] = "Joanna"
+        }
+    }
+    console.log("Speech parameters below:")
+    console.log(speechParams)
 
     // Synthesize with full polly.
     // Return the result of the getURL async function
