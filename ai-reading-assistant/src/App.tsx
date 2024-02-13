@@ -15,6 +15,45 @@ function App() {
   const [loadingSum, setLoadingSum] = useState(false); // Shows whether to display summary loading indicator
   const [loadingSpeech, setLoadingSpeech] = useState(false); // Shows whether to display speech loading indicator
 
+  // State variables for settings menu options
+  // const [fontSize, setFontSize] = useState('2vw');
+  // const [fontStyle, setFontStyle] = useState('OpenDyslexic-Regular');
+  // const [lineSpacing, setLineSpacing] = useState('200%');
+  // const [voice, setVoice] = useState('Danielle');
+
+  // Set state variables
+  // Function to load settings menu values from chrome.storage.local
+  const loadOptionsFromStorage = () => {
+    chrome.storage.local.get(['fontSize', 'fontStyle', 'lineSpacing', 'voice'], (result) => {
+      // Update state variables with values from storage
+      const fontSizeSelect = document.getElementById('fontSizeSelect') as HTMLSelectElement | null;
+      const fontStyleSelect = document.getElementById('fontStyleSelect') as HTMLSelectElement | null;
+      const lineSpacingSelect = document.getElementById('lineSpacingSelect') as HTMLSelectElement | null;
+      const voiceSelect = document.getElementById('voiceSelect') as HTMLSelectElement | null;
+
+      // Default to menu options if not in local storage yet
+      // setFontSize(result.fontSize || '2vw'); 
+      // setFontStyle(result.fontStyle || 'OpenDyslexic-Regular');
+      // setLineSpacing(result.lineSpacing || '200%');
+      // setVoice(result.voice || 'Danielle');
+      // Update the selected options in the settings menu dropdowns
+      fontSizeSelect!.value = result.fontSize || '2vw';
+      fontStyleSelect!.value = result.fontStyle || 'OpenDyslexic-Regular';
+      lineSpacingSelect!.value = result.lineSpacing || '200%';
+      voiceSelect!.value = result.voice || 'Danielle';
+
+      // Update the selected options in the settings menu dropdowns
+      
+    });
+
+    
+  };
+
+  // Load options from storage when component mounts
+  // useEffect(() => {
+  //   loadOptionsFromStorage();
+  // }, []); // Empty dependency array ensures the effect runs only once on mount
+
   // Used to limit the number of words allowed to be input by user
   function countWords(inputString: string): number {
     // Use a regular expression to split the string into words
@@ -426,6 +465,48 @@ function App() {
       });  
   }
   /* END OF SETTINGS MENU FUNCTIONS */
+
+  /* START OF SAVING TO LOCAL STORAGE STUFF */
+  // Define the function to save options
+  const saveOptions = () => {
+    const fontSize = (document.getElementById('fontSizeSelect') as HTMLSelectElement).value;
+    const fontStyle = (document.getElementById('fontStyleSelect') as HTMLSelectElement).value;
+    const lineSpacing = (document.getElementById('lineSpacingSelect') as HTMLSelectElement).value;
+    const voice = (document.getElementById('voiceSelect') as HTMLSelectElement).value;
+
+    const options = {
+      fontSize,
+      fontStyle,
+      lineSpacing,
+      voice
+    };
+
+    // Save options to local storage
+    chrome.storage.local.set(options, () => {
+      console.log('Options saved:', options);
+    });
+  };
+
+  // useEffect hook to add event listeners when the component mounts
+  useEffect(() => {
+    loadOptionsFromStorage();
+    
+    document.getElementById('fontSizeSelect')?.addEventListener('change', saveOptions);
+    document.getElementById('fontStyleSelect')?.addEventListener('change', saveOptions);
+    document.getElementById('lineSpacingSelect')?.addEventListener('change', saveOptions);
+    document.getElementById('voiceSelect')?.addEventListener('change', saveOptions);
+
+    
+
+    // Cleanup function to remove event listeners when the component unmounts
+    return () => {
+      document.getElementById('fontSizeSelect')?.removeEventListener('change', saveOptions);
+      document.getElementById('fontStyleSelect')?.removeEventListener('change', saveOptions);
+      document.getElementById('lineSpacingSelect')?.removeEventListener('change', saveOptions);
+      document.getElementById('voiceSelect')?.removeEventListener('change', saveOptions);
+    };
+  }, []); // Empty dependency array to ensure this effect runs only once on mount
+  /* END OF LOCAL CHROME SAVING STUFF */
   
   return (
     <>
@@ -452,7 +533,7 @@ function App() {
                    Choose a Font Style:
                  </label>
                  <select className="font-style-select" onChange={changeCSS} id = "fontStyleSelect">
-                   <option value="OpenDyslexic-Regular">Dyslexie</option>
+                   <option value="OpenDyslexic-Regular">OpenDyslexic-Regular</option>
                    <option value="times-new-roman">Times New Roman</option>
                  </select>
                </div>
