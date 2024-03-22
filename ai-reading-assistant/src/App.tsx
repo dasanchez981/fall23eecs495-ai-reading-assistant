@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import { summaryCall } from './components/SummaryCall'
 import { speakText } from './components/SpeakText'
+import { karaokeText } from './components/GetKaraoke'
 import ReactPlayer from 'react-player';
+import { Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // This is the main extension function that runs when it is open
@@ -82,6 +84,98 @@ function App() {
 
   /* END OF HELPER FUNCTIONS
 
+  //Karaoke stuff */
+  async function activateKaraoke(urlString:any)
+  {
+    let requestOptions: RequestInit = {
+      method: 'GET',
+      //headers: myHeaders,
+      redirect: 'follow'
+    };
+    console.log("IN ACTIVATE KARAOKE");
+    let json = '';
+    let [tab] = await chrome.tabs.query({active: true})
+    if (tab.url?.startsWith("chrome://")) return undefined;
+    fetch(urlString, requestOptions)
+      .then(response => response.text())
+      .then(result => {
+        //console.log("Here da good stuff");
+        //console.log("speechmarks", result);
+        json = result;
+      chrome.scripting.executeScript({
+      target: { tabId: tab.id! },
+       func: (json) => {
+        //take away karaoke id from previously created span so it
+        //doesnt mess with the current span
+        console.log("HERE ARE THE SPEECHMARKS");
+        console.log(json);
+        console.log("I GOT HERE");
+        var prevSpan = document.getElementById("karaoke") as HTMLElement;
+        
+        if(prevSpan != null)
+        {
+          prevSpan.removeAttribute('id');
+        }
+         var selection = window.getSelection()?.getRangeAt(0);
+         var selectedText = selection?.extractContents();
+         console.log(selectedText!.textContent);
+         var span = document.createElement("textarea");
+         if(selectedText!.textContent != null)
+         {
+            span.innerHTML = selectedText!.textContent;
+            span.style.width = "100%";
+            span.style.height = "100px";
+         }
+         span.id = "karaoke";
+         //span.style.backgroundColor = "yellow";
+        //  if(selectedText)
+        //  {
+        //   span.appendChild(selectedText);
+        //  }
+        //  else {
+        //   console.log('ERROR');
+        //  }
+         selection?.insertNode(span);
+         
+         function highlighter(start : any, finish : any/*, word : any*/) {
+          let textarea = document.getElementById("karaoke") as HTMLInputElement;
+          console.log(start + "," + finish + ",");
+          textarea!.focus();
+          textarea!.setSelectionRange(start, finish);
+        }
+
+         function setTimers() {
+            //read through the speechmarks file and set timers for every word
+            console.log(json);
+            let speechmarks = json.split("\n");
+            for (let i = 0; i < speechmarks.length; i++) {
+            console.log(i + ":" + speechmarks[i]);
+              if (speechmarks[i].length == 0) {
+                continue;
+              }
+                console.log(speechmarks[i]);
+                let smjson = JSON.parse(speechmarks[i]);
+                let t = smjson["time"];
+                let s = smjson["start"];
+                let f = smjson["end"];
+                //let word = smjson["value"];
+                setTimeout(highlighter, t, s, f/*, word*/);
+            }
+
+          }
+          setTimers();
+        
+       },
+       args: [json]
+   }); 
+
+      })
+      .catch((error) => {
+        console.error('Error fetching or parsing data:', error);
+      });
+  }
+  
+
   /* START OF CONTEXT MENU FUNCTIONS */
 
   // Function that uses Chrome background listener to receive messages from context menu items in service-worker.js
@@ -131,7 +225,6 @@ function App() {
       }
 
       speakText(data.value, voice, voice_type).then((value) => {
-
         // Important, creates URL from object
         const audioUrl = URL.createObjectURL(value!);
         setSpeechURL(audioUrl);
@@ -141,6 +234,11 @@ function App() {
         console.log("The url of the speak text query is below");
         console.log(value);
       });
+      karaokeText(data.value, voice, voice_type).then((url) => {
+        console.log("TRIGGERING ACTIVATE KARAOKE");
+        activateKaraoke(url);
+      });
+      
 
       // Text focus context menu option
     } else if (name === "text-focus") {
@@ -174,20 +272,7 @@ function App() {
   const handleSumSubmit = (e: any) => {
     e.preventDefault();
     // Activate loading indicator
-    setLoadingSum(true);
-
-    // Set a variable to track whether loading indicator should be deactivated
-    let shouldDeactivateLoading = true;
-
-    // Set a timeout for 60 seconds
-    const loadingTimeout = setTimeout(() => {
-      // If the summaryCall hasn't returned, deactivate the loading indicator
-      if (shouldDeactivateLoading) {
-        setLoadingSum(false);
-        console.log("Loading indicator for summary deactivated after 60 seconds");
-      }
-      alert("The summary call took too long!");
-    }, 60000); // 60 seconds
+    const timer = startLoadingIndicator("summarize-text"); 
 
     // TODO: This is duplicated code from line 55
     const numWords = countWords(text);
@@ -197,27 +282,16 @@ function App() {
     if ((numWords > 5) && (numWords < 1000)) {
       console.log("Doing a summary call");
       summaryCall(text).then((value) => {
-        // Clear the timeout, as the summaryCall has returned
-        clearTimeout(loadingTimeout);
-
         setResponse(value);
         console.log("The summary call returned: ");
         console.log(value);
-
-        // Deactivate loading indicator only if the timeout hasn't already occurred
-        shouldDeactivateLoading = false;
-        // Deactivate loading indicator
-        setLoadingSum(false);
+        stopLoadingIndicator("summarize-text", timer);
+        
       });
     }
     else {
+      stopLoadingIndicator("summarize-text", timer);
       alert("Your selected text is out of bounds at " + numWords + " words. Acceptable range is from 5 to 1000 words")
-      // Clear the timeout, as the summaryCall has returned
-      clearTimeout(loadingTimeout);
-      // Deactivate loading indicator only if the timeout hasn't already occurred
-      shouldDeactivateLoading = false;
-      // Deactivate loading indicator
-      setLoadingSum(false);
     }
 
     
@@ -227,7 +301,7 @@ function App() {
   const handleTTSSubmit = (e: any) => {
     e.preventDefault();
     // Activate loading indicator 
-    setLoadingSpeech(true)
+    const timer = startLoadingIndicator("text-to-speech");
 
     // TODO: Wrap voice stuff in a function
     // Gets voice selection from drop down menu
@@ -239,10 +313,11 @@ function App() {
     }
     if (e.nativeEvent.submitter.id === "speakbutton") {
       speakText(text, voice, voice_type).then((value) => {
+        //activateKaraoke();
         const audioUrl = URL.createObjectURL(value!);
         setSpeechURL(audioUrl);
         // Deactivate loading indicator
-        setLoadingSpeech(false)
+        stopLoadingIndicator("text-to-speech", timer);
         setAudioType("Speaking highlighted text...");
 
         console.log("The url of the speak text query is below");
@@ -255,7 +330,7 @@ function App() {
         const audioUrl = URL.createObjectURL(value!);
         setSpeechURL(audioUrl);
         // Deactivate loading indicator
-        setLoadingSpeech(false)
+        stopLoadingIndicator("text-to-speech", timer);
         setAudioType("Speaking text summary...");
         console.log("The url of the speak summary text query is below");
         console.log(value);
@@ -488,6 +563,8 @@ function App() {
     };
   }, []); // Empty dependency array to ensure this effect runs only once on mount
   /* END OF LOCAL CHROME SAVING STUFF */
+
+  
   
   return (
     <>
@@ -601,19 +678,22 @@ function App() {
         <br></br>
         <div id='manualGrid'>
           <h5 id='manualTitle'>Toggle Manual Input:</h5>
-          <input type="button" id='toggleManualButton' onClick={toggleManual} value="OFF"></input>
-            <form id='manualForm' onSubmit={onSubmit}>
-              <input type="submit" value="Speak Text" id="speakbutton" />
-              <input type="submit" value="Summarize" id="sumbutton" />
+          <Form id="switch_container">
+            <Form.Check type="switch" id='toggleManualButton' onChange={toggleManual}/>
+          </Form>
+              <form id='manualForm' onSubmit={onSubmit}>
+                <input type="submit" value="Speak Text" id="speakbutton" />
+                <input type="submit" value="Summarize" id="sumbutton" />
 
-              <textarea
-                id="manual_input"
-                name="manual_input"
-                placeholder="Input your text to Speak/Summarize..."
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-              ></textarea>
+                <textarea
+                  id="manual_input"
+                  name="manual_input"
+                  placeholder="Input your text to Speak/Summarize..."
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                ></textarea>
             </form>
+          
         </div>
         <div id='summaryOutput'>
           <h5 id='sumTitle'>Generated Summary:</h5>
