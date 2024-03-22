@@ -12,6 +12,8 @@ function App() {
   const [audioType, setAudioType] = useState(""); // Used to print which audio type is being spoken (highlighted text or text summary)
   const [speechURL, setSpeechURL] = useState(""); // Used to store the URL of the audio file that is being spoken
   const [response, setResponse] = useState(""); // Used to store the response from the summary API call
+  const [customSum, setCustomSum] = useState("");
+  const [customSumText, setCustomSumText] = useState("");
   const [loadingSum, setLoadingSum] = useState(false); // Shows whether to display summary loading indicator
   const [loadingSpeech, setLoadingSpeech] = useState(false); // Shows whether to display speech loading indicator
 
@@ -100,23 +102,45 @@ function App() {
       // Establish lower and upper limit on summaryCall
       if ((numWords > 5) && (numWords < 1000)) {
         console.log("Doing a summary call");
-        summaryCall(data.value).then((value) => {
+        
+        // I think its because it's wihtin this function
+        // Fetch customSum from chrome.storage.local
+        // let customSumBruh = "";
+  
+        chrome.storage.local.get(['customSum'], (result) => {
+          if (result.customSum !== undefined) {
+            // Use set customization
+            const customSumBruh = result.customSum.toString();
 
-          setResponse(value);
-          console.log("The summary call returned: ");
-          console.log(value);
-          stopLoadingIndicator(name, timer)
+            // Use customSumFromStorage as needed
+            console.log('customSum fetched from chrome.storage.local:', customSumBruh);
+            summaryCall(customSumBruh,data.value).then((value) => {
+              setResponse(value);
+              console.log("The summary call returned: ");
+              console.log(value);
+              stopLoadingIndicator(name, timer)
+            });
+          }
+          else {
+            // No customization needed
+            summaryCall("",data.value).then((value) => {
+              setResponse(value);
+              console.log("The summary call returned: ");
+              console.log(value);
+              stopLoadingIndicator(name, timer)
+            });
+          } 
         });
+        
+        // stopLoadingIndicator(name, timer)
       }
       else {
         stopLoadingIndicator(name, timer)
         alert("Your selected text is out of bounds at " + numWords + " words. Acceptable range is from 5 to 1000 words")
-        
       }
 
     // Speech context menu option
     } else if (name === "text-to-speech") {
-      console.log("Let's fix this");
       console.log("Received message to speak from service-worker.js!");
       console.log(data);
       const timer = startLoadingIndicator(name)
@@ -196,7 +220,7 @@ function App() {
     // Establish lower and upper limit on summaryCall
     if ((numWords > 5) && (numWords < 1000)) {
       console.log("Doing a summary call");
-      summaryCall(text).then((value) => {
+      summaryCall(customSum,text).then((value) => {
         // Clear the timeout, as the summaryCall has returned
         clearTimeout(loadingTimeout);
 
@@ -262,6 +286,23 @@ function App() {
       });
     }
   };
+  // Consider custom summary for manual input
+  const handleCustomSum = (e: any) => {
+    e.preventDefault();
+    // Set the value of customSum using setCustomSum
+    console.log(e)
+    console.log("Inside custom summary")
+    const newSum = customSumText
+    setCustomSum(newSum)
+    console.log("Text that user wants:")
+    console.log(customSumText)
+    chrome.storage.local.set({ customSum: customSumText })
+    console.log({ customSum: customSumText })
+    console.log("Set customSum in Chrome local storage")
+    // console.log(customSum)
+    // Set the value of customSum using setCustomSum
+    // setCustomSum(value);
+  };
 
   // Function to handle any manual input and direct to proper function 
   const onSubmit = (e: any) => {
@@ -278,6 +319,9 @@ function App() {
     // Direct to SumSubmit function
     } else if (e.nativeEvent.submitter.id === "sumbutton") {
       handleSumSubmit(e);
+    }
+    else if (e.nativeEvent.submitter.id === "custSumButton") {
+      handleCustomSum(e);
     }
   };
 
@@ -454,12 +498,15 @@ function App() {
     const fontStyle = (document.getElementById('fontStyleSelect') as HTMLSelectElement).value;
     const lineSpacing = (document.getElementById('lineSpacingSelect') as HTMLSelectElement).value;
     const voice = (document.getElementById('voiceSelect') as HTMLSelectElement).value;
+    // Adding customSum option
+    const customSum = ""
 
     const options = {
       fontSize,
       fontStyle,
       lineSpacing,
-      voice
+      voice,
+      customSum
     };
 
     // Save options to local storage
@@ -625,9 +672,21 @@ function App() {
             </div>
             )}
           </div>
-          
+      
+          <form id='customizeSummaryForm' onSubmit={onSubmit}>
+            <input type="submit" value="Set Custom Summary" id="custSumButton" />
+            <textarea
+              id="customize_summary"
+              name="customize_summary"
+              placeholder="Customize the summary to your needs..."
+              value={customSumText}
+              onChange={(e) => setCustomSumText(e.target.value)}
+            ></textarea>   
+          </form>
+
+
+
           <form id='summaryForm' onSubmit={onSubmit}>
-          
             <textarea
               id="manual_output"
               name="manual_output"
