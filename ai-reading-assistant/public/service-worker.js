@@ -53,7 +53,7 @@ function setupContextMenu() {
     setTimeout(() => { 
     // Now only process menu item functionality
     if (data.menuItemId === 'summarize-text') {
-      console.log("Sending message to summarize to App.tsx!")
+      console.log("Sending message to summarize to App.tsx!");
       chrome.runtime.sendMessage({
           name: 'summarize-text',
           data: { value: data.selectionText }

@@ -6,18 +6,21 @@ const openai = new OpenAI({
     dangerouslyAllowBrowser: true
 });
 
-
-export async function summaryCall(text: string) {
+export async function summaryCall(customization: string, text: string) {
     console.log("The value of the query is shown below:")
     console.log(text)
+    console.log("Customization is below:")
+    console.log(customization)
+    // console.log(typeof customization)
     const chatCompletion = await openai.chat.completions.create({
       model: 'gpt-4',
       // TODO: Think about using choices[0]["finish_reason"] output to warn user
       // TODO: Have a limit on the user's text input so that there's enough tokens left for proper/complete summary
+      // TODO: Make custom summary work for context menu
       messages: [
         {
           "role": "system",
-          "content": "Provide a concise summary of the text you are provided with for increased human understanding and reading comprehension. Generate no more than 3 sentences. The summary must contain less words than the input text provided by the user."
+          "content": "Provide a concise summary of the text you are provided with for increased human understanding and reading comprehension. Generate no more than 3 sentences. The summary must contain less words than the input text provided by the user. Also take into account this customization for the summary" + customization
         },
         {
           "role": "user",
