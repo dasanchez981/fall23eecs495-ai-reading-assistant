@@ -19,6 +19,8 @@ function App() {
   const [loadingSum, setLoadingSum] = useState(false); // Shows whether to display summary loading indicator
   const [loadingSpeech, setLoadingSpeech] = useState(false); // Shows whether to display speech loading indicator
 
+  // TODO: eliminate audioType state variable
+  console.log(audioType)
   // Used to limit the number of words allowed to be input by user
   function countWords(inputString: string): number {
     // Use a regular expression to split the string into words
@@ -254,7 +256,7 @@ function App() {
         setSpeechURL(audioUrl);
         
         stopLoadingIndicator(name, timer)
-        setAudioType("Speaking highlighted text...");
+        setAudioType("🗣️");
         console.log("The url of the speak text query is below");
         console.log(value);
       });
@@ -695,7 +697,7 @@ function App() {
         
         {/* If no speech is available then hide player from user */}
         <div id='textToSpeechControls'>
-          <h5 id='ttsTitle'>Text-To-Speech Controls:</h5>
+          <h5 id='ttsTitle'>Read Aloud:</h5>
           <div id='ttsSpinner'>
             {loadingSpeech ? (
                 <div className="spinner-border" role="status">
@@ -703,7 +705,7 @@ function App() {
                 </div>
             ) : (
               <p id="audioIndicator">
-                {audioType}
+                <img src="/public/talkingHead.png" alt="Head with voice" />
               </p>
             )}
           </div>
@@ -725,9 +727,9 @@ function App() {
         </div>
         <br></br>
         <div id='manualGrid'>
-          <h5 id='manualTitle'>Toggle Manual Input:</h5>
+          
           <Form id="switch_container">
-            <Form.Check type="switch" id='toggleManualButton' onChange={toggleManual}/>
+            <Form.Check type="switch" id='toggleManualButton' onChange={toggleManual} label="Manual Input"/>
           </Form>
             <form id='manualForm' onSubmit={onSubmit}>
               <input type="submit" value="Speak Text" id="speakbutton" />

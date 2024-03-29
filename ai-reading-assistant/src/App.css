@@ -245,13 +245,14 @@ body{
 }
 #manualGrid{
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr;
   grid-template-rows: 1fr;
   margin-bottom: 20px;
 }
 #switch_container{
-  grid-column: 3;
+  grid-column: 1;
   grid-row: 1;
+  width: 135px;
 }
 #toggleManualButton{
   /* text-align: center; */
@@ -321,7 +322,7 @@ div#summaryOutput{
   width: 100%;
 }
 
-
+input#text
 
 input#speakSumbutton{
   background-image: url("../public/audioIcon.png");
