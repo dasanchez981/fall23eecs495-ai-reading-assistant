@@ -1,12 +1,11 @@
 
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
-import { Polly } from "@aws-sdk/client-polly";
 import { getSynthesizeSpeechUrl } from "@aws-sdk/polly-request-presigner";
-import { Buffer } from 'buffer';
+import { Polly } from "@aws-sdk/client-polly";
 
 // Function invoked by button click
-export async function speakText(text: string, voice: string, voice_type:string) {
+export async function karaokeText(text: string, voice: string, voice_type:string) {
 
     // Create the Polly service client, assigning your credentials
     const client = new Polly({
@@ -21,12 +20,12 @@ export async function speakText(text: string, voice: string, voice_type:string) 
     // Set the parameters
     let speechParams = {
         Engine: voice_type, 
-        OutputFormat: "mp3", // For example, 'mp3'
+        OutputFormat: "json", // For example, 'mp3'
         SampleRate: "16000", // For example, '16000
         Text: text, // The 'speakText' function supplies this value
         TextType: "text", // For example, "text"
-        VoiceId: voice // For example, "Matthew"
-        //SpeechMarkTypes: ['word']
+        VoiceId: voice, // For example, "Matthew"
+        SpeechMarkTypes: ['word']
     };
 
     if (voice === "Matthew (News)" || voice === "Joanna (News)") {
@@ -50,40 +49,22 @@ export async function speakText(text: string, voice: string, voice_type:string) 
 
     // Synthesize with full polly.
     // Return the result of the getURL async function
-    return (async () => {
-        const url = await getSynthesizeSpeechUrl({
-            client,
-            params: speechParams,
-        });
-        console.log("URL from AWS Polly")
-        console.log(url);
-        
-        // Process to convert Polly presigned URL to a blob
-        // blob object plays nicely with html/react audio player
-        async function downloadPollyAudio(url: string) {
-            // Catch error for invalid input
-            try {
-              const response = await fetch(url);
-              const arrayBuffer = await response.arrayBuffer();
-              console.log("response below:");
-              console.log(response)
-              console.log("ArrayBuffer below:")
-              console.log(arrayBuffer)
-              // Convert the ArrayBuffer to a Buffer
-              const buffer = Buffer.from(arrayBuffer);
-              console.log("Big B buffer below:")
-              console.log(buffer)
-              // Create a Blob from buffer
-              const blob = new Blob([buffer], { type: 'audio/mpeg' });
+    
+  try {
+    const url= await getSynthesizeSpeechUrl({
+      client,
+      params: speechParams,
+    });
+    
+    let myHeaders = new Headers();
+    myHeaders.append("Accept", "text/plain");
+    myHeaders.append("Content-Type", "text/plain");
 
-              console.log("Blob generated")
-              
-              return blob
-            } 
-            catch (error: any) {
-              console.error('Error downloading audio:', error.message);
-            }
-          }
-        return downloadPollyAudio(url.toString());
-    })();  
+    const urlString = url.toString(); // Ensures urlString is of type 'string'
+    return urlString;
+  } catch (error) {
+    console.error('Error getting speech synthesis URL:', error);
+    
+  }
+      
 }
