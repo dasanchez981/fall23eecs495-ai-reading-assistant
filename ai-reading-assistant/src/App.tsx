@@ -4,7 +4,7 @@ import { summaryCall } from './components/SummaryCall'
 import { speakText } from './components/SpeakText'
 import { karaokeText } from './components/GetKaraoke'
 import ReactPlayer from 'react-player';
-import { Form } from 'react-bootstrap';
+import {Form, DropdownButton, Dropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // This is the main extension function that runs when it is open
@@ -627,16 +627,16 @@ function App() {
                <h2>Text Focus Options: </h2>
                <div className = "dropdown-font-size">
                  <label htmlFor="font-size-select">
-                   Choose a Font Size:
+                   Font Size:
                  </label>
-                 <select className="font-size-select" onChange={changeCSS} id = "fontSizeSelect">
-                   <option value="2vw">2vw</option>
+                 <DropdownButton title = "fontSizeSelect" className="font-size-select" onChange={changeCSS} id = "fontSizeSelect">
+                   <Dropdown.Item eventKey="2vw">2vw</Dropdown.Item>
                    <option value="3vw">3vw</option>
-                 </select>
+                 </DropdownButton>
                </div>
                <div className="dropdown-style-select">
                  <label htmlFor="font-style-select">
-                   Choose a Font Style:
+                   Font Style:
                  </label>
                  <select className="font-style-select" onChange={changeCSS} id = "fontStyleSelect">
                    <option value="OpenDyslexic-Regular">OpenDyslexic-Regular</option>
@@ -645,7 +645,7 @@ function App() {
                </div>
                <div className="dropdown-spacing-select">
                  <label htmlFor="line-spacing-select">
-                   Choose a Line Spacing:
+                   Line Spacing:
                  </label>
                  <select className="line-spacing-select" onChange={changeCSS} id = "lineSpacingSelect">
                    <option value="200%">200%</option>
@@ -655,7 +655,7 @@ function App() {
                <h2>Text-to-Speech Voice:</h2>
                <div className="dropdown-voice-select">
                  <label htmlFor="voice-select">
-                   Choose a Voice:
+                   Voice:
                  </label>
                  <select className="voice-select" onChange={changeCSS} id = "voiceSelect">
                    <option value="Danielle">Danielle</option>
@@ -729,17 +729,18 @@ function App() {
           <Form id="switch_container">
             <Form.Check type="switch" id='toggleManualButton' onChange={toggleManual}/>
           </Form>
-              <form id='manualForm' onSubmit={onSubmit}>
-                <input type="submit" value="Speak Text" id="speakbutton" />
-                <input type="submit" value="Summarize" id="sumbutton" />
+            <form id='manualForm' onSubmit={onSubmit}>
+              <input type="submit" value="Speak Text" id="speakbutton" />
+              <input type="submit" value="Summarize" id="sumbutton" />
 
-                <textarea
-                  id="manual_input"
-                  name="manual_input"
-                  placeholder="Input your text to Speak/Summarize..."
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                ></textarea>
+              <textarea
+                id="manual_input"
+                name="manual_input"
+                placeholder="Input your text to Speak/Summarize..."
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+              ></textarea>
+
             </form>
           
         </div>
