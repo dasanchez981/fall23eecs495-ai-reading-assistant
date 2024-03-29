@@ -307,9 +307,6 @@ function App() {
       console.log("Doing a summary call");
 
       summaryCall(customSum,text).then((value) => {
-        // Clear the timeout, as the summaryCall has returned
-        clearTimeout(loadingTimeout);
-
         setResponse(value);
         console.log("The summary call returned: ");
         console.log(value);
