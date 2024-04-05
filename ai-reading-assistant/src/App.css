@@ -340,8 +340,14 @@ div#summaryOutput{
   grid-row: 2;
   width: 100%;
 }
-
-input#text
+#audioIndicator {
+  background-image: url("../public/talkingHead.png");
+  background-color: rgb(182, 182, 182);
+  background-size: 45px 45px;
+  height: 45px;
+  width: 45px;
+  margin-left: 10px;
+}
 
 input#speakSumbutton{
   background-image: url("../public/audioIcon.png");
@@ -350,6 +356,10 @@ input#speakSumbutton{
   width: 50px;
   background-size: 45px 45px;
   margin-left: 10px;
+}
+
+#speakSumbutton {
+  background-image: url("../public/audioIcon.png");
 }
 input:active{
   background-color: rgb(98, 98, 98);

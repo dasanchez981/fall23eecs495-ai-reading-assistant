@@ -626,7 +626,7 @@ function App() {
           <div className="hero">
            <div className = "sub-menu-wrap" id="subMenu">
              <div className ="sub-menu">
-               <h2>Text Focus Options: </h2>
+               <h2>Settings: </h2>
                <div className = "dropdown-font-size">
                  <label htmlFor="font-size-select">
                    Font Size:
@@ -654,10 +654,10 @@ function App() {
                    <option value="500%">500%</option>
                  </select>
                </div>
-               <h2>Text-to-Speech Voice:</h2>
+               {/* <h2>Text-to-Speech Voice:</h2> */}
                <div className="dropdown-voice-select">
                  <label htmlFor="voice-select">
-                   Voice:
+                   Text-to-Speech Voice:
                  </label>
                  <select className="voice-select" onChange={changeCSS} id = "voiceSelect">
                    <option value="Danielle">Danielle</option>
@@ -704,9 +704,13 @@ function App() {
                   <span className="sr-only"></span>
                 </div>
             ) : (
-              <p id="audioIndicator">
-                <img src="/public/talkingHead.png" alt="Head with voice" />
-              </p>
+              // <div id='talkingHeadImage'></div>
+             
+              <div id="audioIndicator"> </div>
+                //  {/* <text> bruh </text> */}
+              
+              // <text> Why </text>
+              
             )}
           </div>
           
