@@ -77,13 +77,13 @@ export async function speakText(text: string, voice: string, voice_type:string) 
               const blob = new Blob([buffer], { type: 'audio/mpeg' });
 
               console.log("Blob generated")
-              
               return blob
             } 
             catch (error: any) {
               console.error('Error downloading audio:', error.message);
             }
           }
+        // console.log(downloadPollyAudio(url.toString()));
         return downloadPollyAudio(url.toString());
     })();  
 }

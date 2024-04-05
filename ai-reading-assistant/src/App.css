@@ -349,6 +349,15 @@ div#summaryOutput{
   margin-left: 10px;
 }
 
+#welcomeIndicator {
+  background-image: url("../public/welcome.png");
+  background-color: rgb(182, 182, 182);
+  background-size: 52px 52px;
+  height: 45px;
+  width: 50px;
+  margin-left: 10px;
+}
+
 input#speakSumbutton{
   background-image: url("../public/audioIcon.png");
   background-color: rgb(182, 182, 182);

@@ -9,6 +9,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 // This is the main extension function that runs when it is open
 function App() {
+  // const welcome_message = "https://polly.us-east-1.amazonaws.com/v1/speech?Engine=long-form&OutputFormat=mp3&SampleRate=16000&Text=Welcome%20to%20Supportive%20AI%20Reading%20Assistant%21%20We%20hope%20you%20enjoy%20using%20this%20extension%21&TextType=text&VoiceId=Danielle&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAVYPXJS5YPU3J5ZSO%2F20240405%2Fus-east-1%2Fpolly%2Faws4_request&X-Amz-Date=20240405T173413Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIC4ENIsHwRQQ1yz3pCjgTICFwILxS7LfR3nSIFSDhXq2AiEA%2BPcMNwKC44kpPUSTRf8%2FQo3CiviF3NksEY0RxnUXm60q0AUIq%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARABGgwzOTYxOTI0ODcyODAiDHF86gjJC%2BniFZxIRSqkBagoIUxRP2%2FIXKVQ%2FtvFb3ZtEhSXX22JcgOH11WnuJLf8tlksoqOThzc2McLim6GhjPhY2d2JL5HLY7Vc6xgPe9LsnmvjP%2FX3uEYjP4NSAoukMiqDkLIPp17Hv4%2BUVrUB4zJIDfQOPwv%2FnRD0sRGKsnB02jhnuwIbw6Z8rrZV1jcqHnS8NtiO0x13NkQI%2BQjnIAVVr%2FjdYpDemGJPQWW1%2Fwto5rMae4P%2Bi2aWDFTpTwePUOJOk1jh4Pfk8w8wG4ZTLkeTRYexMjQ7YTLVUXfwbR46GwEo6CwzFIxBpzREJ6vWRPkmM65pDk1hNlVgoiH1HWW2vp9vvE1JR5bjX1pp037g4WqOg5LUFzltyIwqkD%2BT9xpBiqiFohEuTn7Etxm62nIuNSwGqGjCdOCsscuBof3lxnXqOw3KSVTfB7FeVYpyPqKD1nGVtchOqMHLhPje9PJzQncsRD7A997UH7GGLlCXdcbM0TLwdTPJRrcN%2B%2F%2FVXM%2Bg0iT3T8pgG2%2FUtxiMi9L90RalriwxRyvXUDn%2B9ryfS48bz8eMHO3Z1b6bKJoaVCtfB3gOP4jDMn0gtWnSj3bIcUWok%2B3Adj694%2FWq%2FYDNzyOyT5blvPevZh8UIK5kzim%2FtQi%2FRpogk%2BD04a6QZS6BZOWeAiCvAY88s1vyrBoQJwERPrizNq572seXc69TdoT%2Fn%2FvBi3q6oc0vHAGG2omgaGmPATnaah7ccyVc8npeluu4d5NbHBmQ0bb3lnP6ebPz4Atm3qEcgghru%2FpNLELGfEeQ61vn1CdnvSsVIOL1t1IaNnFRTWpbShOQ1J0YT%2B9dkUE5pPrb7fEOPj5qWi1hmwDQS3pNjobGAOLHfGp3xIa7dV51qWMtuePtoODAqmblYLvsg7KzvLCvDfhJD5QQKYwlezAsAY63wIP3C%2Bbx%2BtjebkaJmj7fEDm8s6L8eeCeC42Uv1OKZqxIXjoTZgDfokT8A%2F02t%2BE60nEe%2F1rbs%2FeKJUzAJifiOKnl%2B1FJ6H8XsnUdVZbZD6nrIxL68TAwtRl4OBghpBn65Yf1iuv1ll72NQIGX4lzOemEH54Q2U1O7b3R%2BL%2FWuiorAWywPTkQkGCy7HkWH56SSeYbSuBKzNJsjSO5P87iY7TufJn1aWQPgxEMqisI7PfypgWeYFw8ubZ8pw4Uxfw%2BR19%2FBjMgnjnPjXqY3MzmJGVhbeq85k1OdLMC1mCxNazoDG33tRxrfykdJ3yTyYSE1WWYhacesGe5M8OJxW0nEzFJPGKPp60zIwss8%2Fr1jb2Gj5wgC1VrUyoB29I%2BnNMrtpsj6z8Tc1HllnjkiOShke55ja1jBPs93itw1u3mo7VGagclfIrG5rugU4Z%2F6ft9GUJG%2BS0NPAXmQ0rX2gMY20%3D&X-Amz-Signature=a53258dd1fb45d3f5b480a74b0854d8cfe58da30504bd5ac39597ad30c417648&X-Amz-SignedHeaders=host&x-amz-user-agent=aws-sdk-js%2F3.427.0%20ua%2F2.0%20os%2FmacOS%2310.15.7%20lang%2Fjs%20md%2Fbrowser%23Chrome_123.0.0.0%20api%2Fpolly%233.427.0"
+ 
+
   // These are state variables used to hold relevant data for the extension
   const [text, setText] = useState(""); // used to hold the text that will be spoken or summarized
   const [audioType, setAudioType] = useState(""); // Used to print which audio type is being spoken (highlighted text or text summary)
@@ -18,6 +21,8 @@ function App() {
   const [customSumText, setCustomSumText] = useState("");
   const [loadingSum, setLoadingSum] = useState(false); // Shows whether to display summary loading indicator
   const [loadingSpeech, setLoadingSpeech] = useState(false); // Shows whether to display speech loading indicator
+
+  const [welcomeMessageStatus, setWelcomeMessageStatus] = useState(false);
 
   // TODO: eliminate audioType state variable
   console.log(audioType)
@@ -239,6 +244,7 @@ function App() {
     } else if (name === "text-to-speech") {
       console.log("Received message to speak from service-worker.js!");
       console.log(data);
+      setWelcomeMessageStatus(false);
       const timer = startLoadingIndicator(name)
 
       // get voice selection from dropdown menu
@@ -249,10 +255,12 @@ function App() {
       if (voice === "Joanna" || voice === "Matthew" || voice === "Joanna (News)" || voice === "Matthew (News)") {
         voice_type = "neural"; // voices "Joanna" and "Matthew" require voice-type=neural
       }
-
+      
       speakText(data.value, voice, voice_type).then((value) => {
         // Important, creates URL from object
         const audioUrl = URL.createObjectURL(value!);
+        console.log("Look here now!")
+        console.log(audioUrl);
         setSpeechURL(audioUrl);
         
         stopLoadingIndicator(name, timer)
@@ -614,7 +622,28 @@ function App() {
   }, []); // Empty dependency array to ensure this effect runs only once on mount
   /* END OF LOCAL CHROME SAVING STUFF */
 
-  
+  // Generate Welcome Message
+  useEffect(() => {
+    const welcome_message = "Welcome to Supportive AI Reading Assistant. We hope you enjoy using this extension!"
+
+    // Initial call to speakText with welcome message, hardcode parameters for now
+    //
+    // Not using setSpeechURL bc we want speechURL to be initialized to 
+    // the welcome message and we need that to be set so the audio player
+    // loads correctly
+    speakText(welcome_message,"Danielle","long-form").then((value) => {
+      // Important, creates URL from object
+      const welcomeURL = URL.createObjectURL(value!);
+      console.log("Look here now for welcomeURL!")
+      console.log(welcomeURL);
+      setSpeechURL(welcomeURL);
+      setWelcomeMessageStatus(true);
+    });
+  }, []); // Empty dependency array to ensure this effect runs only once on mount
+
+
+  console.log("The speech URL is below:")
+  console.log(speechURL)
   
   return (
     <>
@@ -699,21 +728,24 @@ function App() {
         <div id='textToSpeechControls'>
           <h5 id='ttsTitle'>Read Aloud:</h5>
           <div id='ttsSpinner'>
-            {loadingSpeech ? (
-                <div className="spinner-border" role="status">
+          {loadingSpeech ? (
+              <div className="spinner-border" role="status">
                   <span className="sr-only"></span>
-                </div>
-            ) : (
-              // <div id='talkingHeadImage'></div>
-             
-              <div id="audioIndicator"> </div>
-                //  {/* <text> bruh </text> */}
-              
-              // <text> Why </text>
-              
-            )}
+              </div>
+          ) : (
+              welcomeMessageStatus ? (
+
+                <div id="welcomeIndicator"> </div>
+
+              ) : (
+                  // Your code for when loadingSpeech is false and speechURL is not empty
+                  // For example:
+                  <div id="audioIndicator"> </div>
+              )
+          )}
           </div>
           
+
           <div id="audio_container">
             {speechURL ? (
               <ReactPlayer
@@ -725,14 +757,14 @@ function App() {
                 height="50px"
               />
             ) : (
-              <h4>Utilize text-to-speech to activate player </h4>
+              <h3>Welcome!</h3>
             )}
           </div>
         </div>
         <br></br>
         <div id='manualGrid'>
           <Form id="switch_container">
-            <Form.Check type="switch" id='toggleManualButton' onChange={toggleManual} label="Manual Input"/>
+            <Form.Check type="switch" id='toggleManualButton' onChange={toggleManual} label={<h5>Manual Input</h5>}/>
           </Form>
             <form id='manualForm' onSubmit={onSubmit}>
               <input type="submit" value="Speak Text" id="speakbutton" />
@@ -759,19 +791,6 @@ function App() {
             </div>
             )}
           </div>
-      
-          <form id='customizeSummaryForm' onSubmit={onSubmit}>
-            <input type="submit" value="Set Custom Summary" id="custSumButton" />
-            <textarea
-              id="customize_summary"
-              name="customize_summary"
-              placeholder="Customize the summary to your needs..."
-              value={customSumText}
-              onChange={(e) => setCustomSumText(e.target.value)}
-            ></textarea>   
-          </form>
-
-
 
           <form id='summaryForm' onSubmit={onSubmit}>
             <textarea
@@ -787,6 +806,18 @@ function App() {
               </div>
             )}
           </form>
+
+          <form id='customizeSummaryForm' onSubmit={onSubmit}>
+            <input type="submit" value="Customize" id="custSumButton" />
+            <textarea
+              id="customize_summary"
+              name="customize_summary"
+              placeholder="For example, try saying &quot;Put the summary into bullet points&quot;..."
+              value={customSumText}
+              onChange={(e) => setCustomSumText(e.target.value)}
+            ></textarea>   
+          </form>
+
         </div>
       </div>
     </>
