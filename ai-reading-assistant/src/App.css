@@ -43,7 +43,26 @@
  .sub-menu-wrap.open-menu{
   max-height: 400px;
  }
- 
+
+ .dropdown-font-size{
+  display: flex;
+  flex-direction: column;
+  
+ }
+
+ .dropdown-style-select{
+  display: flex;
+  flex-direction: column;
+  
+ }
+ .dropdown-spacing-select{
+  display: flex;
+  flex-direction: column;
+ }
+ .dropdown-voice-select{
+  display: flex;
+  flex-direction: column;
+ }
  
  /*END STYLING FOR DROPDOWN MENU*/
  

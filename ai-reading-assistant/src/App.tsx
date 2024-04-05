@@ -4,7 +4,7 @@ import { summaryCall } from './components/SummaryCall'
 import { speakText } from './components/SpeakText'
 import { karaokeText } from './components/GetKaraoke'
 import ReactPlayer from 'react-player';
-import {Form, DropdownButton, Dropdown } from 'react-bootstrap';
+import {Form /*DropdownButton, Dropdown*/ } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // This is the main extension function that runs when it is open
@@ -631,10 +631,10 @@ function App() {
                  <label htmlFor="font-size-select">
                    Font Size:
                  </label>
-                 <DropdownButton title = "fontSizeSelect" className="font-size-select" onChange={changeCSS} id = "fontSizeSelect">
-                   <Dropdown.Item eventKey="2vw">2vw</Dropdown.Item>
+                 <select className="font-size-select" onChange={changeCSS} id = "fontSizeSelect">
+                   <option value="2vw">2vw</option>
                    <option value="3vw">3vw</option>
-                 </DropdownButton>
+                  </select>
                </div>
                <div className="dropdown-style-select">
                  <label htmlFor="font-style-select">
@@ -727,7 +727,6 @@ function App() {
         </div>
         <br></br>
         <div id='manualGrid'>
-          
           <Form id="switch_container">
             <Form.Check type="switch" id='toggleManualButton' onChange={toggleManual} label="Manual Input"/>
           </Form>
