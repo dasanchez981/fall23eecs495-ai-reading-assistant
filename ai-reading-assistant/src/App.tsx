@@ -4,7 +4,8 @@ import { summaryCall } from './components/SummaryCall'
 import { speakText } from './components/SpeakText'
 import { karaokeText } from './components/GetKaraoke'
 import ReactPlayer from 'react-player';
-import {Form /*DropdownButton, Dropdown*/ } from 'react-bootstrap';
+import { OverlayTrigger, Popover } from 'react-bootstrap';
+import { InfoCircle } from 'react-bootstrap-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // This is the main extension function that runs when it is open
@@ -411,46 +412,46 @@ function App() {
     }
   };
 
-  const toggleManual = async () => {
-    console.log("Toggling manual input");
-    let title = document.getElementById("manualTitle");
-    let button = document.getElementById(
-      "toggleManualButton"
-    ) as HTMLInputElement;
-    if (
-      document.getElementById("manualForm")?.style.display == "" ||
-      document.getElementById("manualForm")?.style.display == "none"
-    ) {
-      document
-        .getElementById("manualForm")
-        ?.style.setProperty("display", "grid");
-      document
-        .getElementById("manualGrid")
-        ?.style.setProperty("grid-template-rows", "0.5fr 5fr");
-      document.documentElement.style.setProperty("min-height", "950px");
-      if (title != undefined) {
-        title.textContent = "Manually Input Text: ";
-      }
-      if (button != undefined) {
-        button.value = "ON";
-      }
-    } else if (document.getElementById("manualForm")?.style.display == "grid") {
-      document
-        .getElementById("manualForm")
-        ?.style.setProperty("display", "none");
-      document
-        .getElementById("manualGrid")
-        ?.style.setProperty("grid-template-rows", "1fr");
-      document.documentElement.style.setProperty("min-height", "fit-content");
+  // const toggleManual = async () => {
+  //   console.log("Toggling manual input");
+  //   let title = document.getElementById("manualTitle");
+  //   let button = document.getElementById(
+  //     "toggleManualButton"
+  //   ) as HTMLInputElement;
+  //   if (
+  //     document.getElementById("manualForm")?.style.display == "" ||
+  //     document.getElementById("manualForm")?.style.display == "none"
+  //   ) {
+  //     document
+  //       .getElementById("manualForm")
+  //       ?.style.setProperty("display", "grid");
+  //     document
+  //       .getElementById("manualGrid")
+  //       ?.style.setProperty("grid-template-rows", "0.5fr 5fr");
+  //     document.documentElement.style.setProperty("min-height", "950px");
+  //     if (title != undefined) {
+  //       title.textContent = "Manually Input Text: ";
+  //     }
+  //     if (button != undefined) {
+  //       button.value = "ON";
+  //     }
+  //   } else if (document.getElementById("manualForm")?.style.display == "grid") {
+  //     document
+  //       .getElementById("manualForm")
+  //       ?.style.setProperty("display", "none");
+  //     document
+  //       .getElementById("manualGrid")
+  //       ?.style.setProperty("grid-template-rows", "1fr");
+  //     document.documentElement.style.setProperty("min-height", "fit-content");
 
-      if (title != undefined) {
-        title.textContent = "Toggle Manual Input: ";
-      }
-      if (button != undefined) {
-        button.value = "OFF";
-      }
-    }
-  };
+  //     if (title != undefined) {
+  //       title.textContent = "Toggle Manual Input: ";
+  //     }
+  //     if (button != undefined) {
+  //       button.value = "OFF";
+  //     }
+  //   }
+  // };
 
   /* END OF MANUAL INPUT FUNCTIONS */
   
@@ -462,7 +463,8 @@ function App() {
       let subMenu = document.getElementById("subMenu")
       let dropdownClicked = e.target.parentNode.className
       if(dropdownClicked !== "dropdown-style-select" && dropdownClicked !== "dropdown-font-size" && dropdownClicked !== "dropdown-spacing-select" &&
-      dropdownClicked !== "sub-menu" && dropdownClicked !== "sub-menu-wrap open-menu" && dropdownClicked !== "dropdown-voice-select")
+      dropdownClicked !== "sub-menu" && dropdownClicked !== "sub-menu-wrap open-menu" && dropdownClicked !== "dropdown-voice-select" 
+      && dropdownClicked !== "switch-container" && dropdownClicked !== "dropdown-copypaste-select")
       {
           if(subMenu?.classList.contains("open-menu"))
           {
@@ -482,6 +484,14 @@ function App() {
 
      e.stopPropagation()
   }
+
+  // function customizeInput(e:any)
+  // {
+  //   let customMenu = document.getElementById("customizeMenu");
+  //   customMenu?.classList.toggle("open-menu");
+
+  //   e.stopPropagation()
+  // }
 
   // Whenever a tab is open with extension sets CSS styling based on settings menu options
   chrome.tabs.onActivated.addListener(function (activeInfo) {
@@ -534,6 +544,26 @@ function App() {
   // Handles changing of text focus settings while on current active webpage
   const changeCSS = async () => {
       console.log("Triggered change CSS")
+
+      // Alter visibility of manualGrid id
+      console.log("Trying to get whole element")
+      var manualGridElement = document.getElementById('manualGrid')
+      console.log(manualGridElement)
+      var manualGridStatus = (document.getElementById('copyPasteSelect') as HTMLInputElement).value;
+      console.log("Tryig to get status of manual grid")
+      console.log(manualGridStatus)
+      // Check if manualGridElement is defined and not null
+      if (manualGridElement && manualGridStatus === 'Hide') {
+        // Set visibility to 'hidden' if it's currently 'visible'
+        manualGridElement.style.visibility = 'hidden';
+        manualGridElement.style.maxHeight = '0px';
+      } else if (manualGridElement && manualGridStatus === 'Show'){
+        // Set visibility to 'visible' if it's not 'visible' or manualGridElement is undefined/null
+        manualGridElement.style.visibility = 'visible';
+        manualGridElement.style.maxHeight= 'fit-content';
+      }
+
+
        let [tab] = await chrome.tabs.query({active: true})
        if (tab.url?.startsWith("chrome://")) return undefined;
        // Get options from settings menu
@@ -644,6 +674,75 @@ function App() {
 
   console.log("The speech URL is below:")
   console.log(speechURL)
+
+  /* ALL ZE HELP POPOVERS ARE BELOW YO */
+
+   // Tooltip next to 'I want questions for a ...' to help users 
+   const audio_help_popover = (
+    <Popover id="help-popup">
+        <Popover.Body>
+            <p><b> 
+              <strong>All narrated text is loaded into this audio player.</strong>
+              <br></br>
+              <br></br>
+              Simply press the play button to listen and click the three dots 
+              at the end for more audio options. 
+            </b></p>
+        </Popover.Body>
+    </Popover>
+    );
+
+    const sum_help_popover = (
+      <Popover id="help-popup">
+        <Popover.Body>
+            <p><b> 
+              <strong>After summarizing text, the summary will appear in the textbox below</strong>
+              <br></br>
+              <br></br>
+              If you'd like to customize your summary, for example, to be in bullet points or another form, 
+              then hover over the "Customize" button and specify how you'd like your summary to be customized in the 
+              textbox that appears. 
+            </b></p>
+        </Popover.Body>
+    </Popover>
+    );
+
+    const copypaste_help_popover = (
+      <Popover id="help-popup">
+        <Popover.Body>
+            <p><b> 
+              <strong>Copy/paste text into the textbox below. </strong>
+              <br></br>
+              <br></br>
+              Use this form as an alternative to the context menu options. Text in the box below can be summarized or spoken. 
+            </b></p>
+        </Popover.Body>
+    </Popover>
+    );
+
+    const customize_popover = (
+      <Popover id="help-popup">
+        <Popover.Body>
+            <p><b> 
+              <strong> Customize your summary!  </strong>
+              <br></br>
+              <br></br>
+              Use this form to customize your summary to your needs. Text in the box below can be summarized or spoken. 
+            </b></p>
+            <form id='customizeSummaryForm' onSubmit={onSubmit}>
+                <input type="submit" value="Apply" id="custSumButton" />
+                <textarea
+                  id="customize_summary"
+                  name="customize_summary"
+                  placeholder="For example, try saying &quot;Put the summary into bullet points&quot;..."
+                  value={customSumText}
+                  onChange={(e) => setCustomSumText(e.target.value)}
+                ></textarea>   
+            </form>
+        </Popover.Body>
+    </Popover>
+    )
+
   
   return (
     <>
@@ -697,6 +796,20 @@ function App() {
                    <option value="Gregory">Gregory</option>
                  </select>
                </div>
+
+               <div className="dropdown-copypaste-select">
+                  <label htmlFor="copypaste-select">
+                    Copy/Paste
+                  </label>
+                  {/* <Form id="switch_container">
+                    <Form.Check type="switch" id='toggleManualButton' onChange={changeCSS} label={<h5>Copy/Paste</h5>}/>
+                  </Form> */}
+                  <select className="copypaste-select" onChange={changeCSS} id = "copyPasteSelect">
+                   <option value="Hide">Hide</option>
+                   <option value="Show">Show</option>
+                   
+                 </select>
+               </div>
              </div>
            </div>
           </div>
@@ -721,12 +834,18 @@ function App() {
           </div>
         </div>
         <br></br>
-        <br></br>
-        <br></br>
         
         {/* If no speech is available then hide player from user */}
         <div id='textToSpeechControls'>
-          <h5 id='ttsTitle'>Read Aloud:</h5>
+          <div className="read-aloud">
+              <h5 id='ttsTitle'>Read Aloud:</h5>
+              <OverlayTrigger trigger={["hover", "focus"]} overlay={audio_help_popover}>
+              <span style={{ cursor: 'pointer' }}>
+                <InfoCircle className="info-icon" size={24} /> {/* Adjust size as needed */}
+              </span>
+            </OverlayTrigger>
+          </div>
+
           <div id='ttsSpinner'>
           {loadingSpeech ? (
               <div className="spinner-border" role="status">
@@ -763,26 +882,38 @@ function App() {
         </div>
         <br></br>
         <div id='manualGrid'>
-          <Form id="switch_container">
-            <Form.Check type="switch" id='toggleManualButton' onChange={toggleManual} label={<h5>Manual Input</h5>}/>
-          </Form>
-            <form id='manualForm' onSubmit={onSubmit}>
-              <input type="submit" value="Speak Text" id="speakbutton" />
-              <input type="submit" value="Summarize" id="sumbutton" />
+          <div className="read-aloud">
+            <h5 id='manualTitle'>Copy/Paste:</h5>
+            <OverlayTrigger trigger={["hover", "focus"]} overlay={copypaste_help_popover}>
+                <span style={{ cursor: 'pointer' }}>
+                  <InfoCircle className="info-icon" size={24} /> {/* Adjust size as needed */}
+                </span>
+              </OverlayTrigger>
+          </div>
+          {/* <Form id="switch_container">
+            <Form.Check type="switch" id='toggleManualButton' onChange={toggleManual} label={<h5>Copy/Paste</h5>}/>
+          </Form> */}
+          <form id='manualForm' onSubmit={onSubmit}>
+            <input type="submit" value="Speak Text" id="speakbutton" />
+            <input type="submit" value="Summarize" id="sumbutton" />
 
-              <textarea
-                id="manual_input"
-                name="manual_input"
-                placeholder="Input your text to Speak/Summarize..."
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-              ></textarea>
+            <textarea
+              id="manual_input"
+              name="manual_input"
+              placeholder="Input your text to Speak/Summarize..."
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+            ></textarea>
 
-            </form>
-          
+          </form> 
         </div>
         <div id='summaryOutput'>
-          <h5 id='sumTitle'>Generated Summary:</h5>
+          <h5 id='sumTitle'>Summary:</h5>
+          <OverlayTrigger trigger={["hover", "focus"]} overlay={sum_help_popover}>
+              <span style={{ cursor: 'pointer' }}>
+                <InfoCircle className="info-icon" size={24} /> {/* Adjust size as needed */}
+              </span>
+            </OverlayTrigger>
           {/* Loading indicator shows when backend is processing */}
           <div id='spinner'>
             {loadingSum && (
@@ -806,18 +937,27 @@ function App() {
               </div>
             )}
           </form>
+          
+          
 
-          <form id='customizeSummaryForm' onSubmit={onSubmit}>
-            <input type="submit" value="Customize" id="custSumButton" />
-            <textarea
-              id="customize_summary"
-              name="customize_summary"
-              placeholder="For example, try saying &quot;Put the summary into bullet points&quot;..."
-              value={customSumText}
-              onChange={(e) => setCustomSumText(e.target.value)}
-            ></textarea>   
-          </form>
+          <OverlayTrigger trigger={["click", "focus"]} placement="bottom" overlay={customize_popover}>
+              <span style={{ cursor: 'pointer' }}>
+                 <div id='customizeSummaryForm'>Customize Hover</div>
+              </span>
+            </OverlayTrigger>
 
+            <div className="customize-menu-wrap" id="customizeMenu">
+              <form id='customizeSummaryForm' onSubmit={onSubmit}>
+                <input type="submit" value="Customize" id="custSumButton" />
+                <textarea
+                  id="customize_summary"
+                  name="customize_summary"
+                  placeholder="For example, try saying &quot;Put the summary into bullet points&quot;..."
+                  value={customSumText}
+                  onChange={(e) => setCustomSumText(e.target.value)}
+                ></textarea>   
+              </form>
+            </div>
         </div>
       </div>
     </>

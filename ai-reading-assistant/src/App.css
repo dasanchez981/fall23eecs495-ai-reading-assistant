@@ -63,6 +63,11 @@
   display: flex;
   flex-direction: column;
  }
+
+ .dropdown-copypaste-select {
+  display: flex;
+  flex-direction: column;
+ }
  
  /*END STYLING FOR DROPDOWN MENU*/
  
@@ -235,10 +240,10 @@ body{
 #textToSpeechControls{
   width: 100%;
   max-width: 600px;
-  display: grid;
+  display: grid; 
   align-items: end;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 0.5fr 0.5fr;
+  grid-template-rows: 0.5fr 0.5fr; 
 }
 #ttsTitle{
   text-align: left;
@@ -265,8 +270,11 @@ body{
 #manualGrid{
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
+  grid-template-rows: 0.5fr 5fr;
+  max-height: 0px;
   margin-bottom: 20px;
+  visibility: hidden;
+  /* transform: scale(0); */
 }
 #switch_container{
   grid-column: 1;
@@ -281,11 +289,12 @@ body{
 }
 #manualTitle{
   text-align: left;
-  grid-column: 1/span 4;
+  grid-column: 1;
   grid-row: 1;
+  width: 135px;
 }
 #manualForm{
-  display: none;
+  display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 4fr;
   grid-column: 1 / span 5;
@@ -321,15 +330,18 @@ div#summaryOutput{
   height: 300px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 5fr;
+  grid-template-rows: 1fr 1fr 5fr;
 }
 #sumTitle{
   text-align: left;
-  grid-column: 1/span 3;
+  grid-column: 1;
   grid-row: 1;
 }
+#customizeSummaryForm{
+  grid-row: 2;
+}
 #spinner{
-  grid-column: 4;
+  grid-column: 5;
   grid-row: 1;
   display: flex;
   justify-content: flex-end;
@@ -337,7 +349,7 @@ div#summaryOutput{
 #summaryForm{
   display: flex;
   grid-column: 1 / span 5;
-  grid-row: 2;
+  grid-row: 3;
   width: 100%;
 }
 #audioIndicator {
@@ -392,6 +404,35 @@ input:active{
   font-size: medium;
   padding: 2px 4px;
 }
+
+.read-aloud {
+  display: flex;
+  align-items: center; /* Center vertically */
+  white-space: nowrap; /* Prevent text wrapping */
+  /* border: 10px solid black; */
+}
+
+.info-icon {
+  margin-left: 15px; /* Adjust the margin as needed for spacing */
+  margin-bottom: 5px;
+}
+
+/*CUSTOMIZE MENU SETTINGS*/
+.customize-menu-wrap{
+  position: absolute;
+  /*top: 100%;*/
+  right: 0;
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height 0.5s;
+}
+
+.customize-menu-wrap.open-menu{
+  max-height: 400px;
+ }
+
+
+
 
 
 
