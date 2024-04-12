@@ -941,12 +941,12 @@ function App() {
           
 
           <OverlayTrigger trigger={["click", "focus"]} placement="bottom" overlay={customize_popover}>
-              <span style={{ cursor: 'pointer' }}>
-                 <div id='customizeSummaryForm'>Customize Hover</div>
+              <span style={{ cursor: 'pointer' }} id='customizeHover'>
+                 <div>Customize</div>
               </span>
             </OverlayTrigger>
 
-            <div className="customize-menu-wrap" id="customizeMenu">
+            {/* <div className="customize-menu-wrap" id="customizeMenu">
               <form id='customizeSummaryForm' onSubmit={onSubmit}>
                 <input type="submit" value="Customize" id="custSumButton" />
                 <textarea
@@ -957,7 +957,7 @@ function App() {
                   onChange={(e) => setCustomSumText(e.target.value)}
                 ></textarea>   
               </form>
-            </div>
+            </div> */}
         </div>
       </div>
     </>
