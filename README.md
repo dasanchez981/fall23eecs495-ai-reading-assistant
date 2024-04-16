@@ -11,41 +11,59 @@ This is an open source project building off work started by the team for the cap
 git@github.com:dasanchez981/fall23eecs495-ai-reading-assistant.git
 ```
 
-2) Navigate to the /ai-reading-assistant folder and install the needed node modules
+2) Ensure that NodeJS is installed on your local machine. Go [here](https://nodejs.org/en/download) for download instructions.
+
+3) To ensure that Node Package Manager is successfully installed on your machine execute this command. This should return a version. 
+```bash
+npm -v
+```
+
+4) Fill in the API credentials provided in the .env.tpl file located in the ai-reading-assistant folder
+``` bash
+cd ai-reading-assistant
+```
+
+5) Rename the template env (.env.tpl) to .env for use in the extension
+``` bash
+mv .env.tpl .env
+```
+
+6) Navigate to the /ai-reading-assistant folder and install the needed node modules
 ``` bash
 cd ai-reading-assistant
 npm install
 ```
 
-3) Build the extension locally by running the following command:
+7) Build the extension locally by running the following command:
 ```bash
 npm run build
 ```
+8) Ensure that a 'dist' folder exists at ai-reading-assistant/dist, this will be loaded into the browser
 
-4) Go to your Chrome Web Browser and navigate to chrome://extensions
+9) Go to your Chrome Web Browser and navigate to chrome://extensions
 
 ![step4](doc/step3.5.png)
 
-5) Toggle "Developer mode" ON in top right hand corner of page
+10) Toggle "Developer mode" ON in top right hand corner of page
 
-6) Click "Load unpacked" button in top left hand corner of page
+11) Click "Load unpacked" button in top left hand corner of page
 
 ![step5-6](doc/step4.png)
 
-7) Select the "dist" folder at /ai-reading-assistant/dist in the repository
+12) Select the "dist" folder at /ai-reading-assistant/dist in the repository
 
-10) Now you should see "AI-Reading-Assistant" as one of your extensions
+13) Now you should see "AI-Reading-Assistant" as one of your extensions
 
-11) Click on puzzle piece in the top right hand corner of browser window and pin the extension
+14) Click on puzzle piece in the top right hand corner of browser window and pin the extension
 
 ![step9](doc/step6.png)
 
-12) Click on the 'SidePanel' icon at the top right of your browser toolbar
+15) Click on the 'SidePanel' icon at the top right of your browser toolbar
 
 ![step10](doc/step7.png)
 
-13) Click on the 'SidePanel' dropdown and select the extension
+16) Click on the 'SidePanel' dropdown and select the extension
 
 ![step11](doc/step8.png)
 
-14) Now the extension should be loaded into your browser. Enjoy!
+17) Now the extension should be loaded into your browser. Enjoy!
