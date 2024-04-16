@@ -344,8 +344,10 @@ div#summaryOutput{
 
 #customizeHover {
   grid-row: 2;
-  border: 5px solid black;
+  color: white;
+  border: 5px solid gray;
   background-color: gray;
+  /* height: 50px; */
 }
 
 #spinner{
