@@ -343,6 +343,10 @@ div#summaryOutput{
 }
 
 #customizeHover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
   grid-row: 2;
   color: white;
   border: 5px solid gray;
