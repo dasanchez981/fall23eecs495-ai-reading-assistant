@@ -5,10 +5,10 @@
 This is an open source project building off work started by the team for the capstone class EECS 495: Software for Accessibility at the University of Michigan. Please contact 495-ai-reading-assistant@umich.edu via email if there are any questions/issues regarding the instructions below!
 
 ### User Interface of "SARA: Supportive AI Reading Assistant"
-The pictures below show our extension in action:
-![extension1](doc/extension1.png)
-![extension2](doc/extension2.png)
-![extension3](doc/extension3.png)
+The pictures below show our extension in action:  
+<img src="doc/extension1.png" alt="extension1" style="width: 30%; height: 30%;">
+<img src="doc/extension2.png" alt="extension2" style="width: 34%; height: 34%;">
+<img src="doc/extension3.png" alt="extension3" style="width: 33%; height: 33%;">
 
 ### Chrome Extension Setup
 
